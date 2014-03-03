@@ -69,7 +69,7 @@ begin
   FormsIniDir  := systemdir;
   //if (ParamStr(1) = 'Severtrans') then sql:=TSQL.Create(ParamStr(1),'dba','sql')
    //else
-   sql:=TSQL.Create('severtrans','dba','sql');
+   sql:=TSQL.Create('mysql-st','dba','sql');
   CreateEnviroment;
   Application.Initialize;
   Application.Title := 'СеверТранс';
