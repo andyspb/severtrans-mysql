@@ -5382,7 +5382,7 @@ object card: Tcard
     Font.Style = []
     LabelPosition = lpAbove
     LabelSpacing = 3
-    MaxLength = 25
+    MaxLength = 50
     ParentFont = False
     TabOrder = 14
     OnChange = LabeledEdit7Change

@@ -90,7 +90,7 @@ begin
     eCard.Enabled:=false;
     edelete.Enabled:=false;
     SQLGrid1.visible:=false;
-    btPrint.visible:=false;
+    btPrint.Enabled:=false;
   end;
 end;
 
@@ -111,6 +111,7 @@ begin
     begin
       eCard.Enabled:=true;
       edelete.Enabled:=true;
+      btPrint.Enabled:=true;
       SQLGrid1.visible:=true;
     end;
   end
@@ -136,6 +137,7 @@ begin
       eCard.Enabled:=true;
       edelete.Enabled:=true;
       SQLGrid1.visible:=true;
+      btPrint.Enabled:=true;
     end;
   end
   else
@@ -181,6 +183,7 @@ begin
     eCard.Enabled:=false;
     edelete.Enabled:=false;
     SQLGrid1.visible:=false;
+    btPrint.Enabled:=false;
   end;
 end;
 
