@@ -22,6 +22,7 @@ function InsertToTable(s1,s2:string):integer;
 Function OrderNum(dat1:string):string;
 Function SendNum(dat1:string):string;
 procedure WriteLog(s2:string);
+function UpdateClientsKredit():integer;
 
 implementation
 
@@ -1167,5 +1168,25 @@ begin
   q.Free;   
 end;
 
+function UpdateClientsKredit():integer;
+var
+TempL1: TStrings;
+i:integer;
+kredit:string;
+begin
+UpdateClientsKredit:=0;
+q:=sql.Select('Clients','`Ident`,`Acronym`','Where `Acronym` Like '+sql.MakeStr("%), '');
+while not q.eof do      {считаем kredit}
+    begin
+     i:=q.FieldByName('`Ident`').asinteger;
+     kredit:=SendStr.StrTo00(SendStr.Credit(i));
+     if  sql.ExecOneSql('Update Clients set Kredit='+sql.MakeStr(kredit)+' where Ident='+IntToStr(i))<>0
+     then begin
+           UpdateClientsKredit:=1;
+           Application.MessageBox('ќбновление кредита не прошло дл€ клиента '+ inttostr(i),'',0);
+          end;
+    end;
+
+end;
 
 end.

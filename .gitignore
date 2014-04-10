@@ -229,3 +229,4 @@ pip-log.txt
 *.~dfm
 *.~pas
 pro/Send/out.rtf
+pro/Select/out.rtf
