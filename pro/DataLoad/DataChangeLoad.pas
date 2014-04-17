@@ -2,10 +2,11 @@ unit DataChangeLoad;
 
 interface
 uses
- Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, toolbtn, StdCtrls, Buttons, BMPBtn, ToolWin, ComCtrls, Sqlctrls,
   LblCombo,Printers, LblEdtDt, ExtCtrls,TSQLCLS,SqlGrid, DB,StrUtils,FunChar,
-   DBTables, Lbsqlcmb, OleServer, Word2000,XMLDOM, DBClient, MConnect, EntrySec;
+  DBTables, Lbsqlcmb, OleServer, Word2000,XMLDOM, DBClient, MConnect, EntrySec,
+  SendStr;
 
 function ReadFiles1(strId: string):TStrings;
 function WriteFiles(s: string;TempL1:TStrings): integer;
@@ -1170,23 +1171,26 @@ end;
 
 function UpdateClientsKredit():integer;
 var
-TempL1: TStrings;
-i:integer;
-kredit:string;
+  i:integer;
+  kredit:string;
+  query:TQuery;
+  pchar_str:PChar;
 begin
-UpdateClientsKredit:=0;
-q:=sql.Select('Clients','`Ident`,`Acronym`','Where `Acronym` Like '+sql.MakeStr("%), '');
-while not q.eof do      {считаем kredit}
+  UpdateClientsKredit:=0;
+  query:=sql.Select('Clients' , 'Ident, Acronym', 'Acronym like ''"%'' ', '');
+  while not query.eof do      {считаем kredit}
+  begin
+    i:= query.FieldByName('Ident').asinteger;
+    kredit:=SendStr.StrTo00(SendStr.Credit(i));
+    if (sql.ExecOneSql('Update Clients set Kredit='+sql.MakeStr(kredit)+' where Ident='+IntToStr(i))<>0) then
     begin
-     i:=q.FieldByName('`Ident`').asinteger;
-     kredit:=SendStr.StrTo00(SendStr.Credit(i));
-     if  sql.ExecOneSql('Update Clients set Kredit='+sql.MakeStr(kredit)+' where Ident='+IntToStr(i))<>0
-     then begin
-           UpdateClientsKredit:=1;
-           Application.MessageBox('ќбновление кредита не прошло дл€ клиента '+ inttostr(i),'',0);
-          end;
+      UpdateClientsKredit:=1;
+      pchar_str:=pchar('ќбновление кредита не прошло дл€ клиента ' + IntToStr(i));
+      Application.MessageBox(pchar_str,'',0);
     end;
-
+    query.Next;
+  end;
+  query.Free;
 end;
 
 end.

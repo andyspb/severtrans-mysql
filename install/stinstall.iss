@@ -66,7 +66,9 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 [Files]
 Source: "{#BinarySourceDir}\pro\Severtrans.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BinarySourceDir}\pro\Package1.bpl"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BinarySourceDir}\pro\*.ini"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BinarySourceDir}\pro\forms.ini"; DestDir: "{app}"; Flags: onlyifdoesntexist ignoreversion
+Source: "{#BinarySourceDir}\pro\Gridfld.ini"; DestDir: "{app}"; Flags: onlyifdoesntexist ignoreversion
+Source: "{#BinarySourceDir}\pro\*.ini"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "forms.ini, Gridfld.ini"
 Source: "{#BinarySourceDir}\pro\*.rtf"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]

@@ -230,3 +230,11 @@ pip-log.txt
 *.~pas
 pro/Send/out.rtf
 pro/Select/out.rtf
+*.~dfm
+*.~pas
+*.~dfm
+pro/Menu.~dfm
+pro/Menu.~pas
+pro/Invoice/out.rtf
+pro/Invoice/out1.rtf
+pro/Account/out.rtf

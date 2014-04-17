@@ -57,6 +57,7 @@ type
     N20071: TMenuItem;
     N43: TMenuItem;
     N44: TMenuItem;
+    ClientsCreditUpdate1: TMenuItem;
     procedure N7Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
     procedure N5Click(Sender: TObject);
@@ -101,6 +102,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure N43Click(Sender: TObject);
     procedure N44Click(Sender: TObject);
+
+    procedure updateClientsKredit1Click(Sender: TObject);
    
   private
     { Private declarations }
@@ -162,6 +165,7 @@ begin
   N35.Visible:=Oper;
   N41.Visible:=false;
   N42.Visible:=false;
+  ClientsCreditUpdate1.Visible:=Bos;
 end;
 
 procedure TFMenu.N7Click(Sender: TObject);
@@ -625,6 +629,15 @@ begin
     Application.MessageBox('Карточка создана!','Confirmation',0);
   FormSend.free;
 end;
+
+procedure TFMenu.updateClientsKredit1Click(Sender: TObject);
+begin
+  if DataChangeLoad.UpdateClientsKredit() = 0 then
+  begin
+    Application.MessageBox('Обновление клиентов завершено!','',0);
+  end;
+end;
+
 
 end.
 

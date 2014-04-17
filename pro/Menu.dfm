@@ -5275,6 +5275,10 @@ object FMenu: TFMenu
         Visible = False
         OnClick = N43Click
       end
+      object ClientsCreditUpdate1: TMenuItem
+        Caption = 'ClientsCreditUpdate'
+        OnClick = updateClientsKredit1Click
+      end
     end
     object N7: TMenuItem
       Caption = #1042#1067#1061#1054#1044
