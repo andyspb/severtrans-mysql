@@ -239,3 +239,7 @@ pro/Invoice/out.rtf
 pro/Invoice/out1.rtf
 pro/Account/out.rtf
 pro/Send/FormSendu.~dfm
+*.~pas
+*.~dfm
+pro/Send/FormSendu.~pas
+pro/Send/FormSendu.~dfm

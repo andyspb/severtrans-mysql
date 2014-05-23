@@ -288,7 +288,7 @@ begin
             end;
           next;
           Inc( Row );
-          if Row>100 then break;
+          if Row>600 then break;
         end;
     end;
 end;

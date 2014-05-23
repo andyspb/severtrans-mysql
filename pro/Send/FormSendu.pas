@@ -1280,28 +1280,29 @@ Next1:
 end;
 
 procedure TFormSend.btOkClick(Sender: TObject);
-var l:longint;
-    val:string;
-    q:TQUERY;
-    S1:real;
-    S2:real;
-Label T1;    
+var
+  l:longint;
+  val:string;
+  q:TQUERY;
+  S1:real;
+  S2:real;
+  Label T1;    
 begin
 //S1:=0;
 //S2:=0;
-Query1.ApplyUpdates;
-if (trim(eInsuranceSum.Text) = '') or (trim(eInsuranceSum.text) = '0.00')
-    or (trim(eInsuranceSum.text) = '0') then
- begin
+  Query1.ApplyUpdates;
+  if (trim(eInsuranceSum.Text) = '') or (trim(eInsuranceSum.text) = '0.00')
+      or (trim(eInsuranceSum.text) = '0') then
+  begin
     application.MessageBox('Объявленная ценность не может быть равна 0!'+
                             ' Проверьте правильность введенных сумм!','Ошибка',0);
     eInsuranceSum.setfocus;
     exit;
-end;
-if CheckBox5.Checked then
-  Query2.ApplyUpdates;
+  end;
+  if CheckBox5.Checked then
+    Query2.ApplyUpdates;
 
-s1:=StrToFloat(trim(eFare.Text));
+  s1:=StrToFloat(trim(eFare.Text));
 
 if cbType.SQLComboBox.GetData=1 then        {проверка для жд перевозок,
                    чтобы сумма заплаченная жд не превышала суммы взятой с клеента}

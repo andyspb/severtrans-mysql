@@ -1280,12 +1280,13 @@ Next1:
 end;
 
 procedure TFormSend.btOkClick(Sender: TObject);
-var l:longint;
-    val:string;
-    q:TQUERY;
-    S1:real;
-    S2:real;
-Label T1;    
+var
+  l:longint;
+  val:string;
+  q:TQUERY;
+  S1:real;
+  S2:real;
+  Label T1;    
 begin
 //S1:=0;
 //S2:=0;
