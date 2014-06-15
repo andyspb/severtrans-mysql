@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Lbledit, LblEdtDt, Sqlctrls, Lbsqlcmb, StdCtrls, Buttons,
   BMPBtn, ComCtrls,DB,TSQLCLS,DBTables,Tadjform, SqlGrid, OleServer,
-  Word2000,Printers, QDialogs, EntrySec;
+  Word2000,Printers, QDialogs, EntrySec, Logger;
 
 type
   TFormAccount = class(TForm)
@@ -297,17 +297,18 @@ end else
 end;
 
 procedure TFormAccount.Print;
-var ReportMakerWP:TReportMakerWP;
-    p,w1,w2,w3,w4: OleVariant;
-    s,s2, mach:string;
-    q:tQuery;
-    i1,i2,i3,i4: integer;
-label T;
+var
+  ReportMakerWP:TReportMakerWP;
+  p,w1,w2,w3,w4: OleVariant;
+  s,s2, mach:string;
+  q:TQuery;
+  i1,i2,i3,i4: integer;
+  label T;
 begin
 try
   ReportMakerWP:=TReportMakerWP.Create(Application);
   ReportMakerWP.ClearParam;
-//--------  
+//--------
   q:=sql.Select('BOSS','*','','');
   ReportMakerWP.AddParam('1='+Number);
   s:=SendStr.DataDMstrY(StrToDate(LabelEditDate1.text));
@@ -353,48 +354,52 @@ try
   ReportMakerWP.AddParam('25='+q.FieldByName('OKONX').asstring);
   ReportMakerWP.AddParam('26='+q.FieldByName('OKPO').asstring);
   q.Free;
-   if sql.SelectString('Contract','Number','Clients_Ident='+
+  if sql.SelectString('Contract','Number','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and `Start`<='+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+
                          ' and ContractType_Ident=1 and (Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+')')<>'' then
   begin
-  ReportMakerWP.AddParam('27='+'№ '+sql.SelectString('Contract','Number','Clients_Ident='+
+    ReportMakerWP.AddParam('27='+'№ '+sql.SelectString('Contract','Number','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and `Start`<='+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+
                          ' and ContractType_Ident=1 and (Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+')'));
-   s2:=FormatDateTime('dd.mm.yyyy',StrToDate(sql.SelectString('Contract','Start','Clients_Ident='+
+    s2:=FormatDateTime('dd.mm.yyyy',StrToDate(sql.SelectString('Contract','Start','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and `Start`<='+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+
                          ' and ContractType_Ident=1 and (Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+')')));
-  ReportMakerWP.AddParam('28='+' от '+S2+' г. (жд)');
-  end else begin
-           ReportMakerWP.AddParam('27='+'');
-           ReportMakerWP.AddParam('28='+'');
-           end;
+    ReportMakerWP.AddParam('28='+' от '+S2+' г. (жд)');
+  end
+  else
+  begin
+    ReportMakerWP.AddParam('27='+'');
+    ReportMakerWP.AddParam('28='+'');
+  end;
   if sql.SelectString('Contract','Number','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and `Start`<='+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+
                          ' and ContractType_Ident=2 and (Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+')')<>'' then
   begin
-  ReportMakerWP.AddParam('29='+'№ '+sql.SelectString('Contract','Number','Clients_Ident='+
+    ReportMakerWP.AddParam('29='+'№ '+sql.SelectString('Contract','Number','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and `Start`<='+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+
                          ' and ContractType_Ident=2 and (Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+')'));
-  ReportMakerWP.AddParam('30='+' от '+FormatDateTime('dd.mm.yyyy',StrToDate(sql.SelectString('Contract','Start','Clients_Ident='+
+    ReportMakerWP.AddParam('30='+' от '+FormatDateTime('dd.mm.yyyy',StrToDate(sql.SelectString('Contract','Start','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and `Start`<='+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+
                          ' and ContractType_Ident=2 and (Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text)))+')')))+
                          ' г. (авто)');
-  end else begin
-           ReportMakerWP.AddParam('29='+'');
-           ReportMakerWP.AddParam('30='+'');
-           end;
+  end
+  else
+  begin
+    ReportMakerWP.AddParam('29='+'');
+    ReportMakerWP.AddParam('30='+'');
+  end;
   if  (sql.SelectString('Contract','Number','Clients_Ident='+
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and ContractType_Ident=2 and Finish is NULL or Finish>'+
@@ -403,7 +408,11 @@ try
                          IntToStr(cbClient.SQLComboBox.GetData)+
                          ' and ContractType_Ident=1 and Finish is NULL or Finish>'+
                          sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate1.text))))<>'')
-  then  ReportMakerWP.AddParam('31='+', ') else ReportMakerWP.AddParam('31='+'');
+  then
+    ReportMakerWP.AddParam('31='+', ')
+  else
+    ReportMakerWP.AddParam('31='+'');
+
   ReportMakerWP.AddParam('32='+eSum.text);
   ReportMakerWP.AddParam('33='+eNDS.text);
   ReportMakerWP.AddParam('34='+eSumNDS.text);
@@ -411,66 +420,95 @@ try
   ReportMakerWP.AddParam('35='+s);
   s:=SendStr.MoneyToString(eNDS.text);
   ReportMakerWP.AddParam('36='+s);
-  ReportMakerWP.AddParam('37='+'18%');;
-  if ReportMakerWP.DoMakeReport(systemdir+'Account\Account.rtf',
-          systemdir+'Account\Account.ini', systemdir+'Account\out.rtf')<>0 then
-                              begin
-                              ReportMakerWP.Free;  
-                              //goto T;
-                              exit
-                              end;;
+  ReportMakerWP.AddParam('37='+'18%');
+
+  WordApplication1:=TWordApplication.Create(Application);
+  if (WordApplication1.Documents <>nil) then
+  begin
+    try
+      WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+    except
+      end;
+    WordApplication1.WindowState:=2;
+    WordApplication1.Free;
+  end;
+
+
+  if (ReportMakerWP.DoMakeReport(systemdir+'Account\Account.rtf',
+          systemdir+'Account\Account.ini', systemdir+'Account\out.rtf')<>0) then
+  begin
+    ReportMakerWP.Free;
+    Logger.LogError(EntrySec.version + '[FAccount] [Print] Failed ReportMakerWP.DoMakeReport');
+    //goto T;
+    exit
+  end;
   ReportMakerWP.Free;
 
-WordApplication1:=TWordApplication.Create(Application);
+  WordApplication1:=TWordApplication.Create(Application);
+  if (Application=Nil) then
+  begin
+    Logger.LogError(EntrySec.version + '[FAccount] (Application is null');
+    application.MessageBox('Oшибка связи с приложением','Error',0);
+  end;
+
   p := systemdir+'Account\out.rtf';
-   i1:=0;
-   i2:=0;
-   i3:=5;
-   i4:=1;
-   if InputQuery('Диалог!','Какое количество копий счета распечатать?',i1,i2,i3,i4) then
-   w1:=i1;
-if i1 = 0 then w1:=1;
+  i1:=0;
+  i2:=0;
+  i3:=5;
+  i4:=1;
+  if InputQuery('Диалог!','Какое количество копий счета распечатать?',i1,i2,i3,i4) then
+  w1:=i1;
+  if (i1 = 0) then
+    w1:=1;
 //  w1:=2;
   mach:='';
   mach:= trim(WordApplication1.UserName);
   w2:=sql.SelectString('Printer','NameA4','ComputerName='+sql.MakeStr(mach));
 
- WordApplication1.Documents.Open(p,
+  WordApplication1.Documents.Open(p,
 	EmptyParam,EmptyParam,EmptyParam,
 	EmptyParam,EmptyParam,EmptyParam,
 	EmptyParam,EmptyParam,EmptyParam,
         EmptyParam,EmptyParam);
 
-w3:=sql.SelectString('Printer','ComNameA4','ComputerName='+sql.MakeStr(mach));
-if  (VarToStr(w2)='') or (VarToStr(w3)='') then
-begin
-application.MessageBox('Информация о принтерах не внесена в базу для данной машины'+
+  w3:=sql.SelectString('Printer','ComNameA4','ComputerName='+sql.MakeStr(mach));
+  if  (VarToStr(w2)='') or (VarToStr(w3)='') then
+  begin
+    application.MessageBox('Информация о принтерах не внесена в базу для данной машины'+
                        ' или в параметрах WinWord не верно указано имя машины!','Ошибка!',0);
- goto T;
- exit;
-end;
+    goto T;
+    exit;
+  end;
 
-w4:=WordApplication1.UserName;
-if w3<>w4 then   w2:= '\\'+w3+'\'+w2;
-WordApplication1.ActivePrinter:=w2;
-WordApplication1.ActiveDocument.PrintOut(
-	EmptyParam,EmptyParam,EmptyParam,
-	EmptyParam, EmptyParam,EmptyParam,
-	EmptyParam,w1,EmptyParam,
-	EmptyParam,EmptyParam,EmptyParam,
-        w2,EmptyParam,EmptyParam,
-        EmptyParam,EmptyParam,EmptyParam);    
+  w4:=WordApplication1.UserName;
+  if w3<>w4 then
+    w2:= '\\'+w3+'\'+w2;
+
+  WordApplication1.ActivePrinter:=w2;
+  WordApplication1.ActiveDocument.PrintOut(
+	    EmptyParam,EmptyParam,EmptyParam,
+	    EmptyParam, EmptyParam,EmptyParam,
+	    EmptyParam,w1,EmptyParam,
+	    EmptyParam,EmptyParam,EmptyParam,
+      w2,EmptyParam,EmptyParam,
+      EmptyParam,EmptyParam,EmptyParam);
+// Label T
 T: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
         EmptyParam);
         WordApplication1.WindowState:=2;
-WordApplication1.Free;
+  WordApplication1.Free;
 except
-WordApplication1.Documents.Close(EmptyParam,EmptyParam,
-        EmptyParam);
-application.MessageBox('Проверьте все настройки для печати!','Ошибка!',0);
-exit
+  on E: Exception do
+  begin
+    Logger.LogError(EntrySec.version + '[FAccount] [Print] Exception happened: ' + E.Message);
+    if (WordApplication1.Documents <> Nil) then
+    begin
+      WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+    end;
+    application.MessageBox('Проверьте все настройки для печати!','Error!',0);
+    exit;
+  end;
 end;
-
 end;
 
 

@@ -567,7 +567,7 @@ var
   ReportMakerWP:TReportMakerWP;
   p,w1,w2,w3,w4: OleVariant;
   s:string;
-  q:tQuery;
+  q:TQuery;
   s2, mach:string;
   i1,i2,i3,i4:integer;
   certificate_ini: string;
@@ -720,6 +720,17 @@ begin
     ReportMakerWP.AddParam('38='+s);
     invoice_ini := iff(EntrySec.bAllData, 'Invoice_all.ini', 'Invoice.ini');
 
+    WordApplication1:=TWordApplication.Create(Application);
+    if (WordApplication1.Documents <>nil) then
+    begin
+      try
+        WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+      except
+      end;
+      WordApplication1.WindowState:=2;
+      WordApplication1.Free;
+    end;
+
     result := ReportMakerWP.DoMakeReport(systemdir+'Invoice\Invoice.rtf',
         systemdir+'Invoice\'+invoice_ini, systemdir+'Invoice\out.rtf');
     if (result<>0) then
@@ -727,14 +738,19 @@ begin
       // report failed
       ReportMakerWP.Free;
       Logger.LogError(EntrySec.version + '[FInvoice] (invoice) ReportMakerWP.DoMakeReport() failed.');
-      // application.messagebox('Закройте выходной документ в WINWORD!',
-      // 'Совет!',0);
+      // application.messagebox('Закройте выходной документ в Microsoft Word!', 'Warning',0);
       // goto T;
       exit
     end;
     ReportMakerWP.Free;
     Logger.LogInfo(EntrySec.version + '[FInvoice] (print()) TWordApplication.Create');
     WordApplication1:=TWordApplication.Create(Application);
+    if (WordApplication1=Nil) then
+    begin
+       Logger.LogError(EntrySec.version + '[FInvoice] (invoice) Failed to create Word App.');
+       application.messagebox('Невозможно продолжить работу с Microsoft Word!', 'Warning',0);
+       exit;
+    end;
     p := systemdir+'Invoice\out.rtf';
     w1:=2;
     //----------------------------
@@ -789,6 +805,12 @@ T:  WordApplication1.Documents.Close(EmptyParam,EmptyParam,
         WordApplication1.WindowState:=2;
     WordApplication1.Free;
     Logger.LogInfo(EntrySec.version + '[FInvoice] (print()) after T: WordApplication1.Free');
+
+    if (Application=Nil) then
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice] (Application is null');
+      application.MessageBox('Oшибка связи с приложением','Error',0);
+    end;
 
     ReportMakerWP:=TReportMakerWP.Create(Application);
     ReportMakerWP.ClearParam;
@@ -916,10 +938,16 @@ T1: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
         WordApplication1.WindowState:=2;
     WordApplication1.Free;
   except
-    Logger.LogError(EntrySec.version + '[FInvoice] [Print] Exceptions happened.');
-    WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
-    application.MessageBox('Проверьте все настройки для печати!','Error!',0);
-    exit;
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice] [Print] Exceptions happened: ' + E.Message);
+      if (WordApplication1.Documents <> Nil) then
+      begin
+        WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+      end;
+      application.MessageBox('Проверьте все настройки для печати!','Error!',0);
+      exit;
+    end;
   end;
 end;
 

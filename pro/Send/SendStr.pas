@@ -529,22 +529,33 @@ begin
 end;
 
 Function DayToDate(s:string;D:TDate):TDate;
-var  i:integer;
-     j:Word;
+var
+  i: integer;
+  j: Word;
 begin
-j:=DayOfTheWeek(d) ;
-if s='Ïí' then i:=1;
-if s='Âò' then i:=2;
-if s='Ñð' then i:=3;
-if s='×ò' then i:=4;
-if s='Ïò' then i:=5;
-if s='Ñá' then i:=6;
-if s='Âñ' then i:=7;
-if i>=j then i:=i-j
-else i:=7-(j-i) ;
+  i:=0;
+  j:=DayOfTheWeek(d) ;
+  if s='Ïí' then
+    i:=1;
+  if s='Âò' then
+    i:=2;
+  if s='Ñð' then
+    i:=3;
+  if s='×ò' then
+    i:=4;
+  if s='Ïò' then
+    i:=5;
+  if s='Ñá' then
+    i:=6;
+  if s='Âñ' then
+    i:=7;
+  if i>=j then
+    i:=i-j
+  else
+    i:=7-(j-i);
 
- DayToDate:=D+i ;
- //else DayToDate:=D+7;
+  DayToDate:=D+i ;
+  //else DayToDate:=D+7;
 end;
 
 function SToDate(str:string;D:TDate):Tdate ;
