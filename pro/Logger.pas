@@ -15,7 +15,7 @@ var f:text;
   curr_time: string;
 begin
   begin
-    system.assign(f,'c:\regiontrans.log');
+    system.assign(f,'c:\severtrans.log');
     {$I-}
     system.append(f);
     if IOresult<>0 then system.rewrite(f);
@@ -32,7 +32,7 @@ var f:text;
   curr_time: string;
 begin
   begin
-    system.assign(f,'c:\regiontrans.log');
+    system.assign(f,'c:\severtrans.log');
     {$I-}
     system.append(f);
     if IOresult<>0 then system.rewrite(f);
