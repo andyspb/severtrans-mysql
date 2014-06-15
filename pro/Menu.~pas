@@ -166,8 +166,6 @@ begin
   N41.Visible:=false;
   N42.Visible:=false;
   ClientsCreditUpdate1.Visible:=Bos;
-  // disable
-  ClientsCreditUpdate1.Enabled:=true;
 end;
 
 procedure TFMenu.N7Click(Sender: TObject);

@@ -243,3 +243,6 @@ pro/Send/FormSendu.~dfm
 *.~dfm
 pro/Send/FormSendu.~pas
 pro/Send/FormSendu.~dfm
+*.~pas
+pro/Logger.~pas
+pro/Menu.~pas
