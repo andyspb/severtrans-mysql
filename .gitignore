@@ -247,3 +247,10 @@ pro/Send/FormSendu.~dfm
 pro/Logger.~pas
 pro/Menu.~pas
 pro/Send/FormSendu.~pas
+pro/Invoice/FAKT.~pas
+pro/Account/FAccount.~pas
+pro/Send/FormSendu.~pas
+pro/Send/FormSendu.~dfm
+pro/Invoice/FInvoice.~pas
+pro/Invoice/FInvoice.~dfm
+pro/Account/FAccount.~dfm

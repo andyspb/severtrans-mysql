@@ -2176,15 +2176,15 @@ procedure TFormSend.LabelEditDate3Exit(Sender: TObject);
 var
   Year, Month, Day, YearN, MonthN, DayN: Word;
 begin
-  if LabelEditDate3.text<>'  .  .    ' then
+  if (LabelEditDate3.text<>'  .  .    ') then
   begin
     try
       FormatDateTime('yyyy-mm-dd',StrToDate(LabelEditDate3.text));
       DecodeDate(StrToDate(LabelEditDate3.text),Year,Month,Day);
       DecodeDate(Now,YearN,MonthN,DayN);
-      if  Year <> YearN then
+      if (Year <> YearN) then
         Application.MessageBox('Неправильно введен год!','Сообщение',0);
-      if  Month <> MonthN then
+      if (Month <> MonthN) then
         Application.MessageBox('Неправильно введен месяц!','Сообщение',0);
 
     except
