@@ -125,10 +125,10 @@ begin
   ident := SQLGrid1.Query.FieldByName('Ident').AsInteger;
   SQLGrid1.saveNextPoint('Ident');
   ident_str := IntToStr(ident);
-  account_table:=iff (EntrySec.bAllData, '`Account_all`', '`Account`');
-  account_table_other:=iff (EntrySec.bAllData, '`Account`', '`Account_all`');
+  account_table:= EntrySec.account_table;
+  account_table_other:= EntrySec.account_table_other;
 
-  if sql.Delete(account_table,'Ident='+IntToStr(ident))=0 then
+  if sql.Delete(account_table,'Ident='+ident_str)=0 then
   begin
     case Application.MessageBox('Удалить!',
                                 'Предупреждение!',

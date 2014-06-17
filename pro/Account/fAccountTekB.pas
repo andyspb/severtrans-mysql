@@ -120,28 +120,28 @@ var
   ident: longint;
   ident_str: string;
   accounttek_table: string;
-  accounttek_other_table: string;
+  accounttek_table_other: string;
   del_thread: TDeleteThread;
 begin
   sql.StartTransaction;
   ident:=SQLGrid1.Query.FieldByName('Ident').AsInteger;
   SQLGrid1.saveNextPoint('Ident');
   ident_str := IntToStr(ident);
-  accounttek_table:=iff(EntrySec.bAllData, '`AccountTek_all`', '`AccountTek`');
-  accounttek_other_table:=iff(EntrySec.bAllData, '`AccountTek`', '`AccountTek_all`');
+  accounttek_table:= EntrySec.accounttek_table;
+  accounttek_table_other:= EntrySec.accounttek_table_other;
 
-  if sql.Delete(accounttek_table,'Ident='+IntToStr(Id))=0 then
+  if sql.Delete(accounttek_table,'Ident='+ident_str)=0 then
   begin
     case Application.MessageBox('Удалить!',
                             'Предупреждение!',MB_YESNO+MB_ICONQUESTION) of
       IDYES:
       begin
         sql.Commit;
-        SQLGrid1.ExecTable(accounttekvew_view);
+        SQLGrid1.ExecTable(EntrySec.accounttekview_view);
         SQLGrid1RowChange(Sender);
-        del_thread := TDeleteThread.Create(True, accounttek_other_table, ident_str);
+        del_thread := TDeleteThread.Create(True, accounttek_table_other, ident_str);
         del_thread.Resume();
-    end;
+      end;
       IDNO:
       begin
         sql.rollback;
