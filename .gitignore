@@ -254,3 +254,7 @@ pro/Send/FormSendu.~dfm
 pro/Invoice/FInvoice.~pas
 pro/Invoice/FInvoice.~dfm
 pro/Account/FAccount.~dfm
+pro/Account/fAccountTekB.~dfm
+pro/Account/fAccountTekB.~pas
+pro/Account/fAccountB.~dfm
+pro/Account/fAccountB.~pas
