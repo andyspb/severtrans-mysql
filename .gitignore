@@ -226,6 +226,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 *.~pas
+pro/*.~*
 *.~dfm
 *.~pas
 pro/Send/out.rtf
