@@ -37,124 +37,123 @@ implementation
 {$R *.DFM}
 function TFormAE.AddRecord(q:Tquery;tbname:string;fldcnt:integer):longint;
 var
- l:longint;
- ident:longint;
- StrFields:string;
- SecondFields:string;
- FirstField:string;
+  l: longint;
+  ident: longint;
+  StrFields: string;
+  SecondFields: string;
+  FirstField: string;
 begin
   FieldCount := fldcnt;
   Ident := sql.selectInteger ('guiview', 'ID',
      'ViewName = ''' + tbname + '''');
   TabQ := sql.select ('guifield', 'DisplayLabel,FieldName',
          sql.condintequ ('viewid', ident),'ID');
- // tabQ.next;
- if FieldCount = 0 then
-   begin
-  //cbCity.caption := TabQ.Fields [0].Value ;
- // cbCity.maxlength :=  q.FieldByName(TabQ.Fields [1].Value).size;
- // FirstField:= TabQ.Fields [1].Value ;
-  StrFields := 'City_Ident' ;
-  eField2.visible := false;
-  eField1.visible := false;
-   end
- else
+  // tabQ.next;
+  AddRecord:=0;
+  if FieldCount = 0 then
   begin
-  cbCity.visible := false;
-  efield1.caption := TabQ.Fields [0].Value ;
-  efield1.maxlength :=  q.FieldByName(TabQ.Fields [1].Value).size;
-  FirstField:= TabQ.Fields [1].Value ;
-  StrFields := 'Ident,' +  FirstField ;
-
-   if FieldCount > 1 then
+    //cbCity.caption := TabQ.Fields [0].Value ;
+    // cbCity.maxlength :=  q.FieldByName(TabQ.Fields [1].Value).size;
+    // FirstField:= TabQ.Fields [1].Value ;
+    StrFields := 'City_Ident' ;
+    eField2.visible := false;
+    eField1.visible := false;
+  end
+  else
+  begin
+    cbCity.visible := false;
+    efield1.caption := TabQ.Fields [0].Value ;
+    efield1.maxlength :=  q.FieldByName(TabQ.Fields [1].Value).size;
+    FirstField:= TabQ.Fields [1].Value ;
+    StrFields := 'Ident,' +  FirstField ;
+    if FieldCount > 1 then
     begin
-     tabQ.next;
-     efield2.caption := TabQ.Fields [0].Value ;
-     efield2.maxlength :=  q.FieldByName(TabQ.Fields [1].Value).size;
-     SecondFields:=  TabQ.Fields [1].Value;
-     StrFields := StrFields + ',' +SecondFields
+      tabQ.next;
+      efield2.caption := TabQ.Fields [0].Value ;
+      efield2.maxlength :=  q.FieldByName(TabQ.Fields [1].Value).size;
+      SecondFields:=  TabQ.Fields [1].Value;
+      StrFields := StrFields + ',' +SecondFields
     end
-   else
-   eField2.visible := false;
+    else
+      eField2.visible := false;
   end;
-if ShowModal=mrOk then
+  if (ShowModal = mrOk) then
+  begin
+    if (fieldcount = 0) then
     begin
-
-
-    if  fieldcount = 0 then
+      if (sql.InsertString(tbname,StrFields,IntToStr(cbCity.SQLComboBox.GetData))<>0) then
       begin
-       if sql.InsertString(tbname,StrFields,IntToStr(cbCity.SQLComboBox.GetData))<>0 then
-              begin
-              Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
-              Addrecord:=0;
-              end else
-                  begin
-
-                   Addrecord:=cbCity.SQLComboBox.GetData;
-                  end;
+        Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
+        Addrecord:=0;
       end
+      else
+      begin
+        Addrecord:=cbCity.SQLComboBox.GetData;
+      end;
+    end
     else
     begin
-        l:=sql.FindNextInteger('Ident',tbname,'',MaxLongint);
-    if fieldcount = 1 then
+      l:=sql.FindNextInteger('Ident',tbname,'',MaxLongint);
+      if (fieldcount = 1) then
       begin
         tabq:=sql.select(tbname,StrFields,FirstField+'='''+trim(eField1.Text)+'''','');
-        if tabq.eof then
-         begin
-             if sql.InsertString(tbname,StrFields,IntToStr(l)+','+
-              sql.MakeStr(trim(eField1.Text)) )<>0 then
-              begin
-
-              Addrecord:=0;
-              end else
-                  begin
-
-                   Addrecord:=l;
-                  end;
-         end
-       else
-         begin
-          Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
-          l:=tabq.FieldByName('Ident').asInteger;
-         end;
-      end
-    else if fieldcount = 2 then
-      begin
-       tabq:=sql.select(tbname,StrFields,FirstField+'='''+trim(eField1.Text)+
-                        ''' and '+SecondFields+'='''+trim(eField2.Text)+'''','');
-       if tabq.eof then
-         begin
-     if sql.InsertString(tbname,StrFields,IntToStr(l)+','+
-        sql.MakeStr(trim(eField1.Text))+','+
-        sql.MakeStr(trim(eField2.Text)))<>0 then
-              begin
-
-              Addrecord:=0;
-              end else
-                  begin
-
-                   Addrecord:=l;
-                  end;
+        if (tabq.eof) then
+        begin
+          if (sql.InsertString(tbname,StrFields,IntToStr(l)+','+
+              sql.MakeStr(trim(eField1.Text)))<>0) then
+          begin
+            Addrecord:=0;
+          end
+          else
+          begin
+            Addrecord:=l;
+          end;
         end
-         else
-         begin
+        else
+        begin
           Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
           l:=tabq.FieldByName('Ident').asInteger;
-         end;
+        end;
+      end
+      else
+      begin;
+        if (fieldcount = 2) then
+        begin
+          tabq:=sql.select(tbname,StrFields,FirstField+'='''+trim(eField1.Text)+
+                        ''' and '+SecondFields+'='''+trim(eField2.Text)+'''','');
+          if (tabq.eof) then
+          begin
+            if (sql.InsertString(tbname,StrFields,IntToStr(l)+','+
+                sql.MakeStr(trim(eField1.Text))+','+
+                sql.MakeStr(trim(eField2.Text)))<>0) then
+            begin
+              Addrecord:=0;
+            end
+            else
+            begin
+              Addrecord:=l;
+            end;
+          end
+          else
+          begin
+            Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
+            l:=tabq.FieldByName('Ident').asInteger;
+          end;
+        end;
       end;
-    end ;
-    end
+    end;
+  end
   else
-    AddRecord:=0 ;
- tabq.Free;
+      AddRecord:=0;
+  tabq.Free;
 end;
 
 function TFormAE.EditRecord(q:Tquery;tbname:string;fldcnt:integer):longint;
 var
-ID:longint;
-Ident:longint;
-StrField1:string;
-StrField2:string;
+  ID: longint;
+  Ident: longint;
+  StrField1: string;
+  StrField2: string;
 begin
   FieldCount := fldcnt;
   ID:=q.FieldByName('Ident').AsInteger;
@@ -169,75 +168,80 @@ begin
   StrField1 :=  TabQ.Fields [1].Value ;
   eField1.text:=q.FieldByName(StrField1).AsString ;
   efield1.maxlength :=  q.FieldByName(StrField1).size;
-  if FieldCount > 1 then
+  Editrecord:=0;
+  if (FieldCount > 1) then
+  begin
+    tabQ.next;
+    efield2.caption := TabQ.Fields [0].Value ;
+    StrField2 := TabQ.Fields [1].Value ;
+    if (q.FieldByName(StrField2).AsString<>'') then
     begin
-      tabQ.next;
-      efield2.caption := TabQ.Fields [0].Value ;
-      StrField2 := TabQ.Fields [1].Value ;
-      if q.FieldByName(StrField2).AsString<>'' then
-          eField2.text:= q.FieldByName(StrField2).AsString
-          else eField2.text:= '0.00';
-      efield2.maxlength := q.FieldByName(StrField2).size
+      eField2.text:= q.FieldByName(StrField2).AsString
     end
+    else
+    begin
+      eField2.text:= '0.00';
+    end;
+    efield2.maxlength := q.FieldByName(StrField2).size
+  end
   else
     eField2.visible := false;
 
-  if ShowModal=mrOk then
+  if (ShowModal = mrOk) then
+  begin
+    if FieldCount = 1 then
     begin
-    
-     if FieldCount = 1 then
-       begin
-       tabq:=sql.select(tbname,'Ident',strField1+'='''+trim(eField1.Text)+'''','');
-        if tabq.eof then
-         begin
-
+      tabq:=sql.select(tbname,'Ident',strField1+'='''+trim(eField1.Text)+'''','');
+      if (tabq.eof) then
+      begin
         if sql.UpdateString(tbname,
            StrField1 + '=''' + trim(eField1.Text)+'''',
            sql.CondIntEqu('Ident',ID))<>0 then
-              begin
-
-              Editrecord:=0;
-              end else
-                  begin
-
-                   Editrecord:=ID;
-                  end;
+        begin
+          Editrecord:=0;
         end
         else
-         begin
-          Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
-          ID:=tabq.FieldByName('Ident').asInteger;
-         end;
+        begin
+          Editrecord:=ID;
+        end;
       end
-     else  if FieldCount = 2 then
-       begin
+      else
+      begin
+        Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
+        ID:=tabq.FieldByName('Ident').asInteger;
+      end;
+    end
+    else
+      if FieldCount = 2 then
+      begin
        tabq:=sql.select(tbname,'Ident',strField1+'='''+trim(eField1.Text)+
                          ''' and '+StrField2+'='''+trim(eField2.Text)+'''','');
-        if tabq.eof then
-         begin
-
-       if sql.UpdateString(tbname,
+       if tabq.eof then
+       begin
+         if sql.UpdateString(tbname,
                           StrField1 + '=''' + trim(eField1.Text)+''','+
                           StrField2+ '='''+ trim(eField2.Text)+ '''',
                           sql.CondIntEqu('Ident',ID))<>0 then
-              begin
-
-              Editrecord:=0;
-              end else
-                  begin
-
-                   Editrecord:=ID;
-                  end;
-         end
-        else
          begin
-          Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
-          ID:=tabq.FieldByName('Ident').asInteger;
+           Editrecord:=0;
+         end
+         else
+         begin
+           Editrecord:=ID;
          end;
-       end ;    
+       end
+       else
+       begin
+         Application.MessageBox('Такая запись уже есть в справочнике!','Ошибка',0);
+         ID:=tabq.FieldByName('Ident').asInteger;
+       end;
+      end;
     end
-  else  EditRecord:=0;
- TabQ.Free;
+    else
+    begin
+      EditRecord:=0;
+    end;
+  TabQ.Free;
 end;
 
 procedure TFormAE.btOkClick(Sender: TObject);

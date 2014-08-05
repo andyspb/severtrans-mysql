@@ -721,33 +721,40 @@ begin
     invoice_ini := iff(EntrySec.bAllData, 'Invoice_all.ini', 'Invoice.ini');
 
     WordApplication1:=TWordApplication.Create(Application);
-    if (WordApplication1.Documents <>nil) then
-      // if WordApplications.
+    WordApplication1.Visible := true;
+    if (WordApplication1.Documents <> nil) then
+    begin
       try
         WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
       except
-      end;  
+        on E: Exception do
+        begin
+          Logger.LogError(EntrySec.version + '[FInvoice][Print] Exceptions happened: ' + E.Message);
+        end;
+      end;
       WordApplication1.WindowState:=2;
-    WordApplication1.Free;
+      WordApplication1.Free;
+    end;
 
     result := ReportMakerWP.DoMakeReport(systemdir+'Invoice\Invoice.rtf',
         systemdir+'Invoice\'+invoice_ini, systemdir+'Invoice\out.rtf');
-    if (result<>0) then
+    if (result <> 0) then
     begin
       // report failed
       ReportMakerWP.Free;
-      Logger.LogError(EntrySec.version + '[FInvoice] (invoice) ReportMakerWP.DoMakeReport() failed.');
+      Logger.LogError(EntrySec.version + '[FInvoice] (invoice) ReportMakerWP.DoMakeReport() FAIL');
       // application.messagebox('Закройте выходной документ в Microsoft Word!', 'Warning',0);
       // goto T;
       exit
     end;
     ReportMakerWP.Free;
-    Logger.LogInfo(EntrySec.version + '[FInvoice] (print()) TWordApplication.Create');
+    Logger.LogInfo(EntrySec.version + '[FInvoice] (print()) ReportMakerWP.DoMakeReport() SUCCESS');
     WordApplication1:=TWordApplication.Create(Application);
-    if (WordApplication1=Nil) then
+    WordApplication1.Visible := true;
+    if (WordApplication1 = nil) then
     begin
        Logger.LogError(EntrySec.version + '[FInvoice] (invoice) Failed to create Word App.');
-       application.messagebox('Невозможно продолжить работу с Microsoft Word!', 'Warning',0);
+       application.messagebox('Невозможно продолжить работу с Ms Word!. Закройте выходной документ.', 'Warning',0);
        exit;
     end;
     p := systemdir+'Invoice\out.rtf';
@@ -922,9 +929,17 @@ T:  WordApplication1.Documents.Close(EmptyParam,EmptyParam,
 
     w4:=WordApplication1.UserName;
     if (w3<>w4) then
+    begin
       w2:= '\\'+w3+'\'+w2;
+    end;
 
     WordApplication1.ActivePrinter:=w2;
+    if (WordApplication1.ActiveDocument=nil) then
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice] [Print] WordApplication1.ActiveDocument NULL');
+      application.MessageBox('Выходной документ MS Word не готов','Ошибка!',0);
+      goto T1;
+    end;
     WordApplication1.ActiveDocument.PrintOut(
 	      EmptyParam,EmptyParam,EmptyParam,
 	      EmptyParam, EmptyParam,EmptyParam,
@@ -932,6 +947,7 @@ T:  WordApplication1.Documents.Close(EmptyParam,EmptyParam,
 	      EmptyParam,EmptyParam,EmptyParam,
         w2,EmptyParam,EmptyParam,
         EmptyParam,EmptyParam,EmptyParam);
+// LABEL
 T1: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
         EmptyParam);
         WordApplication1.WindowState:=2;
@@ -943,6 +959,8 @@ T1: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
       if (WordApplication1.Documents <> Nil) then
       begin
         WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+        WordApplication1.WindowState:=2;
+        WordApplication1.Free;
       end;
       application.MessageBox('Проверьте все настройки для печати!','Error!',0);
       exit;
@@ -951,72 +969,74 @@ T1: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
 end;
 
 procedure TFormInvoice.SaveInvoice;
-var str: string;
-    q:TQuery;
-    l:longInt;
-    SumGd:  Real;    {сумма за жд перевозку}
-    NDSGD:  Real;    {НДС с суммы за жд перевозку}
-    SumAvt: Real;    {сумма за авто перевозку}
-    NDSAvt: Real;    {НДС с суммы за авто перевозку}
-    SumAg:  Real;    {сумма вознагрождение агента}
-    NDSAg:  Real;    {НДС с вознаграждения агента}
-    SumPak: Real;    {сумма за упаковку}
-    NDSPak: Real;    {НДС с суммы за упаковку}
-    SumPakAg:Real;   {сумма вознаграждения за упаковку}
-    NDSPakAg:Real;   {НДС с суммы вознаграждения за упаковку}
-    SumSt:  real;    {сумма страхования}
-    NDSSt:  real;    {НДС со страхования}
-    SumStAg:real;    {сумма вознаграждения агента за страхование}
-    NDSStAg:real;    {НДС с суммы вознагражд. агента за страх.}
+var
+  str: string;
+  q: TQuery;
+  l:longInt;
+  SumGd:  Real;    {сумма за жд перевозку}
+  NDSGD:  Real;    {НДС с суммы за жд перевозку}
+  SumAvt: Real;    {сумма за авто перевозку}
+  NDSAvt: Real;    {НДС с суммы за авто перевозку}
+  SumAg:  Real;    {сумма вознагрождение агента}
+  NDSAg:  Real;    {НДС с вознаграждения агента}
+  SumPak: Real;    {сумма за упаковку}
+  NDSPak: Real;    {НДС с суммы за упаковку}
+  SumPakAg:Real;   {сумма вознаграждения за упаковку}
+  NDSPakAg:Real;   {НДС с суммы вознаграждения за упаковку}
+  SumSt:  real;    {сумма страхования}
+  NDSSt:  real;    {НДС со страхования}
+  SumStAg:real;    {сумма вознаграждения агента за страхование}
+  NDSStAg:real;    {НДС с суммы вознагражд. агента за страх.}
 
-    upd_thread: TUpdateThread;
-    ins_thread: TInsertThread;
-    insert_fields: string;
-    update_fields: string;
+  upd_thread: TUpdateThread;
+  ins_thread: TInsertThread;
+  insert_fields: string;
+  update_fields: string;
 
-    label Ins;
-    label Control;
+  label Ins;
+  label Control;
 
 begin
- q:=sql.Select('PrintInvoice','Sum,SumNDS,NDS','Send_Ident in ('+StrIdSend+')','');
+  q:=sql.Select('PrintInvoice','Sum,SumNDS,NDS','Send_Ident in ('+StrIdSend+')','');
   Sum:=0;
   SumNDS:=0;
   NDS:=0;
   Fee:=0;
-    SumGd:=0;
-    NDSGD:=0;
-    SumAvt:=0;
-    NDSAvt:=0;
-    SumAg:=0;
-    NDSAg:=0;
-    SumPak:=0;
-    NDSPak:=0;
-    SumPakAg:=0;
-    NDSPakAg:=0;
-    SumSt:=0;
-    NDSSt:=0;
-    SumStAg:=0;
-    NDSStAg:=0;
+  SumGd:=0;
+  NDSGD:=0;
+  SumAvt:=0;
+  NDSAvt:=0;
+  SumAg:=0;
+  NDSAg:=0;
+  SumPak:=0;
+  NDSPak:=0;
+  SumPakAg:=0;
+  NDSPakAg:=0;
+  SumSt:=0;
+  NDSSt:=0;
+  SumStAg:=0;
+  NDSStAg:=0;
 
-
-  if q.Eof then exit
-  else begin
-        While (not q.eof) do
-        begin
-         Sum:=Sum+q.FieldByName('Sum').AsFloat;
-         SumNDS:=SumNDS+q.FieldByName('SumNDS').AsFloat;
-         NDS:=NDS+q.FieldByName('NDS').AsFloat;
-         q.Next;
-        end;
-       end;
+  if (q.Eof) then
+    exit
+  else
+  begin
+    while (not q.eof) do
+    begin
+      Sum:=Sum+q.FieldByName('Sum').AsFloat;
+      SumNDS:=SumNDS+q.FieldByName('SumNDS').AsFloat;
+      NDS:=NDS+q.FieldByName('NDS').AsFloat;
+      q.Next;
+    end;
+  end;
   q.Free;
   //----------------
   q:=sql.Select('PrintInvoice','SumNDS,NDS','Send_Ident in ('+StrIdSend+')' +
                ' and NameGood='+
                 sql.Makestr('Перевозка грузобагажа ж/д транспортом'),'') ;
-    While (not q.eof) do
-        begin
-         SumGd:=SumGd+q.FieldByName('SumNDS').AsFloat;
+  while (not q.eof) do
+  begin
+    SumGd:=SumGd+q.FieldByName('SumNDS').AsFloat;
          NDSGD:=NDSGD+q.FieldByName('NDS').AsFloat;
          q.Next;
         end;
@@ -1097,145 +1117,147 @@ begin
    q.Free;
  //----------------
 
-l:=sql.FindNextInteger('Ident',EntrySec.invoice_table {'Invoice'},'',MaxLongint);
-str:=IntToStr(l);
-str:=str+','+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(Dat)));
-str:=str+','+IntToStr(Ident);
-str:=Str+','+sql.MakeStr(StrTo00(FloatToStr(SumNDS)))  ;
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDS)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(Fee)));
-str:=str+','+IntToStr(0);
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumGd)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSGd)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumAvt)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSAvt)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumAg)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSAG)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumPak)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSPak)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumPakAg)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSPakAg)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumSt)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSSt)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumStAg)));
-str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSStAg)));
+  l:=sql.FindNextInteger('Ident',EntrySec.invoice_table {'Invoice'},'',MaxLongint);
+  str:=IntToStr(l);
+  str:=str+','+sql.MakeStr(FormatDateTime('yyyy-mm-dd',StrToDate(Dat)));
+  str:=str+','+IntToStr(Ident);
+  str:=Str+','+sql.MakeStr(StrTo00(FloatToStr(SumNDS)))  ;
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDS)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(Fee)));
+  str:=str+','+IntToStr(0);
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumGd)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSGd)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumAvt)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSAvt)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumAg)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSAG)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumPak)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSPak)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumPakAg)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSPakAg)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumSt)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSSt)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(SumStAg)));
+  str:=str+','+sql.MakeStr(StrTo00(FloatToStr(NDSStAg)));
+// LABEL
 control:
-if sql.SelectString(EntrySec.invoice_table {'Invoice'},'Number','Number='+sql.MakeStr(Number))<>''
-then begin
-     if NumberChange<>'' then
-     begin
+  if (sql.SelectString(EntrySec.invoice_table {'Invoice'},'Number','Number='+sql.MakeStr(Number)) <> '') then
+  begin
+    if (NumberChange <> '') then
+    begin
       Application.MessageBox('Счет фактура с таким номером уже заведена,'+
                               'введите другой номер!','Ошибка!',0);
       eNumber.SetFocus;
       exit
-     end;
-     Number:=Num;
-     goto Control;
-     end
-      else goto Ins;
-Ins: str:=str+','+sql.MakeStr(Number);
-insert_fields:='Ident,Data,Clients_Ident,Sum,'+
+    end;
+    Number:=Num;
+    goto Control;
+  end
+  else
+    goto Ins;
+  Ins: str:=str+','+sql.MakeStr(Number);
+  insert_fields:='Ident,Data,Clients_Ident,Sum,'+
                     'NDS,Fee,ReportReturn,SumGD,NDSGd,SumAvt,NDSAvt,'+
                     'SumAg,NDSAg,SumPak,NDSPak,SumPakAg,NDSPakAg,SumSt,'+
                     'NDSSt,SumStag,NDSStAg,Number';
-if sql.InsertString(EntrySec.invoice_table {'Invoice'},insert_fields,str)<>0 then
-                                                        begin
-                                                        sql.Rollback;
-                                                        exit;
-                                                        end
-else
-begin
-// success
-//update other tables
-  ins_thread:= TInsertThread.Create(True, EntrySec.invoice_table_other, insert_fields, str);
-  ins_thread.Resume();
-
-end;
-
-update_fields:='NumberCountPattern='+sql.MakeStr(Number)+','+
+  if (sql.InsertString(EntrySec.invoice_table {'Invoice'},insert_fields,str) <> 0) then
+  begin
+    sql.Rollback;
+    exit;
+  end
+  else
+  begin
+    // success
+    // update other tables
+    ins_thread:= TInsertThread.Create(True, EntrySec.invoice_table_other, insert_fields, str);
+    ins_thread.Resume();
+  end;
+  update_fields:='NumberCountPattern='+sql.MakeStr(Number)+','+
                     'Invoice_Ident='+IntToStr(l);
-if sql.UpdateString(EntrySec.send_table {'Send'},update_fields,
-                    'Ident in ('+StrIdSend+')')<>0 then begin
-                                                        sql.Rollback;
-                                                        exit;
-                                                        end
-else
-begin
-  upd_thread:= TUpdateThread.Create(True, EntrySec.send_table_other, update_fields, 'Ident in ('+StrIdSend+')');
-  upd_thread.Resume();
-end;
-
+  if (sql.UpdateString(EntrySec.send_table {'Send'},update_fields,
+                    'Ident in ('+StrIdSend+')') <> 0) then
+  begin
+    sql.Rollback;
+    exit;
+  end
+  else
+  begin
+    upd_thread:= TUpdateThread.Create(True, EntrySec.send_table_other, update_fields, 'Ident in ('+StrIdSend+')');
+    upd_thread.Resume();
+  end;
 end;
 
 Function TFormInvoice.Num:string;
-var q:TQuery;
-    Year, Month, Day: Word;
-    Num1,Num2:string;
-    N1,N2:integer;
+var
+  q: TQuery;
+  Year, Month, Day: Word;
+  Num1, Num2: string;
+  N1,N2: integer;
 begin
-if Dat<>'  .  .    '  then
-DecodeDate(StrToDate(Dat), Year, Month, Day)
-else begin
+  if (Dat <> '  .  .    ')  then
+    DecodeDate(StrToDate(Dat), Year, Month, Day)
+  else
+  begin
     Application.MessageBox('Введите дату составления!','Ошибка!',0);
     exit
-    end;
-q:=sql.select(EntrySec.invoiceview_view {'InvoiceView'},'Number,`Year`','`Year`='+IntToStr(Year),'');
-if q.eof then Num:='1/'+FormatDateTime('yy',StrToDate(Dat))
-     else
-     begin
-      Num1:=q.fieldByName('Number').AsString;
-      N1:=pos('/',Num1);
-      delete(Num1,N1,Length(Num1)-N1+1) ;
-      N1:=StrToInt(Num1);
-      while not q.Eof do
-      begin
+  end;
+  q:=sql.select(EntrySec.invoiceview_view {'InvoiceView'},'Number,`Year`','`Year`='+IntToStr(Year),'');
+  if (q.eof) then
+    Num:='1/'+FormatDateTime('yy',StrToDate(Dat))
+  else
+  begin
+    Num1:=q.fieldByName('Number').AsString;
+    N1:=pos('/',Num1);
+    delete(Num1,N1,Length(Num1)-N1+1) ;
+    N1:=StrToInt(Num1);
+    while not q.Eof do
+    begin
       Num2:=q.fieldByName('Number').AsString;
       N2:=pos('/',Num2);
       delete(Num2,N2,Length(Num2)-N2+1) ;
       N2:=StrToInt(Num2);
-      if N1<N2 then N1:=N2;
+      if (N1 < N2) then
+        N1:=N2;
       q.Next;
-      end;
-     Num:=IntToStr(N1+1)+'/'+FormatDateTime('yy',StrToDate(Dat));
-     end;
-
- q.free;
+    end;
+    Num:=IntToStr(N1+1)+'/'+FormatDateTime('yy',StrToDate(Dat));
+  end;
+  q.free;
 end;
+
 procedure TFormInvoice.cbClientChange(Sender: TObject);
 begin
-Ident:=cbClient.SQLComboBox.GetData;
+  Ident:=cbClient.SQLComboBox.GetData;
 end;
 
 procedure TFormInvoice.LabelEditDate1Exit(Sender: TObject);
 begin
-Dat:=LabelEditDate1.text;
+  Dat:=LabelEditDate1.text;
 end;
 
 procedure TFormInvoice.btOkClick(Sender: TObject);
 begin
-if  cbClient.GetData=0 then
-begin
-   Application.MessageBox('Выберите заказчика!','Ошибка!',0);
-   cbClient.SetFocus;
-   exit;
-end;
-if LabelEditDate1.text='  .  .    '  then
-begin
-   Application.MessageBox('Введите дату формирования счет фактуры!','Ошибка!',0);
-   LabelEditDate1.SetFocus;
-   exit;
-end;
+  if (cbClient.GetData = 0) then
+  begin
+    Application.MessageBox('Выберите заказчика!','Ошибка!',0);
+    cbClient.SetFocus;
+    exit;
+  end;
+  if (LabelEditDate1.text = '  .  .    ') then
+  begin
+    Application.MessageBox('Введите дату формирования счет фактуры!','Ошибка!',0);
+    LabelEditDate1.SetFocus;
+    exit;
+  end;
+  erExit(Sender);
+  if (not erExitTest) then
+  begin
+    eNumber.SetFocus;
+    exit;
+  end;
 
-erExit(Sender);
-
-if not erExitTest then
-begin
-  eNumber.SetFocus;
-  exit;
-end;
-
-if sql.SelectString(EntrySec.invoice_table {'Invoice'},'Number','Number='+sql.MakeStr(NumberChange)+
-                      ' and Ident <> '+IntToStr(IdInv))<>'' then
+  if (sql.SelectString(EntrySec.invoice_table {'Invoice'},'Number','Number='+sql.MakeStr(NumberChange)+
+                      ' and Ident <> '+IntToStr(IdInv)) <> '') then
   begin
     Application.MessageBox('Счет фактура с таким номером уже заведена,'+
                               'введите другой номер!','Ошибка!',0);
@@ -1250,18 +1272,18 @@ end;
 
 procedure TFormInvoice.N1Click(Sender: TObject);
 begin
-if cbAktReturn.Checked then
-  cbAktReturn.Checked:=False
-else
-  cbAktReturn.Checked:=true;
+  if (cbAktReturn.Checked) then
+    cbAktReturn.Checked:=False
+  else
+    cbAktReturn.Checked:=true;
 end;
 
 procedure TFormInvoice.FormCreate(Sender: TObject);
 begin
-//cbClient.SQLComboBox.Sorted:=true;
-// krutogolov
-Caption := 'Счет фактура ( ' + EntrySec.period+ ' )';
-//cbAktReturn.Enabled := iff (EntrySec.bAllData, False, True);
+  // cbClient.SQLComboBox.Sorted:=true;
+  // krutogolov
+  Caption := 'Счет фактура ( ' + EntrySec.period+ ' )';
+  //cbAktReturn.Enabled := iff (EntrySec.bAllData, False, True);
 end;
 
 procedure TFormInvoice.FormKeyDown(Sender: TObject;
@@ -1269,13 +1291,13 @@ var
   Key: Word;
   Shift: TShiftState);
 begin
-if key = VK_Return
-  then btPrintClick(Sender)
+  if (key = VK_Return) then
+    btPrintClick(Sender)
 end;
 
 procedure TFormInvoice.eNumberChange(Sender: TObject);
 begin
-if  eNumber.Text<>'' then
+if (eNumber.Text <> '') then
   NumberChange:=trim(eNumber.Text)
 else
   NumberChange:='';

@@ -49,7 +49,7 @@ var
   q: TQuery;
   Id1: longint;
 begin
-  Id1:=0;
+//  Id1:=0;
   CL:=0;
   CT:=0;
   CL:=k;

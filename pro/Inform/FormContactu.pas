@@ -33,17 +33,18 @@ implementation
 
 Function TFormContact.AddRecord:longint;
 begin
-if showModal=mrOk then   
+  AddRecord:=0;
+  if showModal=mrOk then
 
 end;
 
 procedure TFormContact.btCanselClick(Sender: TObject);
 begin
-case Application.MessageBox('Все внесенные изменения не будут сохранены!',
+  case Application.MessageBox('Все внесенные изменения не будут сохранены!',
                             'Предупреждение!',MB_YESNO+MB_ICONQUESTION) of
     IDYES: ModalResult:=mrCancel;
     IDNO:exit;
-end;
+  end;
 end;
 
 end.
