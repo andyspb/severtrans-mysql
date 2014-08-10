@@ -259,3 +259,6 @@ pro/Account/fAccountTekB.~dfm
 pro/Account/fAccountTekB.~pas
 pro/Account/fAccountB.~dfm
 pro/Account/fAccountB.~pas
+*.~pas
+pro/Invoice/FAKT.~pas
+pro/Invoice/FInvoice.~pas
