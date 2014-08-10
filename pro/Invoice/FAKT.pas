@@ -409,10 +409,14 @@ var
   certificatetek_ini: string;
   label T1;
 begin
+  Logger.LogError(EntrySec.version + '[TFormAkt.Print] >>>> ');
   try
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] TReportMakerWP.Create(Application)');
     ReportMakerWP:=TReportMakerWP.Create(Application);
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] ReportMakerWP.ClearParam');
     ReportMakerWP.ClearParam;
 //--------
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] sql.Select(BOSS....');
     q:=sql.Select('BOSS','*','','');
     ReportMakerWP.AddParam('1='+Number);
     s:=SendStr.DataDMstrY(StrToDate(Dat));
@@ -423,6 +427,7 @@ begin
     ReportMakerWP.AddParam('15='+q.FieldByName('PersonBug').asstring);
     q.Free;
 //--------------------------------------------------
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] sql.Select(ClientsAll....');
     q:=sql.Select('ClientsAll','FullName,inPerson,OnReason',
                 'Ident='+IntToStr(Ident),'');
     ReportMakerWP.AddParam('4='+q.FieldByName('FullName').asstring);
@@ -430,11 +435,12 @@ begin
     ReportMakerWP.AddParam('6='+q.FieldByName('OnReason').asstring);
     q.Free;
 //----------------------------------------------------
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] sql.Select(PrintInvoice....');
     q:=sql.Select('PrintInvoice','Sum,SumNDS,NDS','Send_Ident in ('+StrIdSend+')','');
     Sum:=0;
     SumNDS:=0;
 
-    if q.Eof then
+    if (q.Eof) then
       exit
     else
     begin
@@ -454,49 +460,83 @@ begin
     s:='Ident in ('+StrIdSend+')';
     ReportMakerWP.AddParam('38='+s);
     certificatetek_ini:= iff(EntrySec.bAllData, 'CertificateTEK_all.ini', 'CertificateTEK.ini');
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] certificatetek_ini='+certificatetek_ini);
+
+//-----------------------------------------------------------------------------------------------
+// open close word - remove if it is not working
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Create');
+
+    if (Application=Nil) then
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice] (Application is null');
+      application.MessageBox('Oшибка св€зи с приложением','Error',0);
+    end;
+
 
     WordApplication1:=TWordApplication.Create(Application);
-    if (WordApplication1.Documents <>nil) then
+    if (WordApplication1 <> nil) then
     begin
-      try
-        WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
-      except
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Visible=true');
+      WordApplication1.Visible := true;
+      if (WordApplication1.Documents <> nil) then
+      begin
+        try
+          WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+        except
+        on E: Exception do
+          begin
+            Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+          end;
+        end;
+        Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.WindowState=2');
+        WordApplication1.WindowState:=2;
+        Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Free');
+        WordApplication1.Free;
       end;
-      WordApplication1.WindowState:=2;
-      WordApplication1.Free;
     end;
+//-----------------------------------------------------------------------------------------------
+
 
     if (ReportMakerWP.DoMakeReport(systemdir+'Invoice\CertificateTEK.rtf',
           systemdir+'Invoice\' + certificatetek_ini, systemdir+'Invoice\out1.rtf')<>0) then
     begin
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] failed ReportMakerWP.DoMakeReport <> 0');
       ReportMakerWP.Free;
       //application.messagebox('«акройте выходной документ в WINWORD!',
       //'—овет!',0);
       //goto T1;
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] exit <<<');
       exit
     end;
 
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] ReportMakerWP.Free');
     ReportMakerWP.Free;
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] TWordApplication.Create2');
     WordApplication1:=TWordApplication.Create(Application);
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] TWordApplication.Visible=true');
+    WordApplication1.Visible := true;
+
     p := systemdir+'Invoice\out1.rtf';
     w1:=2;
-    if Code=2 then    {при повторной печати даем возможность задать кол копий от 0 до 2}
+    if (Code=2) then    {при повторной печати даем возможность задать кол копий от 0 до 2}
     begin
       i1:=0;
       i2:=0;
       i3:=2;
       i4:=1;
-      if InputQuery('ƒиалог!',' акое количество копий акта распечатать?',i1,i2,i3,i4) then
+      if (InputQuery('ƒиалог!',' акое количество копий акта распечатать?',i1,i2,i3,i4)) then
         w1:=i1;
     end;
-    if w1=0 then       {не печатаем, если пользователь задаст "0" количество копий}
+    if (w1=0) then       {не печатаем, если пользователь задаст "0" количество копий}
     begin
       goto T1;
-      exit;
+      // do wee need exit ?
+      // exit;
     end;
     mach:='';
     mach:= trim(WordApplication1.UserName);
     w2:=sql.SelectString('Printer','NameA4','ComputerName='+sql.MakeStr(mach));
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.Documents.Open p='+p);
     WordApplication1.Documents.Open(p,
         EmptyParam,EmptyParam,EmptyParam,
 	      EmptyParam,EmptyParam,EmptyParam,
@@ -506,16 +546,22 @@ begin
     w3:=sql.SelectString('Printer','ComNameA4','ComputerName='+sql.MakeStr(mach));
     if ((VarToStr(w2)='') or (VarToStr(w3)='')) then
     begin
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] Printer not in DB');
       application.MessageBox('»нформаци€ о принтерах не внесена в базу дл€ данной машины'+
                        ' или в параметрах WinWord не верно указано им€ машины!','ќшибка!',0);
       goto T1;
       exit;
     end;
 
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.UserName');
     w4:=WordApplication1.UserName;
-    if w3<>w4 then
+//----------------------------------
+    if (w3<>w4) then
       w2:= '\\'+w3+'\'+w2;
+//----------------------------
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.ActivePrinter='+w2);
     WordApplication1.ActivePrinter:=w2;
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.ActiveDocument.PrintOut');
     WordApplication1.ActiveDocument.PrintOut(
 	      EmptyParam,EmptyParam,EmptyParam,
 	      EmptyParam, EmptyParam,EmptyParam,
@@ -524,22 +570,50 @@ begin
         w2,EmptyParam,EmptyParam,
         EmptyParam,EmptyParam,EmptyParam);
 // Label
-T1: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
-        EmptyParam);
-        WordApplication1.WindowState:=2;
-    WordApplication1.Free;
+T1:
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] label T1');
+    if (WordApplication1 <> nil) then
+    begin
+      if (WordApplication1.Documents <> nil) then
+      begin
+        Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.Documents.Close');
+        WordApplication1.Documents.Close(EmptyParam,EmptyParam,
+          EmptyParam);
+      end;
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.WindowState=2');
+      WordApplication1.WindowState:=2;
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.Free');
+      WordApplication1.Free;
+    end;
   except
     on E: Exception do
     begin
-      Logger.LogError(EntrySec.version + '[FAKT] [Print] Exceptions happened: ' + E.Message);
-      if (WordApplication1.Documents <> Nil) then
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exceptions happened: ' + E.Message);
+      if (WordApplication1 <> nil) then
       begin
-        WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+        if (WordApplication1.Documents <> Nil) then
+        begin
+          Logger.LogError(EntrySec.version + '[TFormAkt.Print] E WordApplication1.Documents.Close');
+          try
+            WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+          except
+          on E: Exception do
+            begin
+              Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+            end;
+          end;
+        end;
+        Logger.LogError(EntrySec.version + '[TFormAkt.Print] E WordApplication1.WindowState.2');
+        WordApplication1.WindowState:=2;
+        Logger.LogError(EntrySec.version + '[TFormAkt.Print] E WordApplication1.Free.');
+        WordApplication1.Free;
       end;
       application.MessageBox('ѕроверьте все настройки дл€ печати!','Error!',0);
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] E exit <<<');
       exit;
     end;
   end;
+    Logger.LogError(EntrySec.version + '[TFormAkt.Print] <<<<');
 end;
 
 procedure TFormAkt.SaveAkt;
