@@ -564,7 +564,7 @@ end;
 
 procedure TFormInvoice.Print;
 var
-  ReportMakerWP:TReportMakerWP;
+  ReportMakerWP: TReportMakerWP;
   p,w1,w2,w3,w4: OleVariant;
   s:string;
   q:TQuery;
@@ -578,12 +578,25 @@ var
 begin
   Logger.LogError(EntrySec.version + '[TFormInvoice.Print] >>>> ');
   try
+    if (Application = nil) then
+    begin
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с приложением','Error',0);
+      Logger.LogError(EntrySec.version + '[TFormInvoice.Print] Error !!! Application == nil');
+    end;
+    Logger.LogError(EntrySec.version + '[TFormInvoice.Print] call TReportMakerWP.Create');
     ReportMakerWP:=TReportMakerWP.Create(Application);
+    if (ReportMakerWP = nil) then
+    begin
+      Logger.LogError(EntrySec.version + '[TFormInvoice.Print] Error !!! ReportMakerWP == nil');
+    end;
+    Logger.LogError(EntrySec.version + '[TFormInvoice.Print] call ReportMakerWP.ClearParam');
     ReportMakerWP.ClearParam;
     //--------
     Logger.LogError(EntrySec.version + '[TFormInvoice.Print] sql.Select(BOSS....');
     q:=sql.Select('BOSS','*','','');
+    Logger.LogError(EntrySec.version + '[TFormInvoice.Print] call ReportMakerWP.AddParam');
     ReportMakerWP.AddParam('1='+Number);
+    Logger.LogError(EntrySec.version + '[TFormInvoice.Print] call SendStr.DataDMstrY');
     s:=SendStr.DataDMstrY(StrToDate(Dat));
     ReportMakerWP.AddParam('2='+s);
     ReportMakerWP.AddParam('3='+q.FieldByName('Acronym').asstring);
@@ -605,6 +618,7 @@ begin
     ReportMakerWP.AddParam('14='+q.FieldByName('Person').asstring);
     ReportMakerWP.AddParam('15='+q.FieldByName('PersonBug').asstring);
     q.Free;
+    Logger.LogError(EntrySec.version + '[TFormInvoice.Print] after q.free // Select(BOSS....');
     //---------
     Logger.LogError(EntrySec.version + '[TFormInvoice.Print] sql.Select(Clients....');
     q:=sql.Select('Clients','*','Ident='+IntToStr(Ident),'');
@@ -747,26 +761,26 @@ begin
     end;
 
 
-    WordApplication1:=TWordApplication.Create(Application);
-    if (WordApplication1<> nil) then
-    begin
-      WordApplication1.Visible := true;
-      if (WordApplication1.Documents <> nil) then
-      begin
-        try
-          WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
-        except
-          on E: Exception do
-          begin
-            Logger.LogError(EntrySec.version + '[FInvoice.Print]1 Exceptions happened: ' + E.Message);
-          end;
-        end;
-        Logger.LogError(EntrySec.version + '[FInvoice.Print] 1 TWordApplication.WindowState=2');
-        WordApplication1.WindowState:=2;
-        Logger.LogError(EntrySec.version + '[FInvoice.Print] 1 TWordApplication.free');
-        WordApplication1.Free;
-      end;
-    end;
+//    WordApplication1:=TWordApplication.Create(Application);
+//    if (WordApplication1<> nil) then
+//    begin
+//      WordApplication1.Visible := true;
+//      if (WordApplication1.Documents <> nil) then
+//      begin
+//        try
+//          WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+//        except
+//          on E: Exception do
+//          begin
+//            Logger.LogError(EntrySec.version + '[FInvoice.Print]Handled: 1 Exceptions happened: ' + E.Message);
+//          end;
+//        end;
+//        Logger.LogError(EntrySec.version + '[FInvoice.Print] 1 TWordApplication.WindowState=2');
+//        WordApplication1.WindowState:=2;
+//        Logger.LogError(EntrySec.version + '[FInvoice.Print] 1 TWordApplication.free');
+//        WordApplication1.Free;
+//      end;
+//   end;
 // ------------------------------------------------------------------------------------------------
 
     result := ReportMakerWP.DoMakeReport(systemdir+'Invoice\Invoice.rtf',
@@ -861,16 +875,25 @@ T:
     Logger.LogInfo(EntrySec.version + '[FInvoice.print] label T');
     if (WordApplication1 <> nil) then
     begin
-      if (WordApplication1.Documents <> nil) then
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] T: WordApplication1.Documents.Close');
+      if (WordApplication1.Documents<> nil) then
       begin
-        Logger.LogInfo(EntrySec.version + '[FInvoice.print] after T: WordApplication1.Documents.Close');
-        WordApplication1.Documents.Close(EmptyParam,EmptyParam,
-            EmptyParam);
+        try
+          WordApplication1.Documents.Close(EmptyParam,EmptyParam,
+              EmptyParam);
+        except
+          on E: Exception do
+          begin
+            Logger.LogError(EntrySec.version + '[FInvoice.Print] T: Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+          end;
+        end;
       end;
+
       Logger.LogInfo(EntrySec.version + '[FInvoice.print] after T: WordApplication1.WindowState=2');
       WordApplication1.WindowState:=2;
       Logger.LogInfo(EntrySec.version + '[FInvoice.print] after T: WordApplication1.Free');
       WordApplication1.Free;
+    end;
 
     if (Application=Nil) then
     begin
@@ -1029,20 +1052,27 @@ T:
 T1:
     Logger.LogError(EntrySec.version + '[FInvoice.Print] label T1');
     if (WordApplication1<>nil) then
-      begin
+    begin
         Logger.LogError(EntrySec.version + '[FInvoice.Print] WordApplication1.Documents.Close');
         if (WordApplication1.Documents<> nil) then
         begin
-          WordApplication1.Documents.Close(EmptyParam,EmptyParam,
-              EmptyParam);
+          try
+            WordApplication1.Documents.Close(EmptyParam,EmptyParam,
+                EmptyParam);
+          except
+            on E: Exception do
+            begin
+              Logger.LogError(EntrySec.version + '[FInvoice.Print] T1 Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+            end;
+          end;
         end;
-      end;
       Logger.LogError(EntrySec.version + '[FInvoice.Print] WordApplication1.WindowState.2');
       WordApplication1.WindowState:=2;
       Logger.LogError(EntrySec.version + '[FInvoice.Print] WordApplication1.Free');
       WordApplication1.Free;
     end;
-  except
+
+    except
     on E: Exception do
     begin
       Logger.LogError(EntrySec.version + '[FInvoice.Print] Exceptions happened: ' + E.Message);
@@ -1056,7 +1086,7 @@ T1:
           except
             on E: Exception do
             begin
-              Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+              Logger.LogError(EntrySec.version + '[FInvoice.Print] Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
             end;
           end;
         end;

@@ -411,8 +411,19 @@ var
 begin
   Logger.LogError(EntrySec.version + '[TFormAkt.Print] >>>> ');
   try
+    if (Application = nil) then
+    begin
+      application.MessageBox('[TFormAkt.Print] Oшибка связи с приложением','Error',0);
+      Logger.LogError(EntrySec.version + '[TFormInvoice.Print] Error !!! Application == nil');
+    end;
     Logger.LogError(EntrySec.version + '[TFormAkt.Print] TReportMakerWP.Create(Application)');
     ReportMakerWP:=TReportMakerWP.Create(Application);
+        if (ReportMakerWP = nil) then
+    begin
+      Logger.LogError(EntrySec.version + '[TFormAkt.Print] Error !!! ReportMakerWP == nil');
+    end;
+
+
     Logger.LogError(EntrySec.version + '[TFormAkt.Print] ReportMakerWP.ClearParam');
     ReportMakerWP.ClearParam;
 //--------
@@ -473,27 +484,28 @@ begin
     end;
 
 
-    WordApplication1:=TWordApplication.Create(Application);
-    if (WordApplication1 <> nil) then
-    begin
-      Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Visible=true');
-      WordApplication1.Visible := true;
-      if (WordApplication1.Documents <> nil) then
-      begin
-        try
-          WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
-        except
-        on E: Exception do
-          begin
-            Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
-          end;
-        end;
-        Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.WindowState=2');
-        WordApplication1.WindowState:=2;
-        Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Free');
-        WordApplication1.Free;
-      end;
-    end;
+//-----------------------------------------------------------------------------------------------
+//    WordApplication1:=TWordApplication.Create(Application);
+//    if (WordApplication1 <> nil) then
+//    begin
+//      Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Visible=true');
+//      WordApplication1.Visible := true;
+//      if (WordApplication1.Documents <> nil) then
+//      begin
+//        try
+//          WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
+//        except
+//        on E: Exception do
+//          begin
+//            Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+//          end;
+//        end;
+//        Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.WindowState=2');
+//        WordApplication1.WindowState:=2;
+//        Logger.LogError(EntrySec.version + '[TFormAkt.Print] 1 TWordApplication.Free');
+//        WordApplication1.Free;
+//      end;
+//    end;
 //-----------------------------------------------------------------------------------------------
 
 
@@ -574,12 +586,19 @@ T1:
     Logger.LogError(EntrySec.version + '[TFormAkt.Print] label T1');
     if (WordApplication1 <> nil) then
     begin
-      if (WordApplication1.Documents <> nil) then
+
       begin
-        Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.Documents.Close');
-        WordApplication1.Documents.Close(EmptyParam,EmptyParam,
-          EmptyParam);
+        try
+          WordApplication1.Documents.Close(EmptyParam,EmptyParam,
+              EmptyParam);
+        except
+          on E: Exception do
+          begin
+            Logger.LogError(EntrySec.version + '[TFormAkt.Print] T1: Exceptions happened on WordApplication1.Documents.Close(): ' + E.Message);
+          end;
+        end;
       end;
+
       Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.WindowState=2');
       WordApplication1.WindowState:=2;
       Logger.LogError(EntrySec.version + '[TFormAkt.Print] WordApplication1.Free');
@@ -749,74 +768,77 @@ else NumberChange:='';
 end;
 
 procedure TFormAkt.erExit(Sender: TObject);
-var numtest,num1:string;
-    j:      integer;
-    y:Word;
+var
+  numtest, num1: string;
+  j: integer;
+  y: Word;
 begin
-numtest:='';
-erExitTest:=true;
-if NumberChange<>'' then
-begin
- try  
- numtest:=trim(NumberChange);
- delete(numtest,length(numtest)-2,3);
- j:=StrToInt(numtest);
- except
-  ShowMessage('Первая часть номера - это число!');
-  eNumber.SetFocus;
-  erExitTest:=false;
-  exit;
- end;
- if LabelEditDate1.text<>'  .  .    ' then
- begin
- y:=YearOf(StrToDate(LabelEditDate1.text));
- numtest:=IntToStr(y);
- delete(numtest,1,2);
- numtest:='/'+numtest;
- num1:=Trim(NumberChange);
- delete(num1,1,Length(num1)-3);
- if  numtest<>num1 then
- begin
-  ShowMessage('Вторая часть номера - это "/" и две последние цифры от года,'+
+  numtest:='';
+  erExitTest:=true;
+  if (NumberChange<>'') then
+  begin
+    try
+      numtest:=trim(NumberChange);
+      delete(numtest,length(numtest)-2,3);
+      j:=StrToInt(numtest);
+    except
+      ShowMessage('Первая часть номера - это число!');
+      eNumber.SetFocus;
+      erExitTest:=false;
+      exit;
+    end;
+    if (LabelEditDate1.text<>'  .  .    ') then
+    begin
+      y:=YearOf(StrToDate(LabelEditDate1.text));
+      numtest:=IntToStr(y);
+      delete(numtest,1,2);
+      numtest:='/'+numtest;
+      num1:=Trim(NumberChange);
+      delete(num1,1,Length(num1)-3);
+      if (numtest<>num1) then
+      begin
+        ShowMessage('Вторая часть номера - это "/" и две последние цифры от года,'+
                ' на дату формирования счет-фактуры!');
-  erExitTest:=false;
-  eNumber.SetFocus;
-  exit;
-
- end;
- end;
-end;
+        erExitTest:=false;
+        eNumber.SetFocus;
+        exit;
+      end;
+    end;
+  end;
 end;
 
 
 procedure TFormAkt.btOkClick(Sender: TObject);
 begin
-if  cbClient.GetData=0 then
-begin
-   Application.MessageBox('Выберите заказчика!','Ошибка!',0);
-   cbClient.SetFocus;
-   exit;
-end;
-if LabelEditDate1.text='  .  .    '  then
-begin
-   Application.MessageBox('Введите дату формирования!','Ошибка!',0);
-   LabelEditDate1.SetFocus;
-   exit;
-end;
-erExit(Sender);
-;
-if not erExitTest then begin
-eNumber.SetFocus;
-exit;
-end;
-if sql.SelectString(EntrySec.akttek_table {'AktTek'},'Number','Number='+sql.MakeStr(NumberChange)+
-                      ' and Ident <> '+IntToStr(IdInv))<>'' then
-     begin
-      Application.MessageBox('Акт с таким номером уже заведена,'+
+  if (cbClient.GetData=0) then
+  begin
+    Application.MessageBox('Выберите заказчика!','Ошибка!',0);
+    cbClient.SetFocus;
+    exit;
+  end;
+  if (LabelEditDate1.text='  .  .    ') then
+  begin
+    Application.MessageBox('Введите дату формирования!','Ошибка!',0);
+    LabelEditDate1.SetFocus;
+    exit;
+  end;
+  erExit(Sender);
+
+  if (not erExitTest) then
+  begin
+    eNumber.SetFocus;
+    exit;
+  end;
+  if (sql.SelectString(EntrySec.akttek_table {'AktTek'},'Number','Number='+sql.MakeStr(NumberChange)+
+                      ' and Ident <> '+IntToStr(IdInv))<>'') then
+  begin
+    Application.MessageBox('Акт с таким номером уже заведена,'+
                               'введите другой номер!','Ошибка!',0);
-      eNumber.SetFocus;
-      exit
-     end else  ModalResult:=mrOk;
+    eNumber.SetFocus;
+    exit
+  end
+  else
+    ModalResult:=mrOk;
 end;
 
 end.
