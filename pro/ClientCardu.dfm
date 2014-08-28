@@ -5936,7 +5936,7 @@ object card: Tcard
     Font.Style = []
     LabelPosition = lpAbove
     LabelSpacing = 3
-    MaxLength = 25
+    MaxLength = 50
     ParentFont = False
     TabOrder = 37
     OnChange = LabelEditPasswordChange

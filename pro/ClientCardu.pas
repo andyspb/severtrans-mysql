@@ -1320,10 +1320,10 @@ end;
 
 procedure Tcard.LabelEditPasswordChange(Sender: TObject);
 begin
-  if (Length(LabelEditPassword.text)>11) then
+  if (Length(LabelEditPassword.text)>50) then
   begin
     Application.MessageBox
-      ('Длина пароля не более 11 символов!','Ошибка',0);
+      ('Длина пароля не более 50 символов!','Ошибка',0);
     LabelEditPassword.SetFocus ;
   end
   else
