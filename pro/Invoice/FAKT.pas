@@ -423,7 +423,6 @@ begin
       Logger.LogError(EntrySec.version + '[TFormAkt.Print] Error !!! ReportMakerWP == nil');
     end;
 
-
     Logger.LogError(EntrySec.version + '[TFormAkt.Print] ReportMakerWP.ClearParam');
     ReportMakerWP.ClearParam;
 //--------
