@@ -165,7 +165,8 @@ begin
           ident_str);
         del_thread.Resume();
         update_thread := TUpdateThread.Create(True, EntrySec.send_table_other,
-          'NumberCountPattern=NULL', 'NumberCountPattern=' + sql.MakeStr(number));
+          'NumberCountPattern=NULL', 'NumberCountPattern=' +
+            sql.MakeStr(number));
         update_thread.Resume();
       end;
     IDNO:

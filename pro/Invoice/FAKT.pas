@@ -1,5 +1,5 @@
 unit FAKT;
-
+
 interface
 
 uses
@@ -208,7 +208,8 @@ begin
     else
     begin
       // success
-      update_thread := TUpdateThread.Create(True, EntrySec.akttek_table_other, s,
+      update_thread := TUpdateThread.Create(True, EntrySec.akttek_table_other,
+        s,
         'Ident=' + IntToStr(IdInv));
       update_thread.Resume();
     end;
@@ -548,7 +549,7 @@ begin
 
     if (ReportMakerWP.DoMakeReport(systemdir + 'Invoice\CertificateTEK.rtf',
       systemdir + 'Invoice\' + certificatetek_ini, systemdir +
-        'Invoice\out1.rtf') <> 0) then
+      'Invoice\out1.rtf') <> 0) then
     begin
       Logger.LogError(EntrySec.version +
         '[TFormAkt.Print] failed ReportMakerWP.DoMakeReport <> 0');
@@ -922,4 +923,5 @@ begin
 end;
 
 end.
- 
+
+
