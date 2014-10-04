@@ -7,17 +7,26 @@ uses
   Tadjform, StdCtrls, Sqlctrls, Lbledit, ExtCtrls, Buttons, BMPBtn, tsqlcls,
   DB, DBTables, SEQUENCE;
 
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Boolean ): Boolean;  overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Byte    ): Byte;     overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Cardinal): Cardinal; overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Char    ): Char;     overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Extended): Extended;    overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Integer ): Integer;  overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: Pointer ): Pointer;  overload;
-  function Iff(const Condition: Boolean; const TruePart, FalsePart: String  ): String;   overload;
-  {$IFDEF SUPPORTS_INT64}
-    function Iff(const Condition: Boolean; const TruePart, FalsePart: Int64   ): Int64;    overload;
-  {$ENDIF SUPPORTS_INT64}
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Boolean):
+  Boolean; overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Byte): Byte;
+  overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Cardinal):
+  Cardinal; overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Char): Char;
+  overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Extended):
+  Extended; overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Integer):
+  Integer; overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Pointer):
+  Pointer; overload;
+function Iff(const Condition: Boolean; const TruePart, FalsePart: string):
+  string; overload;
+{$IFDEF SUPPORTS_INT64}
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Int64): Int64;
+  overload;
+{$ENDIF SUPPORTS_INT64}
 
 type
   TEntrySecurity = class(Tadjustform)
@@ -37,7 +46,7 @@ type
     { Private declarations }
   public
     { Public declarations }
-    end;
+  end;
 
 var
   EntrySecurity: TEntrySecurity;
@@ -91,17 +100,17 @@ var
 type
   TTestThread = class(TThread)
   public
-     Constructor Create(CreateSuspended : boolean);
+    constructor Create(CreateSuspended: boolean);
   protected
-     procedure Execute; override;
+    procedure Execute; override;
   end;
 
 type
   TDeleteThread = class(TThread)
   public
-     Constructor Create(CreateSuspended: boolean;
-                              table_str: string;
-                              ident_str: string);
+    constructor Create(CreateSuspended: boolean;
+      table_str: string;
+      ident_str: string);
   protected
     procedure Execute; override;
   private
@@ -112,10 +121,10 @@ type
 type
   TInsertThread = class(TThread)
   public
-     Constructor Create(CreateSuspended: boolean;
-                              table_str: string;
-                              field_str: string;
-                              value_str: string);
+    constructor Create(CreateSuspended: boolean;
+      table_str: string;
+      field_str: string;
+      value_str: string);
   protected
     procedure Execute; override;
   private
@@ -127,10 +136,10 @@ type
 type
   TUpdateThread = class(TThread)
   public
-     Constructor Create(CreateSuspended: boolean;
-                              table_str: string;
-                              value_str: string;
-                              key_str: string);
+    constructor Create(CreateSuspended: boolean;
+      table_str: string;
+      value_str: string;
+      key_str: string);
   protected
     procedure Execute; override;
   private
@@ -139,10 +148,9 @@ type
     key: string;
   end;
 
-
 implementation
 
-uses    Menu;
+uses Menu;
 
 {$R *.DFM}
 
@@ -158,7 +166,7 @@ var
 begin
   if (not Terminated) then
   begin
-    sql_str:=TStringList.Create;
+    sql_str := TStringList.Create;
     // krutogolov
     // see @
     sql_str.Add('call  `update_tables_all_6m`;');
@@ -168,11 +176,11 @@ begin
 end;
 
 constructor TDeleteThread.Create(CreateSuspended: boolean;
-                                       table_str: string;
-                                       ident_str: string);
+  table_str: string;
+  ident_str: string);
 begin
-  table :=table_str;
-  ident :=ident_str;
+  table := table_str;
+  ident := ident_str;
   FreeOnTerminate := True;
   inherited Create(CreateSuspended);
 end;
@@ -184,8 +192,8 @@ var
 begin
   if (not Terminated) then
   begin
-    sql_str:=TStringList.Create;
-    temp_str:='delete from ' + table + ' where `Ident` = ' + ident;
+    sql_str := TStringList.Create;
+    temp_str := 'delete from ' + table + ' where `Ident` = ' + ident;
     sql_str.Add(temp_str);
     sql.ExecSQL(sql_str);
     sql_str.free;
@@ -193,13 +201,13 @@ begin
 end;
 
 constructor TInsertThread.Create(CreateSuspended: boolean;
-                                       table_str: string;
-                                       field_str: string;
-                                       value_str: string);
+  table_str: string;
+  field_str: string;
+  value_str: string);
 begin
-  table :=table_str;
-  field :=field_str;
-  value :=value_str;
+  table := table_str;
+  field := field_str;
+  value := value_str;
   FreeOnTerminate := True;
   inherited Create(CreateSuspended);
 end;
@@ -213,9 +221,9 @@ begin
 end;
 
 constructor TUpdateThread.Create(CreateSuspended: boolean;
-                                       table_str: string;
-                                       value_str: string;
-                                       key_str: string);
+  table_str: string;
+  value_str: string;
+  key_str: string);
 begin
   table := table_str;
   value := value_str;
@@ -232,7 +240,6 @@ begin
   end;
 end;
 
-
 procedure TEntrySecurity.btOKClick(Sender: TObject);
 var
   q: TQuery;
@@ -240,97 +247,101 @@ var
   sql_str: TStringList;
   thread: TTestThread;
 begin
-  str:='(ShortName='''+eShortName.text +''') and (Password='''+ePassword.text+''')';
-  q:=sql.select('Inspector','Ident,Roles_Ident',str ,  '' );
+  str := '(ShortName=''' + eShortName.text + ''') and (Password=''' +
+    ePassword.text + ''')';
+  q := sql.select('Inspector', 'Ident,Roles_Ident', str, '');
 
   if (q.eof) then
   begin
-    Application.MessageBox('Неправильное имя или пароль!','Ошибка',0);
+    Application.MessageBox('Неправильное имя или пароль!', 'Ошибка', 0);
     eShortName.setfocus;
     exit;
   end;
 
-  FMenu.CurrentUser:=q.FieldByName('Ident').AsInteger;
-  FMenu.CurrentUserRoles:=q.FieldByName('Roles_Ident').AsInteger;
-  FMenu.CurrentUserName:=eShortName.text;
+  FMenu.CurrentUser := q.FieldByName('Ident').AsInteger;
+  FMenu.CurrentUserRoles := q.FieldByName('Roles_Ident').AsInteger;
+  FMenu.CurrentUserName := eShortName.text;
   bAllData := ChBoxAll.Checked;
-  version:= '3.0.28.09.14';
-  period:=iff(bAllData, 'ВСЕ ВРЕМЯ', '6 Mесяцев');
+  version := '3.0.28.09.14';
+  period := iff(bAllData, 'ВСЕ ВРЕМЯ', '6 Mесяцев');
   // other tables
-  account_table_other:=iff(not bAllData, 'account_all', 'account');
-  accounttek_table_other:=iff(not bAllData, 'accounttek_all', 'accounttek');
-  akttek_table_other:=iff(not bAllData, 'akttek_all', 'akttek');
-  invoice_table_other:=iff(not bAllData, 'invoice_all', 'invoice');
-  order_table_other:=iff(not bAllData, 'order_all', '`order`');
-  paysheet_table_other:=iff(not bAllData, 'paysheet_all', 'paysheet');
-  send_table_other:=iff(not bAllData, 'send_all', 'send');
+  account_table_other := iff(not bAllData, 'account_all', 'account');
+  accounttek_table_other := iff(not bAllData, 'accounttek_all', 'accounttek');
+  akttek_table_other := iff(not bAllData, 'akttek_all', 'akttek');
+  invoice_table_other := iff(not bAllData, 'invoice_all', 'invoice');
+  order_table_other := iff(not bAllData, 'order_all', '`order`');
+  paysheet_table_other := iff(not bAllData, 'paysheet_all', 'paysheet');
+  send_table_other := iff(not bAllData, 'send_all', 'send');
   // strings for other views
-  accountview_view_other:=iff(not bAllData, 'accountview_all', 'accountview');
-  accounttekview_view_other:=iff(not bAllData, 'accounttekview_all', 'accounttekview');
-  akttekview_view_other:=iff(not bAllData, 'akttekview_all', 'akttekview');
-  invoiceview_view_other:=iff(not bAllData, 'invoiceview_all', 'invoiceview');
-  orders_view_other:=iff(not bAllData, 'orders_all', 'orders');
-  orderstek_view_other:=iff(not bAllData, 'orderstek_all', 'orderstek');
-  paysheetview_view_other:=iff(not bAllData, 'paysheetview_all', 'paysheetview');
-  sends_view_other:=iff(not bAllData, 'sends_all', 'sends');
-  svpayreceipt_view_other:=iff(not bAllData, 'svpayreceipt_all', 'svpayreceipt');
-  vs1_view_other:=iff(not bAllData, 'vs1_all', 'vs1');
-  vs2_view_other:=iff(not bAllData, 'vs2_all', 'vs2');
+  accountview_view_other := iff(not bAllData, 'accountview_all', 'accountview');
+  accounttekview_view_other := iff(not bAllData, 'accounttekview_all',
+    'accounttekview');
+  akttekview_view_other := iff(not bAllData, 'akttekview_all', 'akttekview');
+  invoiceview_view_other := iff(not bAllData, 'invoiceview_all', 'invoiceview');
+  orders_view_other := iff(not bAllData, 'orders_all', 'orders');
+  orderstek_view_other := iff(not bAllData, 'orderstek_all', 'orderstek');
+  paysheetview_view_other := iff(not bAllData, 'paysheetview_all',
+    'paysheetview');
+  sends_view_other := iff(not bAllData, 'sends_all', 'sends');
+  svpayreceipt_view_other := iff(not bAllData, 'svpayreceipt_all',
+    'svpayreceipt');
+  vs1_view_other := iff(not bAllData, 'vs1_all', 'vs1');
+  vs2_view_other := iff(not bAllData, 'vs2_all', 'vs2');
 
   // tables
-  account_table:=iff(bAllData, 'account_all', 'account');
-  accounttek_table:=iff(bAllData, 'accounttek_all', 'accounttek');
-  akttek_table:=iff(bAllData, 'akttek_all', 'akttek');
-  invoice_table:=iff(bAllData, 'invoice_all', 'invoice');
-  order_table:=iff(bAllData, 'order_all', '`order`');
-  paysheet_table:=iff(bAllData, 'paysheet_all', 'paysheet');
-  send_table:=iff(bAllData, 'send_all', 'send');
+  account_table := iff(bAllData, 'account_all', 'account');
+  accounttek_table := iff(bAllData, 'accounttek_all', 'accounttek');
+  akttek_table := iff(bAllData, 'akttek_all', 'akttek');
+  invoice_table := iff(bAllData, 'invoice_all', 'invoice');
+  order_table := iff(bAllData, 'order_all', '`order`');
+  paysheet_table := iff(bAllData, 'paysheet_all', 'paysheet');
+  send_table := iff(bAllData, 'send_all', 'send');
   // strings for views
-  accountview_view:=iff(bAllData, 'accountview_all', 'accountview');
-  accounttekview_view:=iff(bAllData, 'accounttekview_all', 'accounttekview');
-  akttekview_view:=iff(bAllData, 'akttekview_all', 'akttekview');
-  invoiceview_view:=iff(bAllData, 'invoiceview_all', 'invoiceview');
-  orders_view:=iff(bAllData, 'orders_all', 'orders');
-  orderstek_view:=iff(bAllData, 'orderstek_all', 'orderstek');
-  paysheetview_view:=iff(bAllData, 'paysheetview_all', 'paysheetview');
-  sends_view:=iff(bAllData, 'sends_all', 'sends');
-  svpayreceipt_view:=iff(bAllData, 'svpayreceipt_all', 'svpayreceipt');
-  vs1_view:=iff(bAllData, 'vs1_all', 'vs1');
-  vs2_view:=iff(bAllData, 'vs2_all', 'vs2');
+  accountview_view := iff(bAllData, 'accountview_all', 'accountview');
+  accounttekview_view := iff(bAllData, 'accounttekview_all', 'accounttekview');
+  akttekview_view := iff(bAllData, 'akttekview_all', 'akttekview');
+  invoiceview_view := iff(bAllData, 'invoiceview_all', 'invoiceview');
+  orders_view := iff(bAllData, 'orders_all', 'orders');
+  orderstek_view := iff(bAllData, 'orderstek_all', 'orderstek');
+  paysheetview_view := iff(bAllData, 'paysheetview_all', 'paysheetview');
+  sends_view := iff(bAllData, 'sends_all', 'sends');
+  svpayreceipt_view := iff(bAllData, 'svpayreceipt_all', 'svpayreceipt');
+  vs1_view := iff(bAllData, 'vs1_all', 'vs1');
+  vs2_view := iff(bAllData, 'vs2_all', 'vs2');
 
   if (bAllData) then
   begin
-    sql_str:=TStringList.Create;
+    sql_str := TStringList.Create;
     sql_str.Add('call  `update_tables_all_6m`;');
     sql.ExecSQL(sql_str);
     sql_str.free;
   end
   else
   begin
-    thread:= TTestThread.Create(True);
+    thread := TTestThread.Create(True);
     thread.Resume();
   end;
-  ModalResult:=mrOK;
+  ModalResult := mrOK;
 end;
 
 procedure TEntrySecurity.btCancelClick(Sender: TObject);
 begin
-  ModalResult:= mrCancel
+  ModalResult := mrCancel
 end;
 
 procedure TEntrySecurity.FormCreate(Sender: TObject);
 begin
-  eShortName.Edit.Font.Size:=10;
-  ePassword.Font.Size:=10;
-  fsection:='EntrySecuritySect';
+  eShortName.Edit.Font.Size := 10;
+  ePassword.Font.Size := 10;
+  fsection := 'EntrySecuritySect';
 end;
 
 procedure TEntrySecurity.FormActivate(Sender: TObject);
 begin
   if (FMenu.CurrentUser <> 0) then
   begin
-    btCancel.Caption:='Отменить';
-    eShortName.Edit.SetFocus;          //btOk.setfocus;
+    btCancel.Caption := 'Отменить';
+    eShortName.Edit.SetFocus; //btOk.setfocus;
   end;
 end;
 
@@ -345,60 +356,97 @@ end;
 // Funes
 // Substituio do operador "?" em C
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Boolean): Boolean; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Boolean):
+  Boolean; overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Byte): Byte; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Byte): Byte;
+  overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Cardinal): Cardinal; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Cardinal):
+  Cardinal; overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Char): Char; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Char): Char;
+  overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Extended): Extended; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Extended):
+  Extended; overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Integer): Integer; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Integer):
+  Integer; overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Pointer): Pointer; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Pointer):
+  Pointer; overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
-function Iff(const Condition: Boolean; const TruePart, FalsePart: String): String; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: string):
+  string; overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 //*******************************************************
 {$IFDEF SUPPORTS_INT64}
-function Iff(const Condition: Boolean; const TruePart, FalsePart: Int64): Int64; overload;
+
+function Iff(const Condition: Boolean; const TruePart, FalsePart: Int64): Int64;
+  overload;
 begin
-  if Condition then    Result := TruePart
-  else    Result := FalsePart;
+  if Condition then
+    Result := TruePart
+  else
+    Result := FalsePart;
 end;
 {$ENDIF SUPPORTS_INT64}
 
 end.
+

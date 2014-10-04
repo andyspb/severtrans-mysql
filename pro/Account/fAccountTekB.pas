@@ -4,8 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, SqlGrid,Tadjform,tsqlcls,  StdCtrls, Buttons, BMPBtn, EntrySec;
-
+  Dialogs, SqlGrid, Tadjform, tsqlcls, StdCtrls, Buttons, BMPBtn, EntrySec;
 
 type
   TFormAccountTekBox = class(TAdjustForm)
@@ -39,56 +38,58 @@ uses FAccount, FAccountTek;
 
 procedure TFormAccountTekBox.FormCreate(Sender: TObject);
 begin
-//  SQLGrid1.Section:='AccountTEKView' ;
-  SQLGrid1.Section:=iff (EntrySec.bAllData, 'AccountTEKView_all','AccountTEKView') ;
-  Caption:='Счета-ТЭК ( ' + EntrySec.period + ' )';
-  accounttekvew_view:= iff (EntrySec.bAllData, 'AccountTEKView_all', 'AccountTEKView');
+  //  SQLGrid1.Section:='AccountTEKView' ;
+  SQLGrid1.Section := iff(EntrySec.bAllData, 'AccountTEKView_all',
+    'AccountTEKView');
+  Caption := 'Счета-ТЭК ( ' + EntrySec.period + ' )';
+  accounttekvew_view := iff(EntrySec.bAllData, 'AccountTEKView_all',
+    'AccountTEKView');
   // BAdd.Enabled:=iff (EntrySec.bAllData,  False, True);
   SQLGrid1.ExecTable(accounttekvew_view);
   if SQLGrid1.Query.eof then
   begin
-    SQLGrid1.visible:=false;
-    BEdit.enabled:=false;
-    BDel.enabled:=false;
+    SQLGrid1.visible := false;
+    BEdit.enabled := false;
+    BDel.enabled := false;
   end
   else
   begin
-    SQLGrid1.visible:=true;
-    BEdit.enabled:=true;
-    BDel.enabled:=true;
+    SQLGrid1.visible := true;
+    BEdit.enabled := true;
+    BDel.enabled := true;
   end;
-  fsection:='FAccountTEK' ;
+  fsection := 'FAccountTEK';
 end;
 
 procedure TFormAccountTekBox.SQLGrid1RowChange(Sender: TObject);
 begin
   if (SQLGrid1.Query.Eof) and (SQLGrid1.Query.bof) then
   begin
-    SQLGrid1.visible:=false;
-    BEdit.enabled:=false;
-    BDel.enabled:=false;
+    SQLGrid1.visible := false;
+    BEdit.enabled := false;
+    BDel.enabled := false;
   end
   else
   begin
-    SQLGrid1.visible:=true;
-    BEdit.enabled:=true;
-    BDel.enabled:=true;
+    SQLGrid1.visible := true;
+    BEdit.enabled := true;
+    BDel.enabled := true;
   end;
 end;
 
 procedure TFormAccountTekBox.BAddClick(Sender: TObject);
 var
-  l:longint;
+  l: longint;
 begin
   sql.StartTransaction;
-  FormAccountTEK:=TFormAccountTEK.Create(Application) ;
-  l:=FormAccountTEK.AddRecord;
+  FormAccountTEK := TFormAccountTEK.Create(Application);
+  l := FormAccountTEK.AddRecord;
   FormAccountTEK.Free;
-  if l<>0 then
+  if l <> 0 then
   begin
     sql.Commit;
     SQLGrid1.execTable(accounttekvew_view);
-    SQLGrid1.LoadPoint('Ident',l);
+    SQLGrid1.LoadPoint('Ident', l);
   end
   else
     sql.Rollback;
@@ -97,18 +98,18 @@ end;
 
 procedure TFormAccountTekBox.BEditClick(Sender: TObject);
 var
-  Id,L:longint;
+  Id, L: longint;
 begin
-  Id:=SQLGrid1.Query.FieldByName('Ident').AsInteger;
+  Id := SQLGrid1.Query.FieldByName('Ident').AsInteger;
   sql.StartTransaction;
-  FormAccountTek:=TFormAccountTek.Create(Application) ;
-  l:=FormAccounttek.EditRecord(Id);
+  FormAccountTek := TFormAccountTek.Create(Application);
+  l := FormAccounttek.EditRecord(Id);
   FormAccounttek.Free;
-  if l<>0 then
+  if l <> 0 then
   begin
     sql.Commit;
     SQLGrid1.execTable(accounttekvew_view);
-    SQLGrid1.LoadPoint('Ident',l);
+    SQLGrid1.LoadPoint('Ident', l);
   end
   else
     sql.Rollback;
@@ -124,29 +125,30 @@ var
   del_thread: TDeleteThread;
 begin
   sql.StartTransaction;
-  ident:=SQLGrid1.Query.FieldByName('Ident').AsInteger;
+  ident := SQLGrid1.Query.FieldByName('Ident').AsInteger;
   SQLGrid1.saveNextPoint('Ident');
   ident_str := IntToStr(ident);
-  accounttek_table:= EntrySec.accounttek_table;
-  accounttek_table_other:= EntrySec.accounttek_table_other;
+  accounttek_table := EntrySec.accounttek_table;
+  accounttek_table_other := EntrySec.accounttek_table_other;
 
-  if sql.Delete(accounttek_table,'Ident='+ident_str)=0 then
+  if sql.Delete(accounttek_table, 'Ident=' + ident_str) = 0 then
   begin
     case Application.MessageBox('Удалить!',
-                            'Предупреждение!',MB_YESNO+MB_ICONQUESTION) of
+      'Предупреждение!', MB_YESNO + MB_ICONQUESTION) of
       IDYES:
-      begin
-        sql.Commit;
-        SQLGrid1.ExecTable(EntrySec.accounttekview_view);
-        SQLGrid1RowChange(Sender);
-        del_thread := TDeleteThread.Create(True, accounttek_table_other, ident_str);
-        del_thread.Resume();
-      end;
+        begin
+          sql.Commit;
+          SQLGrid1.ExecTable(EntrySec.accounttekview_view);
+          SQLGrid1RowChange(Sender);
+          del_thread := TDeleteThread.Create(True, accounttek_table_other,
+            ident_str);
+          del_thread.Resume();
+        end;
       IDNO:
-      begin
-        sql.rollback;
-        exit
-      end;
+        begin
+          sql.rollback;
+          exit
+        end;
     end;
   end
   else
@@ -170,3 +172,4 @@ begin
 end;
 
 end.
+
