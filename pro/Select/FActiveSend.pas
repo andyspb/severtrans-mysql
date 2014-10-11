@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CheckLst,DB,DBTables,TSQLCLS, Buttons, BMPBtn, ComCtrls,
-  Grids, DBGrids, Menus, Sqlctrls, Lbsqlcmb,SqlGrid, ExtCtrls, OleServer,
+  Dialogs, StdCtrls, CheckLst, DB, DBTables, TSQLCLS, Buttons, BMPBtn, ComCtrls,
+  Grids, DBGrids, Menus, Sqlctrls, Lbsqlcmb, SqlGrid, ExtCtrls, OleServer,
   Word2000, toolbtn, Excel2000, EntrySec;
 
 type
@@ -64,19 +64,19 @@ var
 
 implementation
 
-uses makerepp ;
+uses makerepp;
 {$R *.dfm}
 
 procedure TFormActiveSend.FormCreate(Sender: TObject);
 begin
   Caption := 'Активные отправки ( ' + EntrySec.period + ' )';
-  sends_view := iff (EntrySec.bAllData, 'sends_all', 'sends');
+  sends_view := iff(EntrySec.bAllData, 'sends_all', 'sends');
 
   Query1.Close;
-  Query1.DatabaseName:=sql.DataBaseName;
+  Query1.DatabaseName := sql.DataBaseName;
   Query1.SQL.Clear;
-  Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL '+
-                ' order by AcceptorName');
+  Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL ' +
+    ' order by AcceptorName');
   Query1.ExecSQL;
   query1.Open;
   //cbPynkt.SQLComboBox.Sorted:=true;
@@ -86,108 +86,116 @@ end;
 procedure TFormActiveSend.N1Click(Sender: TObject);
 begin
   Query1.Edit;
-  if query1.FieldByName('Sel').value='+' then
-    query1.FieldByName('Sel').value:='-'
-  else query1.FieldByName('Sel').value:='+';
-    query1.Post;
-  end;
+  if query1.FieldByName('Sel').value = '+' then
+    query1.FieldByName('Sel').value := '-'
+  else
+    query1.FieldByName('Sel').value := '+';
+  query1.Post;
+end;
 
 procedure TFormActiveSend.btPrintClick(Sender: TObject);
 var
   ReportMakerWP: TReportMakerWP;
   p, w1, w2, w3, w4: OleVariant;
   s, cond: string;
-  rtffile,  inifile: string;
+  rtffile, inifile: string;
   CWeig, CPlac: integer;
   CVol: real;
   ActivesendGd1_ini: string;
   ActivesendAVt_ini: string;
-  label T;
+label
+  T;
 begin
   try
-  {if cbPynkt.SQLComboBox.GetData=0 then
-  begin
-      Application.MessageBox('Выберите город!','Ошибка!',0);
-      cbPynkt.SQLComboBox.SetFocus;
-      exit;
-  end;  }
-  CWeig := 0;
-  CPlac := 0;
-  CVol := 0;
-  s := '';
-  sql.Delete('ActSendPrint','');
-  Query1.DisableControls;
-  Query1.First;
-
-  while (not Query1.eof) do
-  begin
-    if (Query1.FieldByName('Sel').value = '+') then
+    {if cbPynkt.SQLComboBox.GetData=0 then
     begin
-      CWeig:=CWeig+Query1.FieldByName('Weight').asinteger;
-      CPlac:=CPlac+Query1.FieldByName('PlaceC').asinteger;
-      CVol:=CVol+Query1.FieldByName('Volume').asfloat;
-      sql.InsertString('ActSendPrint','Send_Ident',Query1.FieldByName('Ident').asString);
+        Application.MessageBox('Выберите город!','Ошибка!',0);
+        cbPynkt.SQLComboBox.SetFocus;
+        exit;
+    end;  }
+    CWeig := 0;
+    CPlac := 0;
+    CVol := 0;
+    s := '';
+    sql.Delete('ActSendPrint', '');
+    Query1.DisableControls;
+    Query1.First;
+
+    while (not Query1.eof) do
+    begin
+      if (Query1.FieldByName('Sel').value = '+') then
+      begin
+        CWeig := CWeig + Query1.FieldByName('Weight').asinteger;
+        CPlac := CPlac + Query1.FieldByName('PlaceC').asinteger;
+        CVol := CVol + Query1.FieldByName('Volume').asfloat;
+        sql.InsertString('ActSendPrint', 'Send_Ident',
+          Query1.FieldByName('Ident').asString);
+      end;
+      Query1.Next;
     end;
-    Query1.Next;
-  end;
-  Query1.EnableControls ;
-  //if s<>'' then begin
-  // delete(s,1,1);
-  // s:='Ident in ('+s+')';
-  // end else s:='Ident=0';
-  //-----------------------------
-  ReportMakerWP:=TReportMakerWP.Create(Application);
-  ReportMakerWP.ClearParam;
-  ReportMakerWP.AddParam('1='+IntTOStr(CWeig));
-  ReportMakerWP.AddParam('2='+IntTOStr(CPlac));
-  ReportMakerWP.AddParam('3='+FloatTOStr(CVol));
+    Query1.EnableControls;
+    //if s<>'' then begin
+    // delete(s,1,1);
+    // s:='Ident in ('+s+')';
+    // end else s:='Ident=0';
+    //-----------------------------
+    ReportMakerWP := TReportMakerWP.Create(Application);
+    ReportMakerWP.ClearParam;
+    ReportMakerWP.AddParam('1=' + IntTOStr(CWeig));
+    ReportMakerWP.AddParam('2=' + IntTOStr(CPlac));
+    ReportMakerWP.AddParam('3=' + FloatTOStr(CVol));
 
-  ActivesendGd1_ini := iff(EntrySec.bAllData, 'ActivesendGd1_all', 'ActivesendGd1');
-  ActivesendAVt_ini := iff(EntrySec.bAllData, 'ActivesendAVt_all', 'ActivesendAVt');
-  if cbTrain.SQLComboBox.GetData<>0 then
-    if cbPynkt.SQLComboBox.GetData<>0 then
-    begin
-      cond := 'ContractType_Ident=1 and City_Ident='+
-          IntToStr(cbPynkt.SQLComboBox.GetData)+
-          ' and Train_Ident='+intToStr(cbTrain.SQLComboBox.getdata);
-      rtffile := 'Activesendgd1';
-      inifile:= ActivesendGd1_ini ;
-    end
+    ActivesendGd1_ini := iff(EntrySec.bAllData, 'ActivesendGd1_all',
+      'ActivesendGd1');
+    ActivesendAVt_ini := iff(EntrySec.bAllData, 'ActivesendAVt_all',
+      'ActivesendAVt');
+    if cbTrain.SQLComboBox.GetData <> 0 then
+      if cbPynkt.SQLComboBox.GetData <> 0 then
+      begin
+        cond := 'ContractType_Ident=1 and City_Ident=' +
+          IntToStr(cbPynkt.SQLComboBox.GetData) +
+          ' and Train_Ident=' + intToStr(cbTrain.SQLComboBox.getdata);
+        rtffile := 'Activesendgd1';
+        inifile := ActivesendGd1_ini;
+      end
+      else
+      begin
+        cond := 'ContractType_Ident=1 ' +
+          ' and Train_Ident=' + intToStr(cbTrain.SQLComboBox.getdata);
+        rtffile := 'Activesendgd1';
+        inifile := ActivesendGd1_ini;
+      end
     else
     begin
-      cond:='ContractType_Ident=1 '+
-            ' and Train_Ident='+intToStr(cbTrain.SQLComboBox.getdata);
-            rtffile:='Activesendgd1';
-            inifile:=ActivesendGd1_ini ;
-    end
-    else
-    begin
-      cond:='ContractType_Ident=2 and City_Ident='+
-           IntToStr(cbPynkt.SQLComboBox.GetData);
-      rtffile:='ActivesendAvt1';
-      inifile:=ActivesendAVt_ini;
+      cond := 'ContractType_Ident=2 and City_Ident=' +
+        IntToStr(cbPynkt.SQLComboBox.GetData);
+      rtffile := 'ActivesendAvt1';
+      inifile := ActivesendAVt_ini;
     end;
-    ReportMakerWP.AddParam('4='+cond);
-    ReportMakerWP.AddParam('5='+cbPynkt.SQLComboBox.Text);
-    ReportMakerWP.AddParam('6='+FormatDateTime('dd.mm.yyyy',now));
-    ReportMakerWP.AddParam('7='+'поезд № '+cbTrain.SQLComboBox.Text);
-    if ReportMakerWP.DoMakeReport(systemdir+'Select\'+rtfFile+'.rtf',
-          systemdir+'Select\'+inifile+'.ini', systemdir+'Select\out.rtf')<>0 then
+    ReportMakerWP.AddParam('4=' + cond);
+    ReportMakerWP.AddParam('5=' + cbPynkt.SQLComboBox.Text);
+    ReportMakerWP.AddParam('6=' + FormatDateTime('dd.mm.yyyy', now));
+    ReportMakerWP.AddParam('7=' + 'поезд № ' + cbTrain.SQLComboBox.Text);
+    if ReportMakerWP.DoMakeReport(systemdir + 'Select\' + rtfFile + '.rtf',
+      systemdir + 'Select\' + inifile + '.ini', systemdir + 'Select\out.rtf') <>
+        0 then
     begin
       ReportMakerWP.Free;
-      application.messagebox('Закройте выходной документ в WINWORD!', 'Совет!',0);
+      application.messagebox('Закройте выходной документ в WINWORD!', 'Совет!',
+        0);
       exit
-    end;;
+    end;
+    ;
     //--------------------------------------
-    WordApplication1:=TWordApplication.Create(Application);
-    p := systemdir+'Select\out.rtf';
-    W1:=1;
+    WordApplication1 := TWordApplication.Create(Application);
+    p := systemdir + 'Select\out.rtf';
+    W1 := 1;
     //w2:=sql.SelectString('Printer','NameA4','');
     WordApplication1.Documents.Open(p,
-	  EmptyParam,EmptyParam,EmptyParam,
-	  EmptyParam,EmptyParam,EmptyParam,
-	  EmptyParam,EmptyParam,EmptyParam,
-    EmptyParam,EmptyParam);
+      EmptyParam, EmptyParam, EmptyParam,
+      EmptyParam, EmptyParam, EmptyParam,
+      EmptyParam, EmptyParam, EmptyParam,
+      EmptyParam, EmptyParam);
     //w3:=sql.SelectString('Printer','ComNameA4','');
 
     //w4:=WordApplication1.UserName;
@@ -196,8 +204,8 @@ begin
     {WordApplication1.ActiveDocument.PrintOut(
     EmptyParam,EmptyParam,EmptyParam,
     EmptyParam, EmptyParam,EmptyParam,
-	  EmptyParam,w1,EmptyParam,
-	  EmptyParam,EmptyParam,EmptyParam,
+   EmptyParam,w1,EmptyParam,
+   EmptyParam,EmptyParam,EmptyParam,
     w2,EmptyParam,EmptyParam,
         EmptyParam,EmptyParam,EmptyParam);   }
     {T: WordApplication1.Documents.Close(EmptyParam,EmptyParam,
@@ -207,44 +215,46 @@ begin
 
     WordApplication1.Free;
   except
-    WordApplication1.Documents.Close(EmptyParam,EmptyParam,EmptyParam);
-    application.MessageBox('Проверьте настройки печати!','Ошибка!',0);
+    WordApplication1.Documents.Close(EmptyParam, EmptyParam, EmptyParam);
+    application.MessageBox('Проверьте настройки печати!', 'Ошибка!', 0);
     exit
   end;
 end;
 
 procedure TFormActiveSend.cbTrainChange(Sender: TObject);
-var CId: longInt;
-    str: string;
+var
+  CId: longInt;
+  str: string;
 begin
-  str:='';
-  CId:=cbPynkt.SQLComboBox.GetData;
-  if CId<>0 then
+  str := '';
+  CId := cbPynkt.SQLComboBox.GetData;
+  if CId <> 0 then
   begin
-    if cbTrain.SQLComboBox.getdata<>0 then
-      str:='and ContractType_Ident=1 and City_Ident='+IntToStr(CID)+
-        ' and Train_Ident='+intToStr(cbTrain.SQLComboBox.getdata)
-    else str:='and ContractType_Ident=2 and City_Ident='+IntToStr(CID);
-      Query1.Close;
-    Query1.DatabaseName:=sql.DataBaseName;
+    if cbTrain.SQLComboBox.getdata <> 0 then
+      str := 'and ContractType_Ident=1 and City_Ident=' + IntToStr(CID) +
+        ' and Train_Ident=' + intToStr(cbTrain.SQLComboBox.getdata)
+    else
+      str := 'and ContractType_Ident=2 and City_Ident=' + IntToStr(CID);
+    Query1.Close;
+    Query1.DatabaseName := sql.DataBaseName;
     Query1.SQL.Clear;
-    Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL '+
-                str+' order by AcceptorName');
+    Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL ' +
+      str + ' order by AcceptorName');
     Query1.ExecSQL;
     query1.Open;
   end
   else
   begin
-    if cbTrain.SQLComboBox.getdata<>0 then
-      str:='and ContractType_Ident=1'+
-        ' and Train_Ident='+intToStr(cbTrain.SQLComboBox.getdata)
+    if cbTrain.SQLComboBox.getdata <> 0 then
+      str := 'and ContractType_Ident=1' +
+        ' and Train_Ident=' + intToStr(cbTrain.SQLComboBox.getdata)
     else
-      str:='';
+      str := '';
     Query1.Close;
-    Query1.DatabaseName:=sql.DataBaseName;
+    Query1.DatabaseName := sql.DataBaseName;
     Query1.SQL.Clear;
-    Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL '+
-                str+' order by AcceptorName');
+    Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL ' +
+      str + ' order by AcceptorName');
     Query1.ExecSQL;
     query1.Open;
   end;
@@ -265,12 +275,13 @@ end;
 procedure TFormActiveSend.ToolbarButton1Click(Sender: TObject);
 begin
   Query1.Close;
-  Query1.DatabaseName:=sql.DataBaseName;
+  Query1.DatabaseName := sql.DataBaseName;
   Query1.SQL.Clear;
-  Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL '+
-                ' order by AcceptorName');
+  Query1.SQL.Add('select * from ' + sends_view + ' where DateSupp is NULL ' +
+    ' order by AcceptorName');
   Query1.ExecSQL;
   query1.Open;
 end;
 
 end.
+
