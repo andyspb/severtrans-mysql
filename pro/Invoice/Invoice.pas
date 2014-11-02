@@ -480,7 +480,8 @@ begin
     CloseFile(m);
     strIdSend := '';
     NEWN := 1;
-    q := sql.Select(EntrySec.sends_view {'Sends'}, 'DateSupp,Ident,CountInvoice',
+    q := sql.Select(EntrySec.sends_view {'Sends'},
+      'DateSupp,Ident,CountInvoice',
       'Invoice_Ident=' +
       qIn.fieldByName('Ident').asString, 'DateSupp');
     if not q.Eof then
@@ -575,7 +576,8 @@ begin
     end;
     q.Free;
     //----------------------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Перевозка грузобагажа ж/д транспортом'), '');
@@ -587,7 +589,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Перевозка грузобагажа автотранспортом'), '');
@@ -599,7 +602,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Вознагр. агента за организацию перевозки'), '');
@@ -611,7 +615,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Упаковочный материал'), '');
@@ -623,7 +628,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Вознагр. агента за упаковку'), '');
@@ -635,7 +641,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Страхование'), '');
@@ -647,7 +654,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Вознагр. агента за страхование'), '');
@@ -940,7 +948,8 @@ begin
     end;
     q.Free;
     //----------------------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + strIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + strIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Перевозка грузобагажа ж/д транспортом'), '');
@@ -952,7 +961,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Перевозка грузобагажа автотранспортом'), '');
@@ -964,7 +974,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Вознагр. агента за организацию перевозки'), '');
@@ -976,7 +987,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Упаковочный материал'), '');
@@ -988,7 +1000,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Вознагр. агента за упаковку'), '');
@@ -1000,7 +1013,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Страхование'), '');
@@ -1012,7 +1026,8 @@ begin
     end;
     q.Free;
     //----------------
-    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend +
+    q := sql.Select('PrintInvoice', 'SumNDS,NDS', 'Send_Ident in (' + StrIdSend
+      +
       ')' +
       ' and NameGood=' +
       sql.Makestr('Вознагр. агента за страхование'), '');
