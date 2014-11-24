@@ -43,6 +43,7 @@ var
   SecondFields: string;
   FirstField: string;
 begin
+  {$HINTS OFF}
   FieldCount := fldcnt;
   Ident := sql.selectInteger ('guiview', 'ID',
      'ViewName = ''' + tbname + '''');

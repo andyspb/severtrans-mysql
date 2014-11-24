@@ -33,7 +33,8 @@ var
   q: TQUEry;
   DateStart, DateFin: TDate;
 begin
-  if D2 < D1 then
+  {$HINTS OFF}
+  if (D2 < D1) then
   begin
     Datestart := D2;
     Datefin := D1;
@@ -666,6 +667,7 @@ var
   i: integer;
   N1, N2, N3: integer;
 begin
+  {$HINTS OFF}
   N3 := 0;
   i := 0;
   Neg := '';

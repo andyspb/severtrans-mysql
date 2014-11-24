@@ -61,17 +61,17 @@ uses
 
 {$R *.res}
 
-{
+
 //make singleton later
-function sql_instance
-begin
-  if (sql = nil)
-  begin
-    sql:=TSQL.Create('mysql-st','dba','sql');
-  end
-  result := sql;
-end;
-}
+//function sql_instance():TSQLConnection;
+//begin
+//  if (sql = nil)
+//  begin
+//    sql:=TSQL.Create('mysql-st','dba','sql');
+//  end
+//  result := sql;
+//end;
+
 
 begin
   ShortDateFormat:='dd.mm.yyyy';

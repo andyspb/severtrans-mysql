@@ -26,6 +26,7 @@ var
   perc: integer;
   Country: string;
 begin
+  InvoiceCount := 0;
   q := sql.Select(EntrySec.sends_view {'Sends'}, '', 'Ident in (' + strId + ')',
     ''); //+
   { ' and NumberCountPattern is NULL and( (ContractType_Ident=2 and '+
@@ -322,6 +323,7 @@ var
   l, i: longint;
   str, str1: string;
 begin
+  AktCount := 0;
   q := sql.Select(EntrySec.sends_view {'Sends'}, '', 'Ident in (' + strId + ')',
     '');
   if not q.eof then
@@ -1143,6 +1145,7 @@ var
   perc: integer;
   Country: string;
 begin
+  AftoSumCount := 0;
   q := sql.Select(EntrySec.send_table {'Send'}, '', 'Ident =' + IntToStr(Id),
     ''); //+
   if not q.eof then

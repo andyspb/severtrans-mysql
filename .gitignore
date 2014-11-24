@@ -244,3 +244,8 @@ pro/Invoice/FInvoice.~dfm
 pro/Account/FAccount.~dfm
 pro/Account/fAccountTekB.~dfm
 pro/Account/fAccountB.~dfm
+pro/Inform/FAddEdit.dfm
+pro/Send/FTrain.~dfm
+pro/Send/FTrain.~dfm
+pro/Inform/FAddEdit.dfm
+*.~dfm

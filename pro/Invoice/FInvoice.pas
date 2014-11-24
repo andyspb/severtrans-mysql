@@ -612,14 +612,14 @@ label
 label
   T1;
 begin
-  Logger.LogError(EntrySec.version + '[TFormInvoice.Print] >>>> ');
+  Logger.LogError(EntrySec.version + '[TFormInvoice.Print] >>>>');
   if (Application = nil) then
   begin
-      Logger.LogError(EntrySec.version +
-        '[TFormInvoice.Print] Error !!! Application == nil');
-      application.MessageBox('[TFormInvoice.Print] Oшибка связи с приложением',
-        'Error', 0);
-      exit;
+    Logger.LogError(EntrySec.version +
+      '[TFormInvoice.Print] Error !!! Application == nil');
+    application.MessageBox('[TFormInvoice.Print] Oшибка связи с приложением',
+      'Error', 0);
+    exit;
   end;
   Logger.LogError(EntrySec.version +
     '[TFormInvoice.Print] call TReportMakerWP.Create');
@@ -640,10 +640,10 @@ begin
   except
     on E: Exception do
     begin
-      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exceptions happened: '
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
         + E.Message);
       application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных',
-      'Error', 0);
+        'Error', 0);
       exit;
     end;
   end;
@@ -678,13 +678,48 @@ begin
 
     ReportMakerWP.AddParam('14=' + query.FieldByName('Person').asstring);
     ReportMakerWP.AddParam('15=' + query.FieldByName('PersonBug').asstring);
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка при заполнении счет-фактуры',
+        'Error', 0);
+      exit;
+    end;
+  end;
+
+  try
     query.Free;
     Logger.LogError(EntrySec.version +
-      '[TFormInvoice.Print] after q.free // Select(BOSS....');
-    //---------
+      '[TFormInvoice.Print] after query.free ');
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных on free',
+        'Error', 0);
+      exit;
+    end;
+  end;
+  //---------
+  try
     Logger.LogError(EntrySec.version +
       '[TFormInvoice.Print] sql.Select(Clients....');
     query := sql.Select('Clients', '*', 'Ident=' + IntToStr(Ident), '');
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных 2',
+        'Error', 0);
+      exit;
+    end;
+  end;
+
+  try
     ReportMakerWP.AddParam('16=' + query.FieldByName('Name').asstring);
     s := sql.SelectString('Address', 'AdrName', 'Clients_Ident=' +
       IntToStr(cbClient.SQLComboBox.GetData) +
@@ -724,8 +759,7 @@ begin
       ' and `Start`<=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
       StrToDate(Dat))) +
       ' and ContractType_Ident=1 and (Finish is NULL or Finish>' +
-      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '')
-    then
+      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '') then
     begin
       ReportMakerWP.AddParam('27=' + '№ ' + sql.SelectString('Contract',
         'Number', 'Clients_Ident=' +
@@ -756,8 +790,7 @@ begin
       ' and `Start`<=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
       StrToDate(Dat))) +
       ' and ContractType_Ident=2 and (Finish is NULL or Finish>' +
-      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '')
-    then
+      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '') then
     begin
       ReportMakerWP.AddParam('29=' + '№ ' + sql.SelectString('Contract',
         'Number', 'Clients_Ident=' +
@@ -789,42 +822,94 @@ begin
       (sql.SelectString('Contract', 'Number', 'Clients_Ident=' +
       IntToStr(Ident) + ' and ContractType_Ident=1 and Finish is NULL') <> '')
         then
+    begin
       ReportMakerWP.AddParam('31=' + ', ')
-    else
-      ReportMakerWP.AddParam('31=' + '');
-    query.Free;
-
-    //-----------------------------------------------------------------------------------------
-    Logger.LogError(EntrySec.version +
-      '[TFormInvoice.Print] 3 sql.Select(PrintInvoice....');
-    query := sql.Select('PrintInvoice', 'Sum,SumNDS,NDS', 'Send_Ident in (' +
-      StrIdSend + ')', '');
-    Sum := 0;
-    SumNDS := 0;
-    NDS := 0;
-    Fee := 0;
-    if (query.Eof) then
-      exit
+    end
     else
     begin
-      while (not query.eof) do
-      begin
-        Sum := Sum + query.FieldByName('Sum').AsFloat;
-        SumNDS := SumNDS + query.FieldByName('SumNDS').AsFloat;
-        NDS := NDS + query.FieldByName('NDS').AsFloat;
-        query.Next;
-      end;
+      ReportMakerWP.AddParam('31=' + '');
     end;
-    query.Free;
-    //-----------------------------------------------------------------------------------------
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка при заполнении счет-фактуры',
+        'Error', 0);
+      exit;
+    end;
+  end;
 
-    ReportMakerWP.AddParam('32=' + StrTo00(FloatToStr(Sum)));
-    ReportMakerWP.AddParam('33=' + StrTo00(FloatToStr(NDS)));
-    ReportMakerWP.AddParam('34=' + StrTo00(FloatToStr(SumNDS)));
-    s := SendStr.MoneyToString(StrTo00(FloatToStr(SumNDS)));
-    ReportMakerWP.AddParam('35=' + s);
-    s := SendStr.MoneyToString(StrTo00(FloatToStr(NDS)));
-    ReportMakerWP.AddParam('36=' + s);
+  try
+    query.Free;
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных 2',
+        'Error', 0);
+      exit;
+    end;
+  end;
+
+  //-----------------------------------------------------------------------------------------
+  try
+    Logger.LogError(EntrySec.version +
+      '[TFormInvoice.Print] 3 sql.Select(PrintInvoice....');
+
+    query := sql.Select('PrintInvoice', 'Sum,SumNDS,NDS', 'Send_Ident in (' +
+      StrIdSend + ')', '');
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных 2',
+        'Error', 0);
+      exit;
+    end;
+  end;
+
+  Sum := 0;
+  SumNDS := 0;
+  NDS := 0;
+  Fee := 0;
+  if (query.Eof) then
+    exit
+  else
+  begin
+    while (not query.eof) do
+    begin
+      Sum := Sum + query.FieldByName('Sum').AsFloat;
+      SumNDS := SumNDS + query.FieldByName('SumNDS').AsFloat;
+      NDS := NDS + query.FieldByName('NDS').AsFloat;
+      query.Next;
+    end;
+  end;
+  try
+    query.Free;
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных 2',
+        'Error', 0);
+      exit;
+    end;
+  end;
+  //-----------------------------------------------------------------------------------------
+
+  ReportMakerWP.AddParam('32=' + StrTo00(FloatToStr(Sum)));
+  ReportMakerWP.AddParam('33=' + StrTo00(FloatToStr(NDS)));
+  ReportMakerWP.AddParam('34=' + StrTo00(FloatToStr(SumNDS)));
+  s := SendStr.MoneyToString(StrTo00(FloatToStr(SumNDS)));
+  ReportMakerWP.AddParam('35=' + s);
+  s := SendStr.MoneyToString(StrTo00(FloatToStr(NDS)));
+  ReportMakerWP.AddParam('36=' + s);
+
+  try
     Logger.LogError(EntrySec.version +
       '[TFormInvoice.Print] 4 sql.Select(PrintInvoice....');
     query := sql.Select('PrintInvoice', 'NameGood,SumNDS,', 'Send_Ident in (' +
@@ -836,8 +921,19 @@ begin
       query.Next;
     end;
     query.Free;
-    //------------------------------------------------------------------------------------------
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных 2',
+        'Error', 0);
+      exit;
+    end;
+  end;
+  //------------------------------------------------------------------------------------------
 
+  try
     s := SendStr.MoneyToString(StrTo00(FloatToStr(Fee)));
     ReportMakerWP.AddParam('37=' + s);
     s := 'Ident in (' + StrIdSend + ')';
@@ -856,28 +952,6 @@ begin
       Logger.LogError(EntrySec.version + '[FInvoice] (Application is null');
       application.MessageBox('Oшибка связи с приложением', 'Error', 0);
     end;
-
-    //    WordApplication1:=TWordApplication.Create(Application);
-    //    if (WordApplication1<> nil) then
-    //    begin
-    //      WordApplication1.Visible := true;
-    //      if (WordApplication1.Documents <> nil) then
-    //      begin
-    //        try
-    //          WordApplication1.Documents.Close(EmptyParam,EmptyParam, EmptyParam);
-    //        except
-    //          on E: Exception do
-    //          begin
-    //            Logger.LogError(EntrySec.version + '[FInvoice.Print]Handled: 1 Exceptions happened: ' + E.Message);
-    //          end;
-    //        end;
-    //        Logger.LogError(EntrySec.version + '[FInvoice.Print] 1 TWordApplication.WindowState=2');
-    //        WordApplication1.WindowState:=2;
-    //        Logger.LogError(EntrySec.version + '[FInvoice.Print] 1 TWordApplication.free');
-    //        WordApplication1.Free;
-    //      end;
-    //   end;
-    // ------------------------------------------------------------------------------------------------
 
     result := ReportMakerWP.DoMakeReport(systemdir + 'Invoice\Invoice.rtf',
       systemdir + 'Invoice\' + invoice_ini, systemdir + 'Invoice\out.rtf');
@@ -900,6 +974,19 @@ begin
     Logger.LogInfo(EntrySec.version +
       '[FInvoice.print] ReportMakerWP.DoMakeReport() SUCCESS');
 
+  except
+    on E: Exception do
+    begin
+      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+        + E.Message);
+      application.MessageBox('[TFormInvoice.Print] Oшибка создания отчета',
+        'Error', 0);
+      exit;
+    end;
+  end;
+
+
+  try
     Logger.LogInfo(EntrySec.version +
       '[FInvoice.print] 2 TWordApplication.Create');
     WordApplication1 := TWordApplication.Create(Application);
@@ -980,7 +1067,7 @@ begin
       EmptyParam, EmptyParam, EmptyParam,
       w2, EmptyParam, EmptyParam,
       EmptyParam, EmptyParam, EmptyParam);
-  // LABEL
+    // LABEL
     T:
     Logger.LogInfo(EntrySec.version + '[FInvoice.print] label T');
     if (WordApplication1 <> nil) then
