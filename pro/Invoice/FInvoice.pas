@@ -602,7 +602,7 @@ var
   p, w1, w2, w3, w4: OleVariant;
   s: string;
   query: TQuery;
-  s2, mach: string;
+  s2, user_name_str: string;
   i1, i2, i3, i4: integer;
   certificate_ini: string;
   invoice_ini: string;
@@ -1023,13 +1023,13 @@ begin
       goto T;
       exit;
     end;
-    mach := '';
+    user_name_str := '';
     Logger.LogInfo(EntrySec.version +
       '[FInvoice.print] trim(WordApplication1.UserName)');
 
-    mach := trim(WordApplication1.UserName);
+    user_name_str := trim(WordApplication1.UserName);
     w2 := sql.SelectString('Printer', 'NameA4', 'ComputerName=' +
-      sql.MakeStr(mach));
+      sql.MakeStr(user_name_str));
     Logger.LogInfo(EntrySec.version +
       '[FInvoice.print] WordApplication1.Documents.Open p=' + p);
     WordApplication1.Documents.Open(p,
@@ -1038,7 +1038,7 @@ begin
       EmptyParam, EmptyParam, EmptyParam,
       EmptyParam, EmptyParam);
     w3 := sql.SelectString('Printer', 'ComNameA4', 'ComputerName=' +
-      sql.MakeStr(mach));
+      sql.MakeStr(user_name_str));
     if ((VarToStr(w2) = '') or (VarToStr(w3) = '')) then
     begin
       Logger.LogError(EntrySec.version +
@@ -1212,10 +1212,10 @@ begin
       goto T1;
       exit;
     end;
-    mach := '';
-    mach := trim(WordApplication1.UserName);
+    user_name_str := '';
+    user_name_str := trim(WordApplication1.UserName);
     w2 := sql.SelectString('Printer', 'NameA4', 'ComputerName=' +
-      sql.MakeStr(mach));
+      sql.MakeStr(user_name_str));
 
     Logger.LogError(EntrySec.version +
       '[FInvoice.print] TWordApplication.Open p=' + p);
@@ -1226,7 +1226,7 @@ begin
       EmptyParam, EmptyParam);
 
     w3 := sql.SelectString('Printer', 'ComNameA4', 'ComputerName=' +
-      sql.MakeStr(mach));
+      sql.MakeStr(user_name_str));
     if ((VarToStr(w2) = '') or (VarToStr(w3) = '')) then
     begin
       Logger.LogError(EntrySec.version +
