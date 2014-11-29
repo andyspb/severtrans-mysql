@@ -600,13 +600,9 @@ procedure TFormInvoice.Print;
 var
   ReportMakerWP: TReportMakerWP;
   p, w1, w2, w3, w4: OleVariant;
-  s: string;
   query: TQuery;
-  s2, user_name_str: string;
-  i1, i2, i3, i4: integer;
-  certificate_ini: string;
-  invoice_ini: string;
-  result: integer;
+  s1, s2, user_name, certificate_ini, invoice_ini: string;
+  i1, i2, i3, i4, result: integer;
 label
   T;
 label
@@ -654,8 +650,8 @@ begin
     ReportMakerWP.AddParam('1=' + Number);
     Logger.LogError(EntrySec.version +
       '[TFormInvoice.Print] call SendStr.DataDMstrY');
-    s := SendStr.DataDMstrY(StrToDate(Dat));
-    ReportMakerWP.AddParam('2=' + s);
+    s1 := SendStr.DataDMstrY(StrToDate(Dat));
+    ReportMakerWP.AddParam('2=' + s1);
     ReportMakerWP.AddParam('3=' + query.FieldByName('Acronym').asstring);
     //if Number='' then Number:='/'+FormatDateTime('yy',StrToDate(LabelEditDate1.text));
     ReportMakerWP.AddParam('4=' + query.FieldByName('UrAddress').asstring);
@@ -663,15 +659,15 @@ begin
     ReportMakerWP.AddParam('6=' + query.FieldByName('INN').asstring + '/' +
       query.FieldByName('KPP').asstring);
     ReportMakerWP.AddParam('7=' + query.FieldByName('CalculateCount').asstring);
-    s := sql.SelectString('Bank', 'Name', 'Ident=' +
+    s1 := sql.SelectString('Bank', 'Name', 'Ident=' +
       IntToStr(query.FieldByName('Bank_Ident').asinteger));
-    ReportMakerWP.AddParam('8=' + s);
-    s := sql.SelectString('Bank', 'KorCount', 'Ident=' +
+    ReportMakerWP.AddParam('8=' + s1);
+    s1 := sql.SelectString('Bank', 'KorCount', 'Ident=' +
       IntToStr(query.FieldByName('Bank_Ident').asinteger));
-    ReportMakerWP.AddParam('9=' + s);
-    s := sql.SelectString('Bank', 'BIK', 'Ident=' +
+    ReportMakerWP.AddParam('9=' + s1);
+    s1 := sql.SelectString('Bank', 'BIK', 'Ident=' +
       IntToStr(query.FieldByName('Bank_Ident').asinteger));
-    ReportMakerWP.AddParam('10=' + s);
+    ReportMakerWP.AddParam('10=' + s1);
     ReportMakerWP.AddParam('11=' + 'Санкт-Петербург');
     ReportMakerWP.AddParam('12=' + query.FieldByName('OKONX').asstring);
     ReportMakerWP.AddParam('13=' + query.FieldByName('OKPO').asstring);
@@ -721,35 +717,35 @@ begin
 
   try
     ReportMakerWP.AddParam('16=' + query.FieldByName('Name').asstring);
-    s := sql.SelectString('Address', 'AdrName', 'Clients_Ident=' +
+    s1 := sql.SelectString('Address', 'AdrName', 'Clients_Ident=' +
       IntToStr(cbClient.SQLComboBox.GetData) +
       ' and Addresstype_Ident=' + intToStr(1));
-    ReportMakerWP.AddParam('17=' + s);
+    ReportMakerWP.AddParam('17=' + s1);
     ReportMakerWP.AddParam('18=' + query.FieldByName('Telephone').asstring);
     ReportMakerWP.AddParam('19=' + query.FieldByName('INN').asstring + '/' +
       query.FieldByName('KPP').asstring);
     ReportMakerWP.AddParam('20=' + query.FieldByName('CalculatCount').asstring);
-    s := sql.SelectString('Bank', 'Name', 'Ident=' +
+    s1 := sql.SelectString('Bank', 'Name', 'Ident=' +
       IntToStr(query.fieldByName('Bank_Ident').asInteger));
-    ReportMakerWP.AddParam('21=' + s);
-    s := sql.SelectString('Bank', 'KorCount', 'Ident=' +
+    ReportMakerWP.AddParam('21=' + s1);
+    s1 := sql.SelectString('Bank', 'KorCount', 'Ident=' +
       IntToStr(query.fieldByName('Bank_Ident').asInteger));
-    ReportMakerWP.AddParam('22=' + s);
-    s := sql.SelectString('Bank', 'BIK', 'Ident=' +
+    ReportMakerWP.AddParam('22=' + s1);
+    s1 := sql.SelectString('Bank', 'BIK', 'Ident=' +
       IntToStr(query.fieldByName('Bank_Ident').asInteger));
-    ReportMakerWP.AddParam('23=' + s);
-    s := sql.SelectString('City', 'Name', 'Ident=' +
+    ReportMakerWP.AddParam('23=' + s1);
+    s1 := sql.SelectString('City', 'Name', 'Ident=' +
       IntToStr(query.fieldByName('City_Ident').asInteger));
     //---------------------------
-    if (s <> '') then
+    if (s1 <> '') then
     begin
-      if (pos(' до ', s) <> 0) or (pos(' склад', s) <> 0) then
+      if (pos(' до ', s1) <> 0) or (pos(' склад', s1) <> 0) then
       begin
-        delete(s, pos(' ', s), Length(s) - pos(' ', s) + 1);
+        delete(s1, pos(' ', s1), Length(s1) - pos(' ', s1) + 1);
       end;
     end;
     //---------------------------
-    ReportMakerWP.AddParam('24=' + s);
+    ReportMakerWP.AddParam('24=' + s1);
     ReportMakerWP.AddParam('25=' + query.FieldByName('OKONX').asstring);
     ReportMakerWP.AddParam('26=' + query.FieldByName('OKPO').asstring);
     Logger.LogError(EntrySec.version +
@@ -904,10 +900,10 @@ begin
   ReportMakerWP.AddParam('32=' + StrTo00(FloatToStr(Sum)));
   ReportMakerWP.AddParam('33=' + StrTo00(FloatToStr(NDS)));
   ReportMakerWP.AddParam('34=' + StrTo00(FloatToStr(SumNDS)));
-  s := SendStr.MoneyToString(StrTo00(FloatToStr(SumNDS)));
-  ReportMakerWP.AddParam('35=' + s);
-  s := SendStr.MoneyToString(StrTo00(FloatToStr(NDS)));
-  ReportMakerWP.AddParam('36=' + s);
+  s1 := SendStr.MoneyToString(StrTo00(FloatToStr(SumNDS)));
+  ReportMakerWP.AddParam('35=' + s1);
+  s1 := SendStr.MoneyToString(StrTo00(FloatToStr(NDS)));
+  ReportMakerWP.AddParam('36=' + s1);
 
   try
     Logger.LogError(EntrySec.version +
@@ -934,10 +930,10 @@ begin
   //------------------------------------------------------------------------------------------
 
   try
-    s := SendStr.MoneyToString(StrTo00(FloatToStr(Fee)));
-    ReportMakerWP.AddParam('37=' + s);
-    s := 'Ident in (' + StrIdSend + ')';
-    ReportMakerWP.AddParam('38=' + s);
+    s1 := SendStr.MoneyToString(StrTo00(FloatToStr(Fee)));
+    ReportMakerWP.AddParam('37=' + s1);
+    s1 := 'Ident in (' + StrIdSend + ')';
+    ReportMakerWP.AddParam('38=' + s1);
     invoice_ini := iff(EntrySec.bAllData, 'Invoice_all.ini', 'Invoice.ini');
     Logger.LogError(EntrySec.version + '[TFormInvoice.Print] invoice_ini=' +
       invoice_ini);
@@ -1023,13 +1019,13 @@ begin
       goto T;
       exit;
     end;
-    user_name_str := '';
+    user_name := '';
     Logger.LogInfo(EntrySec.version +
       '[FInvoice.print] trim(WordApplication1.UserName)');
 
-    user_name_str := trim(WordApplication1.UserName);
+    user_name := trim(WordApplication1.UserName);
     w2 := sql.SelectString('Printer', 'NameA4', 'ComputerName=' +
-      sql.MakeStr(user_name_str));
+      sql.MakeStr(user_name));
     Logger.LogInfo(EntrySec.version +
       '[FInvoice.print] WordApplication1.Documents.Open p=' + p);
     WordApplication1.Documents.Open(p,
@@ -1038,7 +1034,7 @@ begin
       EmptyParam, EmptyParam, EmptyParam,
       EmptyParam, EmptyParam);
     w3 := sql.SelectString('Printer', 'ComNameA4', 'ComputerName=' +
-      sql.MakeStr(user_name_str));
+      sql.MakeStr(user_name));
     if ((VarToStr(w2) = '') or (VarToStr(w3) = '')) then
     begin
       Logger.LogError(EntrySec.version +
@@ -1108,8 +1104,8 @@ begin
     //---------------------------------
     query := sql.Select('BOSS', '*', '', '');
     ReportMakerWP.AddParam('1=' + Number);
-    s := SendStr.DataDMstrY(StrToDate(Dat));
-    ReportMakerWP.AddParam('2=' + s);
+    s1 := SendStr.DataDMstrY(StrToDate(Dat));
+    ReportMakerWP.AddParam('2=' + s1);
     ReportMakerWP.AddParam('3=' + query.FieldByName('Name').asstring);
 
     ReportMakerWP.AddParam('14=' + query.FieldByName('Person').asstring);
@@ -1146,10 +1142,10 @@ begin
     ReportMakerWP.AddParam('32=' + StrTo00(FloatToStr(Sum)));
     ReportMakerWP.AddParam('33=' + StrTo00(FloatToStr(NDS)));
     ReportMakerWP.AddParam('34=' + StrTo00(FloatToStr(SumNDS)));
-    s := SendStr.MoneyToString(StrTo00(FloatToStr(SumNDS)));
-    ReportMakerWP.AddParam('35=' + s);
-    s := SendStr.MoneyToString(StrTo00(FloatToStr(NDS)));
-    ReportMakerWP.AddParam('36=' + s);
+    s1 := SendStr.MoneyToString(StrTo00(FloatToStr(SumNDS)));
+    ReportMakerWP.AddParam('35=' + s1);
+    s1 := SendStr.MoneyToString(StrTo00(FloatToStr(NDS)));
+    ReportMakerWP.AddParam('36=' + s1);
     query := sql.Select('PrintInvoice', 'NameGood,SumNDS,', 'Send_Ident in (' +
       StrIdSend + ')' +
       ' and (NameGOOD like ''Вознагр.%'')', '');
@@ -1159,10 +1155,10 @@ begin
       query.Next;
     end;
     query.Free;
-    s := SendStr.MoneyToString(StrTo00(FloatToStr(Fee)));
-    ReportMakerWP.AddParam('37=' + s);
-    s := 'Ident in (' + StrIdSend + ')';
-    ReportMakerWP.AddParam('38=' + s);
+    s1 := SendStr.MoneyToString(StrTo00(FloatToStr(Fee)));
+    ReportMakerWP.AddParam('37=' + s1);
+    s1 := 'Ident in (' + StrIdSend + ')';
+    ReportMakerWP.AddParam('38=' + s1);
     certificate_ini := iff(EntrySec.bAllData, 'Certificate_all.ini',
       'Certificate.ini');
     //-----------------------------------------
@@ -1212,10 +1208,10 @@ begin
       goto T1;
       exit;
     end;
-    user_name_str := '';
-    user_name_str := trim(WordApplication1.UserName);
+    user_name := '';
+    user_name := trim(WordApplication1.UserName);
     w2 := sql.SelectString('Printer', 'NameA4', 'ComputerName=' +
-      sql.MakeStr(user_name_str));
+      sql.MakeStr(user_name));
 
     Logger.LogError(EntrySec.version +
       '[FInvoice.print] TWordApplication.Open p=' + p);
@@ -1226,7 +1222,7 @@ begin
       EmptyParam, EmptyParam);
 
     w3 := sql.SelectString('Printer', 'ComNameA4', 'ComputerName=' +
-      sql.MakeStr(user_name_str));
+      sql.MakeStr(user_name));
     if ((VarToStr(w2) = '') or (VarToStr(w3) = '')) then
     begin
       Logger.LogError(EntrySec.version +
