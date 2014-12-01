@@ -1,6 +1,6 @@
 object FormConstant: TFormConstant
-  Left = 658
-  Top = 147
+  Left = 656
+  Top = 136
   Width = 834
   Height = 561
   Caption = #1050#1086#1085#1089#1090#1072#1085#1090#1099
@@ -5162,7 +5162,7 @@ object FormConstant: TFormConstant
     end
     object Label11: TLabel
       Left = 400
-      Top = 216
+      Top = 208
       Width = 194
       Height = 16
       Caption = #1055#1088#1086#1094#1077#1085#1090' '#1079#1072' '#1078#1076' '#1087#1077#1088#1077#1074#1086#1079#1082#1091
@@ -5188,6 +5188,13 @@ object FormConstant: TFormConstant
       Width = 229
       Height = 16
       Caption = #1052#1080#1085' '#1087#1088#1086#1074#1086#1079#1085#1072#1103' '#1087#1083#1072#1090#1072' ('#1090#1077#1087#1083#1072#1103')'
+    end
+    object Label19: TLabel
+      Left = 400
+      Top = 248
+      Width = 172
+      Height = 16
+      Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1058#1045#1050' %'
     end
     object EditMoney1: TEditMoney
       Left = 264
@@ -5374,6 +5381,22 @@ object FormConstant: TFormConstant
       MaxLength = 8
       ShowHint = True
       TabOrder = 12
+    end
+    object ePercentTek: TLabelInteger
+      Left = 656
+      Top = 232
+      Width = 121
+      Height = 39
+      Hint = #1042#1074#1077#1076#1080#1090#1077' '#1087#1088#1086#1094#1077#1085#1090' '#1079#1072' '#1078#1076' '#1087#1077#1088#1077#1074#1086#1079#1082#1091
+      FieldName = 'PercentTek'
+      CaptionID = 0
+      Text = '0'
+      ParentColor = False
+      ReadOnly = False
+      MaxLength = 5
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 14
     end
   end
   object HeaderControl1: THeaderControl

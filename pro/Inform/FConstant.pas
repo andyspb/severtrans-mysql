@@ -51,6 +51,9 @@ type
     Label17: TLabel;
     Label18: TLabel;
     EditMoney5: TEditMoney;
+    Label19: TLabel;
+    ePercentTek: TLabelInteger;
+
     procedure btCanselClick(Sender: TObject);
     procedure btOkClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -123,6 +126,9 @@ begin
   if q.FieldByName('PriceDver').asString<>'' then
      EPriceDver.Text:=q.FieldByName('PriceDver').asString;
 
+  if q.FieldByName('PercentTek').asString<>'' then
+    ePercentTek.Text:=q.FieldByName('PercentTek').asString;
+
 end
  else  UpDate.text:=FormatDateTime('dd.mm.yyyy',now);
 
@@ -194,12 +200,15 @@ begin
     if  ePackTariff.Text<>'' then
             str:=str+', '+sql.MakeStr(trim(ePackTariff.Text))
        else str:=str+', '+'NULL';
+    if  ePercentTek.Text<>'' then
+            str:=str+', '+sql.MakeStr(trim(ePercentTek.Text))
+       else str:=str+', '+'0';
  //------------------------------
 
  sql.InsertString('Constant','UnitVol,UnitPack,UnitExp,UnitPass,'+
                   'PercentWarm,PercentFragile,PercentOversized,MinPay,MinPayWarm,'+
                   'UpDate,MinPayGd,PlaceTariff,PercentTarGd,PriceSklad,PriceDver,'+
-                  'PercentSend,PercentPack,PercentInsurance,PackTariff',str);
+                  'PercentSend,PercentPack,PercentInsurance,PackTariff,PercentTek',str);
 //-----------------------------------------------------------------------------
 end else begin
      if  MaskEdit1.Text<>'' then
@@ -268,6 +277,10 @@ end else begin
             str:=str+', PackTariff='+sql.MakeStr(trim(ePackTariff.Text))
        else str:=str+', PackTariff='+'NULL';
 //----------------------------------
+    if  ePercentTek.Text<>'' then
+            str:=str+', PercentTek='+sql.MakeStr(trim(ePercentTek.Text))
+       else str:=str+', PercentTek='+'0';
+//----------------------------------
 
     sql.UpdateString('Constant',str,'');
 //----------------------------------------------------------------------------    
@@ -279,6 +292,7 @@ end;
 
 procedure TFormConstant.btOkClick(Sender: TObject);
 var
+  varInt: integer;
     varStr:string;
 begin
 VarStr:=trim(MaskEdit1.text)  ;
@@ -360,7 +374,16 @@ begin
    ePriceDver.SetFocus;
    exit;
 end else
+begin
+varInt := StrToInt(ePercentTek.text);
+if ( varInt <0)  or (varInt >100 ) then
+begin
+   Application.MessageBox('Неправильно введено значение!','Ошибка',0);
+   ePercentTek.SetFocus;
+   exit;
+end else
  ModalResult:=mrOk;
+end
 end
 end
 end

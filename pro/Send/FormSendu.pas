@@ -222,6 +222,7 @@ var
   sends_view: string;
   send_table_other: string;
   sends_view_other: string;
+  PercentTek: integer;
 
 implementation
 
@@ -231,7 +232,18 @@ uses Menu, FConstant, SendStr, FAddEdit, makerepp,
 {$R *.dfm}
 
 procedure TFormSend.FormCreate(Sender: TObject);
+var
+  q:TQuery;
 begin
+  PercentTek :=10;
+  q:=sql.select('Constant','*','','') ;
+  if (not q.eof) then
+  begin
+      if (q.FieldByName('PercentTek').asString<>'') then
+        PercentTek:=q.FieldByName('PercentTek').asInteger;
+  end;
+  q.Free;
+
   labelInteger2.Edit.BiDiMode := bdLeftToRight;
   eWieght.Edit.BiDiMode := bdLeftToRight;
   //cbPynkt.SQLComboBox.Sorted:=true;
@@ -254,7 +266,7 @@ function TFormSend.AddRecord: longint;
 var
   str, s: string;
   l: longInt;
-  q: TQUEry;
+  q: TQuery;
   I: integer;
   fields: string;
   thread: TInsertThread;
@@ -1574,7 +1586,7 @@ begin
     if (sql.SelectInteger('ClientsTek', 'Ident', 'Ident=' +
       intToStr(cbZak.GetData)) <> 0)
       and (trim(ePercent.text) = '0') then
-      ePercent.text := '5';
+      ePercent.text := IntToStr(PercentTek); //'5';
 
     if (cbOtpr.GetData = 0) or (cbOtpr.GetData = -1) then
     begin
@@ -3269,7 +3281,7 @@ end;
 procedure TFormSend.RadioGroup1Exit(Sender: TObject);
 begin
   if (trim(ePercent.text) = '0') and (RadioGroup1.ItemIndex = 1) then
-    ePercent.text := '5';
+    ePercent.text := IntToStr(PercentTek) ; //'5';
 end;
 
 procedure TFormSend.ePercentExit(Sender: TObject);
