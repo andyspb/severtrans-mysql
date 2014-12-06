@@ -3,7 +3,7 @@ unit Invoice;
 interface
 uses
   Windows, Messages, SysUtils, Variants, Controls, DateUtils, SqlGrid, Dialogs,
-  DB, DBTables, TSQLCLS, EntrySec;
+  DB, DBTables, TSQLCLS, EntrySec, Math;
 
 function InvoiceCount(Id: longint; strId: string; NewNalog: integer): integer;
 function AftoSumCount(Id: longint): real;
@@ -165,6 +165,7 @@ begin
         str := str + ',' + sql.MakeStr('1.0');
         str := str + ',' + sql.MakeStr(SendStr.StrTo00(FloatToStr(f)));
         NDS := (f * 18) / 118;
+        NDS := SimpleRoundTo(NDS, -2);
         NDS := StrToFloat(StrTo00(FloatToStr(NDS)));
         str := str + ',' + sql.MakeStr(SendStr.StrTo00(FloatToStr(NDS)));
         Sum := f - NDS;
@@ -199,6 +200,7 @@ begin
         str := str + ',' + sql.MakeStr('1.0');
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(f1)));
         NDS := (f1 * 18) / 118;
+        NDS := SimpleRoundTo(NDS,-2);
         NDS := StrToFloat(StrTo00(FloatToStr(NDS)));
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(NDS)));
         Sum := f1 - NDS;
@@ -231,6 +233,7 @@ begin
         str := str + ',' + sql.MakeStr('1.0');
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(f2)));
         NDS := (f2 * 18) / 118;
+        NDS := SimpleRoundTo(NDS, -2);
         NDS := StrToFloat(StrTo00(FloatToStr(NDS)));
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(NDS)));
         Sum := f2 - NDS;
@@ -258,6 +261,7 @@ begin
         str := str + ',' + sql.MakeStr('ì');
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(f3)));
         NDS := (f3 * 18) / 118;
+        NDS := SimpleRoundTo(NDS, -2);
         NDS := StrToFloat(StrTo00(FloatToStr(NDS)));
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(NDS)));
         Sum := f3 - NDS;
@@ -290,6 +294,7 @@ begin
         str := str + ',' + sql.MakeStr('1.0');
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(f4)));
         NDS := (f4 * 18) / 118;
+        NDS := SimpleRoundTO(NDS, -2);
         NDS := StrToFloat(StrTo00(FloatToStr(NDS)));
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(NDS)));
         Sum := f4 - NDS;
