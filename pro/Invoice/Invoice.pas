@@ -200,7 +200,7 @@ begin
         str := str + ',' + sql.MakeStr('1.0');
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(f1)));
         NDS := (f1 * 18) / 118;
-        NDS := SimpleRoundTo(NDS,-2);
+        NDS := SimpleRoundTo(NDS, -2);
         NDS := StrToFloat(StrTo00(FloatToStr(NDS)));
         str := str + ',' + sql.MakeStr(StrTo00(FloatToStr(NDS)));
         Sum := f1 - NDS;
