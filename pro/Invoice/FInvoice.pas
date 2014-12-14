@@ -603,6 +603,8 @@ var
   query: TQuery;
   s1, s2, user_name, certificate_ini, invoice_ini: string;
   i1, i2, i3, i4, result: integer;
+  counter: integer;
+  sqlSelected: boolean;
 label
   T;
 label
@@ -628,20 +630,39 @@ begin
   Logger.LogError(EntrySec.version +
     '[TFormInvoice.Print] call ReportMakerWP.ClearParam');
   ReportMakerWP.ClearParam;
-  try
-    //--------
-    Logger.LogError(EntrySec.version +
-      '[TFormInvoice.Print] sql.Select(BOSS....');
-    query := sql.Select('BOSS', '*', '', '');
-  except
-    on E: Exception do
-    begin
-      Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
-        + E.Message);
-      application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных',
-        'Error', 0);
-      exit;
+
+  counter := 0;
+  sqlSelected := False;
+  while ((sqlSelected <> True) and (counter <= 10)) do
+  begin
+    try
+      //--------
+      counter := counter + 1;
+      Logger.LogError(EntrySec.version +
+        '[TFormInvoice.Print] sql.Select(BOSS....');
+      query := sql.Select('BOSS', '*', '', '');
+      sqlSelected := True;
+    except
+      on E: Exception do
+      begin
+        Logger.LogError(EntrySec.version + '[FInvoice.Print] Exception: '
+          + E.Message);
+        //        application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных',
+        //          'Error', 0);
+        //        exit;
+        sleep(5000);
+        query.Free;
+
+      end;
     end;
+  end;
+
+  if (sqlSelected <> True) then
+  begin
+    application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных ' +
+      '(sqlSelected <> True)',
+      'Error', 0);
+    exit;
   end;
 
   try
@@ -755,7 +776,8 @@ begin
       ' and `Start`<=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
       StrToDate(Dat))) +
       ' and ContractType_Ident=1 and (Finish is NULL or Finish>' +
-      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '') then
+      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '')
+        then
     begin
       ReportMakerWP.AddParam('27=' + '№ ' + sql.SelectString('Contract',
         'Number', 'Clients_Ident=' +
@@ -786,7 +808,8 @@ begin
       ' and `Start`<=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
       StrToDate(Dat))) +
       ' and ContractType_Ident=2 and (Finish is NULL or Finish>' +
-      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '') then
+      sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(Dat))) + ')') <> '')
+        then
     begin
       ReportMakerWP.AddParam('29=' + '№ ' + sql.SelectString('Contract',
         'Number', 'Clients_Ident=' +
@@ -980,7 +1003,6 @@ begin
       exit;
     end;
   end;
-
 
   try
     Logger.LogInfo(EntrySec.version +

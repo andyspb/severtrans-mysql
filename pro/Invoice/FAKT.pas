@@ -436,33 +436,70 @@ var
   q: tQuery;
   i1, i2, i3, i4: integer;
   certificatetek_ini: string;
+  counter: integer;
+  sqlSelected: boolean;
 label
   T1;
 begin
   Logger.LogError(EntrySec.version + '[TFormAkt.Print] >>>> ');
-  try
-    if (Application = nil) then
-    begin
-      application.MessageBox('[TFormAkt.Print] Oшибка связи с приложением',
-        'Error', 0);
-      Logger.LogError(EntrySec.version +
-        '[TFormInvoice.Print] Error !!! Application == nil');
-    end;
+  if (Application = nil) then
+  begin
+    application.MessageBox('[TFormAkt.Print] Oшибка связи с приложением',
+      'Error', 0);
     Logger.LogError(EntrySec.version +
-      '[TFormAkt.Print] TReportMakerWP.Create(Application)');
-    ReportMakerWP := TReportMakerWP.Create(Application);
-    if (ReportMakerWP = nil) then
-    begin
-      Logger.LogError(EntrySec.version +
-        '[TFormAkt.Print] Error !!! ReportMakerWP == nil');
-    end;
+      '[TFormInvoice.Print] Error !!! Application == nil');
+  end;
+  Logger.LogError(EntrySec.version +
+    '[TFormAkt.Print] TReportMakerWP.Create(Application)');
+  ReportMakerWP := TReportMakerWP.Create(Application);
+  if (ReportMakerWP = nil) then
+  begin
+    Logger.LogError(EntrySec.version +
+      '[TFormAkt.Print] Error !!! ReportMakerWP == nil');
+  end;
 
-    Logger.LogError(EntrySec.version +
-      '[TFormAkt.Print] ReportMakerWP.ClearParam');
-    ReportMakerWP.ClearParam;
-    //--------
-    Logger.LogError(EntrySec.version + '[TFormAkt.Print] sql.Select(BOSS....');
-    q := sql.Select('BOSS', '*', '', '');
+  Logger.LogError(EntrySec.version +
+    '[TFormAkt.Print] ReportMakerWP.ClearParam');
+  ReportMakerWP.ClearParam;
+  //--------
+  Logger.LogError(EntrySec.version + '[TFormAkt.Print] sql.Select(BOSS....');
+  counter := 0;
+  sqlSelected := False;
+  while ((sqlSelected <> True) and (counter <= 10)) do
+  begin
+    try
+      //--------
+      counter := counter + 1;
+      Logger.LogError(EntrySec.version +
+        '[TFormAkt.Print] sql.Select(BOSS....');
+      q := sql.Select('BOSS', '*', '', '');
+      sqlSelected := True;
+    except
+      on E: Exception do
+      begin
+        Logger.LogError(EntrySec.version + '[TFormAkt.Print] Exception: '
+          + E.Message);
+        //        application.MessageBox('[TFormAkt.Print] Oшибка связи с базой данных',
+        //          'Error', 0);
+        //        exit;
+        sleep(5000);
+        q.Free;
+
+      end;
+    end;
+  end;
+
+  if (sqlSelected <> True) then
+  begin
+    application.MessageBox('[TFormInvoice.Print] Oшибка связи с базой данных ' +
+      '(sqlSelected <> True)',
+      'Error', 0);
+    exit;
+  end;
+
+
+  try
+
     ReportMakerWP.AddParam('1=' + Number);
     s := SendStr.DataDMstrY(StrToDate(Dat));
     ReportMakerWP.AddParam('2=' + s);
@@ -470,6 +507,7 @@ begin
 
     ReportMakerWP.AddParam('14=' + q.FieldByName('Person').asstring);
     ReportMakerWP.AddParam('15=' + q.FieldByName('PersonBug').asstring);
+
     q.Free;
     //--------------------------------------------------
     Logger.LogError(EntrySec.version +
