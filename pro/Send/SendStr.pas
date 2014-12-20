@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Controls, DateUtils, SqlGrid, Dialogs,
-  DB, DBTables, TSQLCLS, EntrySec;
+  DB, DBTables, TSQLCLS, EntrySec, Math;
 //public
 // { Public declarations }
 function MoneyToString(Money: string): string;
@@ -130,8 +130,8 @@ begin
       q.Free;
       S1 := '';
       S2 := '';
-      S1 := FloatToStr(Sum);
-      S2 := FloatToStr(Sum1);
+      S1 := FloatToStr(SimpleRoundTo(Sum,-2));
+      S2 := FloatToStr(SimpleRoundTo(Sum1,-2));
       S2 := StrTo00(S2);
       S1 := StrTo00(S1);
       if (S1 = S2) then
@@ -160,8 +160,8 @@ begin
       q.Free;
       S1 := '';
       S2 := '';
-      S1 := FloatToStr(Sum);
-      S2 := FloatToStr(Sum1);
+      S1 := FloatToStr(SimpleRoundTo(Sum,-2));
+      S2 := FloatToStr(SimpleRoundTo(Sum1,-2));
       S2 := StrTo00(S2);
       S1 := StrTo00(S1);
       if (S1 = S2) then
@@ -239,8 +239,8 @@ begin
     //---------------------
     S1 := '';
     S2 := '';
-    S1 := FloatToStr(Sum);
-    S2 := FloatToStr(Sum1);
+    S1 := FloatToStr(SimpleRoundTo(Sum,-2));
+    S2 := FloatToStr(SimpleRoundTo(Sum1,-2));
     S2 := StrTo00(S2);
     S1 := StrTo00(S1);
     if (S1 = s2) then
