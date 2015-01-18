@@ -433,7 +433,7 @@ var
   ReportMakerWP: TReportMakerWP;
   p, w1, w2, w3, w4: OleVariant;
   s, mach: string;
-  q: tQuery;
+  query: tQuery;
   i1, i2, i3, i4: integer;
   certificatetek_ini: string;
   counter: integer;
@@ -472,7 +472,7 @@ begin
       counter := counter + 1;
       Logger.LogError(EntrySec.version +
         '[TFormAkt.Print] sql.Select(BOSS....');
-      q := sql.Select('BOSS', '*', '', '');
+      query := sql.Select('BOSS', '*', '', '');
       sqlSelected := True;
     except
       on E: Exception do
@@ -483,7 +483,7 @@ begin
         //          'Error', 0);
         //        exit;
         sleep(5000);
-        q.Free;
+        query.Free;
 
       end;
     end;
@@ -499,45 +499,42 @@ begin
 
 
   try
-
     ReportMakerWP.AddParam('1=' + Number);
     s := SendStr.DataDMstrY(StrToDate(Dat));
     ReportMakerWP.AddParam('2=' + s);
     ReportMakerWP.AddParam('3=' + 'ООО "Севертранс ТЭК"');
-
-    ReportMakerWP.AddParam('14=' + q.FieldByName('Person').asstring);
-    ReportMakerWP.AddParam('15=' + q.FieldByName('PersonBug').asstring);
-
-    q.Free;
+    ReportMakerWP.AddParam('14=' + query.FieldByName('Person').asstring);
+    ReportMakerWP.AddParam('15=' + query.FieldByName('PersonBug').asstring);
+    query.Free;
     //--------------------------------------------------
     Logger.LogError(EntrySec.version +
       '[TFormAkt.Print] sql.Select(ClientsAll....');
-    q := sql.Select('ClientsAll', 'FullName,inPerson,OnReason',
+    query := sql.Select('ClientsAll', 'FullName,inPerson,OnReason',
       'Ident=' + IntToStr(Ident), '');
-    ReportMakerWP.AddParam('4=' + q.FieldByName('FullName').asstring);
-    ReportMakerWP.AddParam('5=' + q.FieldByName('inPerson').asstring);
-    ReportMakerWP.AddParam('6=' + q.FieldByName('OnReason').asstring);
-    q.Free;
+    ReportMakerWP.AddParam('4=' + query.FieldByName('FullName').asstring);
+    ReportMakerWP.AddParam('5=' + query.FieldByName('inPerson').asstring);
+    ReportMakerWP.AddParam('6=' + query.FieldByName('OnReason').asstring);
+    query.Free;
     //----------------------------------------------------
     Logger.LogError(EntrySec.version +
       '[TFormAkt.Print] sql.Select(PrintInvoice....');
-    q := sql.Select('PrintInvoice', 'Sum,SumNDS,NDS', 'Send_Ident in (' +
+    query := sql.Select('PrintInvoice', 'Sum,SumNDS,NDS', 'Send_Ident in (' +
       StrIdSend + ')', '');
     Sum := 0;
     SumNDS := 0;
 
-    if (q.Eof) then
+    if (query.Eof) then
       exit
     else
     begin
-      while (not q.eof) do
+      while (not query.eof) do
       begin
-        Sum := Sum + q.FieldByName('Sum').AsFloat;
-        SumNDS := SumNDS + q.FieldByName('SumNDS').AsFloat;
-        q.Next;
+        Sum := Sum + query.FieldByName('Sum').AsFloat;
+        SumNDS := SumNDS + query.FieldByName('SumNDS').AsFloat;
+        query.Next;
       end;
     end;
-    q.Free;
+    query.Free;
 
     ReportMakerWP.AddParam('32=' + StrTo00(FloatToStr(Sum)));
     ReportMakerWP.AddParam('34=' + StrTo00(FloatToStr(SumNDS)));
