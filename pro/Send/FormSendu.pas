@@ -28,6 +28,7 @@ type
     LabelEdit6: TLabelEdit;
     GroupBox2: TGroupBox;
     cbOtpr: TSQLComboBox;
+    cbPynktOtpr: TLabelSQLComboBox;
     LabelEdit2: TLabelEdit;
     GroupBox3: TGroupBox;
     cbPolych: TSQLComboBox;
@@ -805,6 +806,13 @@ begin
       ' and Arch<>1';
   end;
 
+  if q.FieldByName('City_Ident_Sender').asString <> '' then
+  begin
+    cbPynktOtpr.SQLComboBox.setActive(q.FieldByName('City_Ident_Sender').asInteger);
+    cbNTrain.Where := 'City_Ident=' + IntToStr(cbPynktOtpr.GetData) +
+      ' and Arch<>1';
+  end;
+
   if q.FieldByName('DateSend').asString <> '' then
     LabelEditDate2.Text := FormatDateTime('dd.mm.yyyy',
       StrToDate(q.FieldByName('DateSend').asString));
@@ -1033,6 +1041,11 @@ begin
       str := str + ',City_Ident=' + 'NULL'
     else
       str := str + ',City_Ident=' + IntToStr(cbPynkt.SqlComboBox.GetData);
+
+    if cbPynktOtpr.SqlComboBox.GetData = 0 then
+      str := str + ',City_Ident_Sender=' + 'NULL'
+    else
+      str := str + ',City_Ident_Sender=' + IntToStr(cbPynktOtpr.SqlComboBox.GetData);
 
     if LabelEditDate2.text <> '  .  .    ' then
       str := str + ',DateSend=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
@@ -2921,6 +2934,7 @@ begin
     cbNTrain.Visible := false;
     LabelEdit10.Visible := false;
     cbPynkt.Caption := 'Пункт назначения';
+    cbPynktOtpr.Caption := 'Пункт отправления';
     GroupBox4.Visible := true;
     LabelSQLComboBox1.Visible := true;
     eVolume.Visible := true;

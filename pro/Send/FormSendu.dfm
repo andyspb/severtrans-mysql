@@ -1,8 +1,8 @@
 object FormSend: TFormSend
-  Left = 61
-  Top = 23
-  Width = 926
-  Height = 728
+  Left = 135
+  Top = 106
+  Width = 924
+  Height = 758
   HorzScrollBar.ButtonSize = 20
   HorzScrollBar.Range = 888
   HorzScrollBar.Smooth = True
@@ -5092,7 +5092,7 @@ object FormSend: TFormSend
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 910
+    Width = 908
     Height = 29
     ButtonHeight = 25
     Caption = 'ToolBar1'
@@ -5160,8 +5160,8 @@ object FormSend: TFormSend
   object PageControl1: TPageControl
     Left = 0
     Top = 29
-    Width = 910
-    Height = 661
+    Width = 908
+    Height = 691
     Hint = #1054#1090#1087#1088#1072#1074#1082#1072
     ActivePage = TabSheet1
     Align = alClient
@@ -5287,7 +5287,7 @@ object FormSend: TFormSend
       end
       object cbGryz: TLabelSQLComboBox
         Left = 8
-        Top = 368
+        Top = 416
         Width = 225
         Height = 40
         Hint = #1042#1074#1077#1076#1080#1090#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1075#1088#1091#1079#1072' '#1082#1083#1080#1077#1085#1090#1072
@@ -5430,8 +5430,8 @@ object FormSend: TFormSend
       object GroupBox2: TGroupBox
         Left = 0
         Top = 56
-        Width = 241
-        Height = 81
+        Width = 249
+        Height = 137
         Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5519,8 +5519,8 @@ object FormSend: TFormSend
         end
       end
       object GroupBox3: TGroupBox
-        Left = 0
-        Top = 144
+        Left = -8
+        Top = 200
         Width = 249
         Height = 169
         Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
@@ -5748,7 +5748,7 @@ object FormSend: TFormSend
       end
       object GroupBox6: TGroupBox
         Left = 608
-        Top = 420
+        Top = 460
         Width = 193
         Height = 141
         Caption = #1062#1077#1085#1085#1086#1089#1090#1100
@@ -5866,7 +5866,7 @@ object FormSend: TFormSend
       end
       object eSumCount: TLblEditMoney
         Left = 608
-        Top = 568
+        Top = 608
         Width = 201
         Height = 39
         Hint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1086#1090#1087#1088#1072#1074#1082#1080
@@ -5902,7 +5902,7 @@ object FormSend: TFormSend
       end
       object GroupBox5: TGroupBox
         Left = -8
-        Top = 416
+        Top = 456
         Width = 593
         Height = 193
         Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1091#1089#1083#1091#1075#1080
@@ -6133,7 +6133,7 @@ object FormSend: TFormSend
       end
       object cbForwarder: TLabelSQLComboBox
         Left = 8
-        Top = 319
+        Top = 375
         Width = 225
         Height = 40
         Hint = #1042#1074#1077#1076#1080#1090#1077' '#1060#1048#1054' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072' '#1082#1083#1080#1077#1085#1090#1072
@@ -6388,6 +6388,25 @@ object FormSend: TFormSend
         MaxLength = 5
         TabOrder = 11
         OnExit = ePercentExit
+      end
+      object cbPynktOtpr: TLabelSQLComboBox
+        Left = 8
+        Top = 144
+        Width = 209
+        Height = 40
+        Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076' '#1082#1091#1076#1072' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1075#1088#1091#1079
+        CaptionID = 0
+        Caption = #1055#1091#1085#1082#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1080#1103
+        Table = 'City'
+        DatabaseName = 'SeverTrans'
+        IDField = 'Ident'
+        InfoField = 'Name'
+        ParentColor = False
+        NotNull = False
+        NewItemFlag = False
+        OnChange = cbPynktChange
+        TabOrder = 33
+        OnExit = cbTypeExit
       end
     end
     object TabSheet2: TTabSheet
