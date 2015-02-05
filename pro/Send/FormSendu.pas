@@ -290,6 +290,9 @@ begin
   cbZak.Where := 'PersonType_Ident=1';
   cbZak.Recalc;
 
+  // TODO get City by request
+  cbPynktOtpr.SetActive(323);
+
   Query1.Close;
   Query1.DatabaseName := sql.DataBaseName;
   Query1.SQL.Clear;
@@ -353,6 +356,16 @@ begin
       str := str + ',' + 'NULL'
     else
       str := str + ',' + IntToStr(cbPynkt.SqlComboBox.GetData);
+    //----------
+    if cbPynktOtpr.SqlComboBox.GetData = 0 then
+      begin
+      // by default 323 Санкт-Петербург
+      str := str + ',' + '323'
+      end
+    else
+      str := str + ',' + IntToStr(cbPynktOtpr.SqlComboBox.GetData);
+    cbPynktOtpr.NotNull := true;
+
     //----------
     if LabelEditDate2.text <> '  .  .    ' then
       str := str + ',' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
@@ -639,7 +652,7 @@ begin
       StrToDate(LabelEditDate4.text)));
     //----------
     fields := 'Ident,Check,`Start`,Inspector_Ident,ContractType_Ident,' +
-      'Client_Ident,Client_Ident_Sender,City_Ident,DateSend,' +
+      'Client_Ident,Client_Ident_Sender,City_Ident,City_Ident_Sender,DateSend,' +
       'Acceptor_Ident,Forwarder_Ident,RollOut_Ident,NameGood_Ident,' +
       'TypeGood_Ident,TypeGood_Ident1,TypeGood_Ident2,TypeGood_Ident3,' +
       'PrivilegedTariff,' +
@@ -811,6 +824,12 @@ begin
     cbPynktOtpr.SQLComboBox.setActive(q.FieldByName('City_Ident_Sender').asInteger);
     cbNTrain.Where := 'City_Ident=' + IntToStr(cbPynktOtpr.GetData) +
       ' and Arch<>1';
+  end
+  else
+  begin
+    // set Санкт-Петербург по умолчанию
+    // TODO get by query
+    cbPynktOtpr.SQLComboBox.setActive(323);
   end;
 
   if q.FieldByName('DateSend').asString <> '' then
@@ -2565,6 +2584,9 @@ begin
       // add current year
       cur_year := IntToStr(YearOf(Now));
       ReportMakerWP.AddParam('33=' + cur_year);
+
+      // Add City Sender
+      ReportMakerWP.AddParam('34=' + cbPynktOtpr.SQLComboBox.text);
 
       sendrtf := 'send\sendU.rtf'; //печать для юр лиц
       clientName := sql.SelectString('Clients', 'Acronym', 'Ident=' +

@@ -1,6 +1,6 @@
 object FormSend: TFormSend
-  Left = 135
-  Top = 106
+  Left = 139
+  Top = 157
   Width = 924
   Height = 758
   HorzScrollBar.ButtonSize = 20
@@ -6402,9 +6402,8 @@ object FormSend: TFormSend
         IDField = 'Ident'
         InfoField = 'Name'
         ParentColor = False
-        NotNull = False
+        NotNull = True
         NewItemFlag = False
-        OnChange = cbPynktChange
         TabOrder = 33
         OnExit = cbTypeExit
       end

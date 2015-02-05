@@ -201,7 +201,10 @@ var
   dateDel: string;
   sendrtf: string;
   clientName:string;
+  citySenderIdent:integer;
+  citySenderName:string;
   cur_year: string;
+  str:string;
   label T;
 begin
   try
@@ -316,6 +319,22 @@ begin
     // -- add current year
     cur_year:=IntToStr(YearOf(Now));
     ReportMakerWP.AddParam('33='+cur_year );
+    // City Sender
+    citySenderName:='Санкт-Петербург';
+    citySenderIdent := SQLGRID1.Query.FieldByName('City_Ident_Sender').AsInteger;
+    if (citySenderIdent>0) then
+    begin
+      str:= sql.SelectString('City','Name','Ident='+ IntToStr(citySenderIdent));
+      if (str <> '') then
+      begin
+        citySenderName := str;
+      end;
+    end;
+    // TODO
+    // add City_sender view view
+    // ReportMakerWP.AddParam('34='+SQLGRID1.Query.FieldByName('CityNameSender').AsString);
+    ReportMakerWP.AddParam('34='+ citySenderName);
+
     sendrtf := 'send\sendU.rtf'; //печать для юр лиц
     if Pos('"', clientName) = 1 then
       sendrtf := 'send\sendCh.rtf'; //печать для частных лиц "ТЭК"
