@@ -1,6 +1,6 @@
 object card: Tcard
-  Left = 344
-  Top = 67
+  Left = 113
+  Top = 92
   Width = 698
   Height = 727
   Hint = #1050#1072#1088#1090#1086#1095#1082#1072' '#1082#1083#1080#1077#1085#1090#1072
@@ -5124,7 +5124,7 @@ object card: Tcard
   object eFullName: TLabeledEdit
     Left = 8
     Top = 160
-    Width = 585
+    Width = 617
     Height = 24
     Hint = 
       #1042#1074#1077#1076#1080#1090#1077' '#1087#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1082#1083#1080#1077#1085#1090#1072' ('#1085#1077' '#1076#1086#1083#1078#1077#1085#1086' '#1087#1088#1077#1074#1099#1096#1072#1090#1100' 70 '#1089#1080#1084#1074#1086#1083#1086 +
@@ -5153,7 +5153,7 @@ object card: Tcard
   object LabeledEdit1: TLabeledEdit
     Left = 248
     Top = 112
-    Width = 369
+    Width = 377
     Height = 24
     Hint = 
       #1042#1074#1077#1076#1080#1090#1077' '#1089#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1082#1083#1080#1077#1085#1090#1072' ('#1085#1077' '#1076#1086#1083#1078#1077#1085#1086' '#1087#1088#1077#1074#1099#1096#1072#1090#1100' 45 '#1089#1080 +
@@ -5267,9 +5267,9 @@ object card: Tcard
     OnChange = LabeledEdit6Change
   end
   object eCountry: TLabelSQLComboBox
-    Left = 272
-    Top = 488
-    Width = 225
+    Left = 304
+    Top = 496
+    Width = 321
     Height = 40
     Hint = #1042#1074#1077#1076#1080#1090#1077' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     CaptionID = 0
@@ -5285,10 +5285,10 @@ object card: Tcard
     TabOrder = 24
   end
   object LabelSQLComboBox1: TLabelSQLComboBox
-    Left = 360
+    Left = 328
     Top = 192
-    Width = 233
-    Height = 40
+    Width = 297
+    Height = 41
     Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076
     CaptionID = 0
     Caption = #1043#1086#1088#1086#1076
@@ -5361,7 +5361,7 @@ object card: Tcard
   object LabeledEdit7: TLabeledEdit
     Left = 8
     Top = 352
-    Width = 201
+    Width = 265
     Height = 24
     Hint = 
       #1042#1074#1077#1076#1080#1090#1077' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1072#1076#1088#1077#1089#1089' '#1082#1083#1080#1077#1085#1090#1072' ('#1085#1077' '#1076#1086#1083#1078#1077#1085' '#1087#1088#1077#1074#1099#1096#1072#1090#1100' 25 '#1089#1080#1084#1074#1086 +
@@ -5543,8 +5543,8 @@ object card: Tcard
   object LabelSQLComboBox3: TLabelSQLComboBox
     Left = 8
     Top = 488
-    Width = 225
-    Height = 40
+    Width = 273
+    Height = 41
     Hint = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072
     FieldName = 'Name'
     CaptionID = 0
@@ -5621,7 +5621,7 @@ object card: Tcard
   object LabelSQLComboBox4: TLabelSQLComboBox
     Left = 8
     Top = 440
-    Width = 593
+    Width = 617
     Height = 40
     Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1073#1072#1085#1082' '#1082#1083#1080#1077#1085#1090#1072
     CaptionID = 0
@@ -5655,7 +5655,7 @@ object card: Tcard
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
-    Left = 594
+    Left = 634
     Top = 206
     Width = 25
     Height = 25
@@ -5673,7 +5673,7 @@ object card: Tcard
     OnClick = BitBtn2Click
   end
   object BitBtn3: TBitBtn
-    Left = 602
+    Left = 634
     Top = 454
     Width = 25
     Height = 25
@@ -5691,8 +5691,8 @@ object card: Tcard
     OnClick = BitBtn3Click
   end
   object BitBtn5: TBitBtn
-    Left = 498
-    Top = 502
+    Left = 634
+    Top = 510
     Width = 25
     Height = 25
     Hint = 
@@ -5758,7 +5758,7 @@ object card: Tcard
   object LabeledEdit16: TLabeledEdit
     Left = 8
     Top = 552
-    Width = 281
+    Width = 257
     Height = 24
     Hint = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1080' '#1076#1072#1090#1091' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1085#1072' '#1078#1076'. '#1087#1077#1088#1077#1074#1086#1079#1082#1080' '#1082#1083#1080#1077#1085#1090#1072
     EditLabel.Width = 274
@@ -5783,9 +5783,9 @@ object card: Tcard
     OnEnter = LabeledEdit16Change
   end
   object LabeledEdit17: TLabeledEdit
-    Left = 344
+    Left = 304
     Top = 552
-    Width = 257
+    Width = 321
     Height = 24
     Hint = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1080' '#1076#1072#1090#1091' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1085#1072' '#1072#1074#1090#1086'. '#1087#1077#1088#1077#1074#1086#1079#1082#1080' '#1082#1083#1080#1077#1085#1090#1072
     EditLabel.Width = 255
