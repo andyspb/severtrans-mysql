@@ -5268,7 +5268,7 @@ object card: Tcard
   end
   object eCountry: TLabelSQLComboBox
     Left = 304
-    Top = 496
+    Top = 488
     Width = 321
     Height = 40
     Hint = #1042#1074#1077#1076#1080#1090#1077' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
@@ -5288,7 +5288,7 @@ object card: Tcard
     Left = 328
     Top = 192
     Width = 297
-    Height = 41
+    Height = 40
     Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076
     CaptionID = 0
     Caption = #1043#1086#1088#1086#1076
@@ -5544,7 +5544,7 @@ object card: Tcard
     Left = 8
     Top = 488
     Width = 273
-    Height = 41
+    Height = 40
     Hint = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072
     FieldName = 'Name'
     CaptionID = 0
@@ -5692,7 +5692,7 @@ object card: Tcard
   end
   object BitBtn5: TBitBtn
     Left = 634
-    Top = 510
+    Top = 502
     Width = 25
     Height = 25
     Hint = 

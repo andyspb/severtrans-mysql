@@ -5388,7 +5388,7 @@ object FormSend: TFormSend
         end
         object BitBtn1: TBitBtn
           Left = 216
-          Top = 54
+          Top = 62
           Width = 25
           Height = 25
           Hint = 
@@ -5408,7 +5408,7 @@ object FormSend: TFormSend
         end
         object BitBtn9: TBitBtn
           Left = 184
-          Top = 54
+          Top = 62
           Width = 25
           Height = 25
           Hint = 
@@ -5479,7 +5479,7 @@ object FormSend: TFormSend
         end
         object BitBtn3: TBitBtn
           Left = 208
-          Top = 46
+          Top = 54
           Width = 25
           Height = 25
           Hint = 
@@ -5499,7 +5499,7 @@ object FormSend: TFormSend
         end
         object BitBtn7: TBitBtn
           Left = 176
-          Top = 46
+          Top = 54
           Width = 25
           Height = 25
           Hint = 
@@ -5606,7 +5606,7 @@ object FormSend: TFormSend
         end
         object BitBtn4: TBitBtn
           Left = 216
-          Top = 46
+          Top = 54
           Width = 25
           Height = 25
           Hint = 
@@ -5626,7 +5626,7 @@ object FormSend: TFormSend
         end
         object BitBtn6: TBitBtn
           Left = 184
-          Top = 46
+          Top = 54
           Width = 25
           Height = 25
           Hint = 
