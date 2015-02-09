@@ -5096,7 +5096,7 @@ object FormSend: TFormSend
     Height = 29
     ButtonHeight = 25
     Caption = 'ToolBar1'
-    TabOrder = 0
+    TabOrder = 1
     object btOk: TBMPBtn
       Left = 0
       Top = 2
@@ -5169,7 +5169,7 @@ object FormSend: TFormSend
     ParentShowHint = False
     ShowHint = True
     TabIndex = 0
-    TabOrder = 1
+    TabOrder = 0
     OnChange = PageControl1Change
     object TabSheet1: TTabSheet
       Hint = #1047#1072#1082#1083#1072#1076#1082#1072' '#1087#1088#1080#1077#1084#1082#1072
@@ -5187,7 +5187,7 @@ object FormSend: TFormSend
         ParentShowHint = False
         PopupMenu = PopupMenu3
         ShowHint = True
-        TabOrder = 0
+        TabOrder = 1
         OnClick = RadioGroup1Click
         OnExit = RadioGroup1Exit
       end
@@ -5206,15 +5206,15 @@ object FormSend: TFormSend
         MaxLength = 10
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 2
+        TabOrder = 0
         OnEnter = LabelEditDate1Enter
         OnExit = LabelEditDate1Exit
       end
       object cbType: TLabelSQLComboBox
         Left = 360
         Top = 8
-        Width = 209
-        Height = 41
+        Width = 217
+        Height = 40
         Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1080#1087' '#1087#1077#1088#1077#1074#1086#1079#1082#1080
         CaptionID = 0
         Caption = #1058#1080#1087' '#1087#1077#1088#1077#1074#1086#1079#1082#1080
@@ -5228,7 +5228,7 @@ object FormSend: TFormSend
         OnChange = cbTypeChange
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 4
+        TabOrder = 3
         OnExit = cbTypeExit
       end
       object LabelEdit1: TLabelEdit
@@ -5245,13 +5245,13 @@ object FormSend: TFormSend
         MaxLength = 0
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 3
+        TabOrder = 2
       end
       object cbPynkt: TLabelSQLComboBox
-        Left = 256
+        Left = 248
         Top = 56
-        Width = 249
-        Height = 41
+        Width = 265
+        Height = 40
         Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076' '#1082#1091#1076#1072' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1075#1088#1091#1079
         CaptionID = 0
         Caption = #1055#1091#1085#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -5281,7 +5281,7 @@ object FormSend: TFormSend
         MaxLength = 10
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 10
+        TabOrder = 9
         OnEnter = LabelEditDate2Enter
         OnExit = LabelEditDate2Exit
       end
@@ -5302,13 +5302,13 @@ object FormSend: TFormSend
         NewItemFlag = True
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 30
+        TabOrder = 24
       end
       object GroupBox1: TGroupBox
-        Left = 576
-        Top = 0
-        Width = 281
-        Height = 145
+        Left = 584
+        Top = 8
+        Width = 249
+        Height = 137
         Caption = #1047#1072#1082#1072#1079#1095#1080#1082
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5316,11 +5316,11 @@ object FormSend: TFormSend
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 4
         object cbZak: TSQLComboBox
           Left = 8
           Top = 24
-          Width = 265
+          Width = 233
           Height = 24
           Hint = #1074#1099#1073#1077#1088#1080#1090#1077' '#1079#1072#1082#1072#1079#1095#1080#1082#1072
           ItemHeight = 16
@@ -5341,7 +5341,7 @@ object FormSend: TFormSend
         object LabelEdit4: TLabelEdit
           Left = 8
           Top = 48
-          Width = 201
+          Width = 161
           Height = 39
           Hint = #1058#1077#1083#1077#1092#1086#1085' '#1079#1072#1082#1072#1079#1095#1080#1082#1072
           Visible = False
@@ -5352,7 +5352,7 @@ object FormSend: TFormSend
           MaxLength = 0
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 1
+          TabOrder = 3
         end
         object LabelEdit5: TLabelEdit
           Left = 8
@@ -5373,7 +5373,7 @@ object FormSend: TFormSend
         object LabelEdit6: TLabelEdit
           Left = 152
           Top = 88
-          Width = 121
+          Width = 89
           Height = 39
           Hint = #1044#1086#1075#1086#1074#1086#1088' '#1089' '#1079#1072#1082#1072#1079#1095#1080#1082#1086#1084
           Visible = False
@@ -5387,8 +5387,8 @@ object FormSend: TFormSend
           TabOrder = 5
         end
         object BitBtn1: TBitBtn
-          Left = 248
-          Top = 62
+          Left = 216
+          Top = 54
           Width = 25
           Height = 25
           Hint = 
@@ -5403,12 +5403,12 @@ object FormSend: TFormSend
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 2
           OnClick = BitBtn1Click
         end
         object BitBtn9: TBitBtn
-          Left = 216
-          Top = 62
+          Left = 184
+          Top = 54
           Width = 25
           Height = 25
           Hint = 
@@ -5423,7 +5423,7 @@ object FormSend: TFormSend
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 2
+          TabOrder = 1
           OnClick = BitBtn9Click
         end
       end
@@ -5443,7 +5443,7 @@ object FormSend: TFormSend
         object cbOtpr: TSQLComboBox
           Left = 8
           Top = 16
-          Width = 233
+          Width = 225
           Height = 24
           Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
           ItemHeight = 16
@@ -5464,7 +5464,7 @@ object FormSend: TFormSend
         object LabelEdit2: TLabelEdit
           Left = 8
           Top = 40
-          Width = 169
+          Width = 161
           Height = 39
           Hint = #1058#1077#1083#1077#1092#1086#1085' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
           Visible = False
@@ -5475,11 +5475,11 @@ object FormSend: TFormSend
           MaxLength = 0
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 1
+          TabOrder = 3
         end
         object BitBtn3: TBitBtn
-          Left = 216
-          Top = 54
+          Left = 208
+          Top = 46
           Width = 25
           Height = 25
           Hint = 
@@ -5494,12 +5494,12 @@ object FormSend: TFormSend
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 2
           OnClick = BitBtn3Click
         end
         object BitBtn7: TBitBtn
-          Left = 184
-          Top = 54
+          Left = 176
+          Top = 46
           Width = 25
           Height = 25
           Hint = 
@@ -5514,7 +5514,7 @@ object FormSend: TFormSend
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 2
+          TabOrder = 1
           OnClick = BitBtn7Click
         end
       end
@@ -5530,11 +5530,11 @@ object FormSend: TFormSend
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
-        TabOrder = 18
+        TabOrder = 10
         object cbPolych: TSQLComboBox
           Left = 8
           Top = 16
-          Width = 233
+          Width = 225
           Height = 24
           Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
           ItemHeight = 16
@@ -5556,7 +5556,7 @@ object FormSend: TFormSend
         object LabelEdit3: TLabelEdit
           Left = 8
           Top = 40
-          Width = 169
+          Width = 161
           Height = 39
           Hint = #1058#1077#1083#1077#1092#1086#1085' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
           Enabled = False
@@ -5568,7 +5568,7 @@ object FormSend: TFormSend
           MaxLength = 0
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 1
+          TabOrder = 3
         end
         object LabelEdit7: TLabelEdit
           Left = 8
@@ -5606,7 +5606,7 @@ object FormSend: TFormSend
         end
         object BitBtn4: TBitBtn
           Left = 216
-          Top = 54
+          Top = 46
           Width = 25
           Height = 25
           Hint = 
@@ -5621,12 +5621,12 @@ object FormSend: TFormSend
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 2
           OnClick = BitBtn4Click
         end
         object BitBtn6: TBitBtn
           Left = 184
-          Top = 54
+          Top = 46
           Width = 25
           Height = 25
           Hint = 
@@ -5641,7 +5641,7 @@ object FormSend: TFormSend
           ParentFont = False
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 2
+          TabOrder = 1
           OnClick = BitBtn6Click
         end
       end
@@ -5657,7 +5657,7 @@ object FormSend: TFormSend
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
-        TabOrder = 22
+        TabOrder = 15
         object CheckBox1: TCheckBox
           Left = 8
           Top = 18
@@ -5744,7 +5744,7 @@ object FormSend: TFormSend
         OnChange = LabelSQLComboBox1Change
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 20
+        TabOrder = 12
       end
       object GroupBox6: TGroupBox
         Left = 608
@@ -5752,7 +5752,7 @@ object FormSend: TFormSend
         Width = 193
         Height = 141
         Caption = #1062#1077#1085#1085#1086#1089#1090#1100
-        TabOrder = 32
+        TabOrder = 29
         object eInsurancePercent: TLblEditMoney
           Left = 8
           Top = 55
@@ -5824,13 +5824,13 @@ object FormSend: TFormSend
         MaxLength = 5
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 12
+        TabOrder = 18
         OnExit = cbTypeExit
       end
       object eTariff: TLblEditMoney
         Left = 704
         Top = 274
-        Width = 145
+        Width = 129
         Height = 39
         Hint = #1058#1072#1088#1080#1092' '#1085#1072' '#1087#1077#1088#1077#1074#1086#1079#1082#1091
         Visible = False
@@ -5844,12 +5844,12 @@ object FormSend: TFormSend
         MaxLength = 8
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 23
+        TabOrder = 22
       end
       object eFare: TLblEditMoney
-        Left = 704
+        Left = 696
         Top = 330
-        Width = 145
+        Width = 153
         Height = 39
         Hint = #1055#1088#1086#1074#1086#1079#1085#1072#1103' '#1087#1083#1072#1090#1072
         CaptionID = 0
@@ -5862,7 +5862,7 @@ object FormSend: TFormSend
         MaxLength = 10
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 25
+        TabOrder = 27
       end
       object eSumCount: TLblEditMoney
         Left = 608
@@ -5879,7 +5879,7 @@ object FormSend: TFormSend
         MaxLength = 10
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 33
+        TabOrder = 30
       end
       object eVolume: TLblEditMoney
         Left = 704
@@ -5897,7 +5897,7 @@ object FormSend: TFormSend
         MaxLength = 6
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 17
+        TabOrder = 20
         OnExit = cbTypeExit
       end
       object GroupBox5: TGroupBox
@@ -5912,7 +5912,7 @@ object FormSend: TFormSend
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
-        TabOrder = 31
+        TabOrder = 28
         object CheckBox5: TCheckBox
           Left = 8
           Top = 14
@@ -5936,7 +5936,7 @@ object FormSend: TFormSend
           ParentShowHint = False
           PopupMenu = PopupMenu3
           ShowHint = True
-          TabOrder = 1
+          TabOrder = 3
           OnClick = CheckBox4Click
         end
         object CheckBox6: TCheckBox
@@ -5949,7 +5949,7 @@ object FormSend: TFormSend
           ParentShowHint = False
           PopupMenu = PopupMenu3
           ShowHint = True
-          TabOrder = 5
+          TabOrder = 6
           OnClick = CheckBox6Click
         end
         object eAddServicePrace: TLblEditMoney
@@ -5988,7 +5988,7 @@ object FormSend: TFormSend
           MaxLength = 10
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 2
+          TabOrder = 4
         end
         object LblEditMoney2: TLblEditMoney
           Left = 320
@@ -6007,7 +6007,7 @@ object FormSend: TFormSend
           MaxLength = 10
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 6
+          TabOrder = 7
         end
         object LabelInteger2: TLabelInteger
           Left = 456
@@ -6025,7 +6025,7 @@ object FormSend: TFormSend
           MaxLength = 5
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 7
+          TabOrder = 8
         end
         object eExpCount: TLblEditMoney
           Left = 456
@@ -6044,7 +6044,7 @@ object FormSend: TFormSend
           MaxLength = 8
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 5
         end
         object DBGrid2: TDBGrid
           Left = 8
@@ -6056,7 +6056,7 @@ object FormSend: TFormSend
           ParentShowHint = False
           PopupMenu = PopupMenu2
           ShowHint = True
-          TabOrder = 4
+          TabOrder = 1
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
           TitleFont.Height = -13
@@ -6108,11 +6108,11 @@ object FormSend: TFormSend
           MaxLength = 10
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 8
+          TabOrder = 2
         end
       end
       object BitBtn2: TBitBtn
-        Left = 546
+        Left = 554
         Top = 70
         Width = 25
         Height = 25
@@ -6148,19 +6148,19 @@ object FormSend: TFormSend
         NewItemFlag = True
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 27
+        TabOrder = 23
       end
       object DBGrid1: TDBGrid
         Left = 456
         Top = 160
-        Width = 233
+        Width = 241
         Height = 128
         Hint = #1042#1074#1077#1076#1080#1090#1077' '#1074#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1084#1077#1089#1090
         DataSource = DataSource1
         ParentShowHint = False
         PopupMenu = PopupMenu1
         ShowHint = True
-        TabOrder = 13
+        TabOrder = 16
         TitleFont.Charset = DEFAULT_CHARSET
         TitleFont.Color = clWindowText
         TitleFont.Height = -13
@@ -6204,7 +6204,7 @@ object FormSend: TFormSend
         MaxLength = 60
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 24
+        TabOrder = 17
       end
       object LabelEdit10: TLabelEdit
         Left = 360
@@ -6220,12 +6220,12 @@ object FormSend: TFormSend
         MaxLength = 0
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 15
+        TabOrder = 14
       end
       object cbNTrain: TLabelSQLComboBox
-        Left = 256
+        Left = 264
         Top = 170
-        Width = 97
+        Width = 89
         Height = 40
         Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1087#1086#1077#1079#1076#1072
         Visible = False
@@ -6243,7 +6243,7 @@ object FormSend: TFormSend
         OnChange = LabelSQLComboBox1Change
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 16
+        TabOrder = 13
       end
       object ePlac: TLabelInteger
         Left = 456
@@ -6260,11 +6260,11 @@ object FormSend: TFormSend
         MaxLength = 5
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 26
+        TabOrder = 31
         OnExit = cbTypeExit
       end
       object BitBtn5: TBitBtn
-        Left = 826
+        Left = 818
         Top = 205
         Width = 25
         Height = 25
@@ -6280,13 +6280,13 @@ object FormSend: TFormSend
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 19
+        TabOrder = 21
         OnClick = BitBtn5Click
       end
       object eCountWieght: TLabelInteger
         Left = 704
         Top = 230
-        Width = 145
+        Width = 112
         Height = 39
         Hint = #1042#1074#1077#1076#1080#1090#1077' '#1088#1072#1089#1095#1077#1090#1085#1099#1081' '#1074#1077#1089
         CaptionID = 0
@@ -6298,11 +6298,11 @@ object FormSend: TFormSend
         MaxLength = 5
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 21
+        TabOrder = 32
         OnExit = cbTypeExit
       end
       object BitBtn8: TBitBtn
-        Left = 512
+        Left = 520
         Top = 70
         Width = 25
         Height = 25
@@ -6320,7 +6320,7 @@ object FormSend: TFormSend
         OnClick = BitBtn8Click
       end
       object BitBtn10: TBitBtn
-        Left = 826
+        Left = 818
         Top = 162
         Width = 25
         Height = 25
@@ -6336,13 +6336,13 @@ object FormSend: TFormSend
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 14
+        TabOrder = 19
         OnClick = BitBtn10Click
       end
       object LabelEdit14: TLabelEdit
         Left = 256
         Top = 378
-        Width = 433
+        Width = 441
         Height = 39
         Hint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1091#1089#1083#1091#1075#1080
         FieldName = 'AddServStr'
@@ -6353,12 +6353,12 @@ object FormSend: TFormSend
         MaxLength = 60
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 29
+        TabOrder = 25
       end
       object LblEditMoney6: TLblEditMoney
-        Left = 704
+        Left = 720
         Top = 376
-        Width = 145
+        Width = 129
         Height = 39
         Hint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1091#1089#1083#1091#1075#1080
         FieldName = 'AddServSum'
@@ -6372,12 +6372,12 @@ object FormSend: TFormSend
         MaxLength = 10
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 28
+        TabOrder = 26
       end
       object ePercent: TLabelInteger
         Left = 256
         Top = 96
-        Width = 153
+        Width = 137
         Height = 39
         CaptionID = 0
         Caption = #1057#1082#1080#1076#1082#1072' '#1085#1072' '#1090#1072#1088#1080#1092
@@ -6386,13 +6386,13 @@ object FormSend: TFormSend
         ReadOnly = False
         OnChange = ePercentExit
         MaxLength = 5
-        TabOrder = 9
+        TabOrder = 11
         OnExit = ePercentExit
       end
       object cbPynktOtpr: TLabelSQLComboBox
         Left = 8
-        Top = 136
-        Width = 233
+        Top = 144
+        Width = 209
         Height = 40
         Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076' '#1082#1091#1076#1072' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1075#1088#1091#1079
         CaptionID = 0
@@ -6404,7 +6404,7 @@ object FormSend: TFormSend
         ParentColor = False
         NotNull = True
         NewItemFlag = False
-        TabOrder = 11
+        TabOrder = 33
         OnExit = cbTypeExit
       end
     end

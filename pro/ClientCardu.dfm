@@ -5100,7 +5100,7 @@ object card: Tcard
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 1
+    TabOrder = 33
     OnClick = btOkClick
     ToolBarButton = True
   end
@@ -5117,7 +5117,7 @@ object card: Tcard
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 2
+    TabOrder = 34
     OnClick = btCanselClick
     ToolBarButton = True
   end
@@ -5147,7 +5147,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 70
     ParentFont = False
-    TabOrder = 7
+    TabOrder = 4
     OnChange = eFullNameChange
   end
   object LabeledEdit1: TLabeledEdit
@@ -5176,7 +5176,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 45
     ParentFont = False
-    TabOrder = 6
+    TabOrder = 3
     OnChange = LabeledEdit1Change
     OnExit = LabeledEdit1Exit
   end
@@ -5206,7 +5206,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 25
     ParentFont = False
-    TabOrder = 5
+    TabOrder = 1
     OnChange = LabeledEdit2Change
     OnExit = LabeledEdit2Exit
   end
@@ -5236,7 +5236,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 80
     ParentFont = False
-    TabOrder = 12
+    TabOrder = 9
     OnChange = LabeledEdit4Change
   end
   object LabeledEdit6: TLabeledEdit
@@ -5263,12 +5263,12 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 30
     ParentFont = False
-    TabOrder = 14
+    TabOrder = 11
     OnChange = LabeledEdit6Change
   end
   object eCountry: TLabelSQLComboBox
     Left = 304
-    Top = 488
+    Top = 496
     Width = 321
     Height = 40
     Hint = #1042#1074#1077#1076#1080#1090#1077' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
@@ -5282,13 +5282,13 @@ object card: Tcard
     NotNull = False
     NewItemFlag = False
     OnChange = eCountryChange
-    TabOrder = 27
+    TabOrder = 24
   end
   object LabelSQLComboBox1: TLabelSQLComboBox
     Left = 328
     Top = 192
     Width = 297
-    Height = 40
+    Height = 41
     Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076
     CaptionID = 0
     Caption = #1043#1086#1088#1086#1076
@@ -5300,7 +5300,7 @@ object card: Tcard
     NotNull = False
     NewItemFlag = False
     OnChange = LabelSQLComboBox1Change
-    TabOrder = 9
+    TabOrder = 7
   end
   object LabeledEdit3: TLabeledEdit
     Left = 328
@@ -5328,7 +5328,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 80
     ParentFont = False
-    TabOrder = 13
+    TabOrder = 10
     OnChange = LabeledEdit3Change
   end
   object LabeledEdit5: TLabeledEdit
@@ -5355,7 +5355,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 15
     ParentFont = False
-    TabOrder = 15
+    TabOrder = 12
     OnChange = LabeledEdit5Change
   end
   object LabeledEdit7: TLabeledEdit
@@ -5384,7 +5384,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 50
     ParentFont = False
-    TabOrder = 17
+    TabOrder = 14
     OnChange = LabeledEdit7Change
   end
   object LabeledEdit8: TLabeledEdit
@@ -5411,7 +5411,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 12
     ParentFont = False
-    TabOrder = 19
+    TabOrder = 16
     OnChange = LabeledEdit8Change
   end
   object LabeledEdit9: TLabeledEdit
@@ -5438,7 +5438,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 20
     ParentFont = False
-    TabOrder = 21
+    TabOrder = 18
     OnChange = LabeledEdit9Change
   end
   object LabeledEdit10: TLabeledEdit
@@ -5465,7 +5465,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 5
     ParentFont = False
-    TabOrder = 22
+    TabOrder = 19
     OnChange = LabeledEdit10Change
   end
   object LabeledEdit11: TLabeledEdit
@@ -5492,7 +5492,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 8
     ParentFont = False
-    TabOrder = 23
+    TabOrder = 20
     OnChange = LabeledEdit11Change
   end
   object LabelSQLComboBox2: TLabelSQLComboBox
@@ -5511,7 +5511,7 @@ object card: Tcard
     NotNull = False
     NewItemFlag = False
     OnChange = LabelSQLComboBox2Change
-    TabOrder = 8
+    TabOrder = 5
   end
   object LabeledEdit12: TLabeledEdit
     Left = 304
@@ -5537,14 +5537,14 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 50
     ParentFont = False
-    TabOrder = 18
+    TabOrder = 15
     OnChange = LabeledEdit12Change
   end
   object LabelSQLComboBox3: TLabelSQLComboBox
     Left = 8
     Top = 488
     Width = 273
-    Height = 40
+    Height = 41
     Hint = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072
     FieldName = 'Name'
     CaptionID = 0
@@ -5558,7 +5558,7 @@ object card: Tcard
     NullStr = #1072#1074#1090#1086#1084#1086#1073#1080#1083#1100#1085#1099#1077
     NewItemFlag = False
     OnChange = LabelSQLComboBox3Change
-    TabOrder = 26
+    TabOrder = 23
   end
   object LabeledEdit13: TLabeledEdit
     Left = 8
@@ -5634,7 +5634,7 @@ object card: Tcard
     NotNull = False
     NewItemFlag = False
     OnChange = LabelEditBmpBtn1ChangeData
-    TabOrder = 24
+    TabOrder = 21
   end
   object BitBtn1: TBitBtn
     Left = 290
@@ -5651,7 +5651,7 @@ object card: Tcard
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 10
+    TabOrder = 6
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
@@ -5669,7 +5669,7 @@ object card: Tcard
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 11
+    TabOrder = 8
     OnClick = BitBtn2Click
   end
   object BitBtn3: TBitBtn
@@ -5687,12 +5687,12 @@ object card: Tcard
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 25
+    TabOrder = 22
     OnClick = BitBtn3Click
   end
   object BitBtn5: TBitBtn
     Left = 634
-    Top = 502
+    Top = 510
     Width = 25
     Height = 25
     Hint = 
@@ -5705,7 +5705,7 @@ object card: Tcard
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 28
+    TabOrder = 25
     OnClick = BitBtn5Click
   end
   object LabelSQLComboBox6: TLabelSQLComboBox
@@ -5724,7 +5724,7 @@ object card: Tcard
     NotNull = False
     NewItemFlag = False
     OnChange = LabelSQLComboBox6Change
-    TabOrder = 3
+    TabOrder = 0
   end
   object LabeledEdit15: TLabeledEdit
     Left = 304
@@ -5752,7 +5752,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 50
     ParentFont = False
-    TabOrder = 16
+    TabOrder = 13
     OnChange = LabeledEdit15Change
   end
   object LabeledEdit16: TLabeledEdit
@@ -5779,7 +5779,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 30
     ParentFont = False
-    TabOrder = 29
+    TabOrder = 26
     OnEnter = LabeledEdit16Change
   end
   object LabeledEdit17: TLabeledEdit
@@ -5806,7 +5806,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 30
     ParentFont = False
-    TabOrder = 30
+    TabOrder = 27
     OnEnter = LabeledEdit17Change
   end
   object cbGryz: TLabelSQLComboBox
@@ -5824,7 +5824,7 @@ object card: Tcard
     ParentColor = False
     NotNull = False
     NewItemFlag = True
-    TabOrder = 31
+    TabOrder = 28
   end
   object LabelEdit5: TLabelEdit
     Left = 376
@@ -5837,7 +5837,7 @@ object card: Tcard
     ParentColor = False
     ReadOnly = False
     MaxLength = 0
-    TabOrder = 33
+    TabOrder = 30
   end
   object cbForwarder: TLabelSQLComboBox
     Left = 192
@@ -5854,7 +5854,7 @@ object card: Tcard
     ParentColor = False
     NotNull = False
     NewItemFlag = True
-    TabOrder = 32
+    TabOrder = 29
   end
   object LabeledEdit18: TLabeledEdit
     Left = 136
@@ -5880,7 +5880,7 @@ object card: Tcard
     LabelSpacing = 3
     MaxLength = 9
     ParentFont = False
-    TabOrder = 20
+    TabOrder = 17
     OnExit = LabeledEdit18Exit
   end
   object eSalePersent: TLabelInteger
@@ -5894,7 +5894,7 @@ object card: Tcard
     ParentColor = False
     ReadOnly = False
     MaxLength = 5
-    TabOrder = 4
+    TabOrder = 2
   end
   object LabelEdit1: TLabelEdit
     Left = 520
@@ -5909,7 +5909,7 @@ object card: Tcard
     ParentColor = False
     ReadOnly = False
     MaxLength = 0
-    TabOrder = 34
+    TabOrder = 31
     OnExit = LabelEdit1Exit
   end
   object LabelEditPassword: TLabeledEdit
