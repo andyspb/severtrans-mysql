@@ -1,8 +1,8 @@
 object FormSend: TFormSend
-  Left = 129
-  Top = 86
-  Width = 924
-  Height = 758
+  Left = 88
+  Top = 58
+  Width = 905
+  Height = 752
   HorzScrollBar.ButtonSize = 20
   HorzScrollBar.Range = 888
   HorzScrollBar.Smooth = True
@@ -5092,7 +5092,7 @@ object FormSend: TFormSend
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 908
+    Width = 889
     Height = 29
     ButtonHeight = 25
     Caption = 'ToolBar1'
@@ -5160,8 +5160,8 @@ object FormSend: TFormSend
   object PageControl1: TPageControl
     Left = 0
     Top = 29
-    Width = 908
-    Height = 691
+    Width = 889
+    Height = 685
     Hint = #1054#1090#1087#1088#1072#1074#1082#1072
     ActivePage = TabSheet1
     Align = alClient
@@ -5431,7 +5431,7 @@ object FormSend: TFormSend
         Left = 0
         Top = 56
         Width = 249
-        Height = 137
+        Height = 129
         Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -6391,7 +6391,7 @@ object FormSend: TFormSend
       end
       object cbPynktOtpr: TLabelSQLComboBox
         Left = 8
-        Top = 144
+        Top = 136
         Width = 209
         Height = 40
         Hint = #1042#1099#1073#1077#1088#1080#1090#1077' '#1075#1086#1088#1086#1076' '#1082#1091#1076#1072' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1075#1088#1091#1079
