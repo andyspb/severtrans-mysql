@@ -929,7 +929,7 @@ begin
             begin
               q := sql.Select(send_table, 'SumCount',
                 'Invoice_ident in (Select Ident from ' + EntrySec.invoice_table
-                  +
+                +
                 ' where Data>=' +
                 sql.MakeStr(FormatDateTime('yyyy-mm-dd',
                 StrToDate(LabelEditDate1.Text))) +
