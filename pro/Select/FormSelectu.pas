@@ -153,7 +153,7 @@ var
   cond, cond1, cd, vs, str, credit1: string;
   l, i, sort, Num, CLI: integer;
   ReportMakerWP: TReportMakerWP;
-  Fil, FilIni, FilOut: string;
+  Fil, FilIni, FilOut, tempStr: string;
   str1: TStringList;
   q, qCL: TQuery;
   Sum, WR, WC, F, ASP, Iv, ASPack: real;
@@ -680,7 +680,8 @@ begin
           str1.Add('cast(cast(Sum(i.SumStAg) as decimal(10,2))as char(12)) as SSA ,');
           str1.Add('cast(cast(Sum(i.NDSStAg) as decimal(10,2))as char(12)) as NSA ,');
           str1.Add('cast(cast(Sum(i.Sum) as decimal(10,2))as char(12)) as SNDS ');
-          str1.Add('from Invoice as i left outer join Clients as c on');
+          str1.Add('from ' + invoice_table +
+            ' as i left outer join Clients as c on');
           str1.Add('(i.Clients_Ident=c.Ident)');
           str1.Add('where Data>=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
             StrToDate(LabelEditDate1.Text)))); //+
@@ -764,6 +765,20 @@ begin
       //--------------------
       6: {книга продаж}
         begin
+          // alter view booksel
+          str1 := TStringList.Create;
+          str1.Add('alter view booksel '); //+
+          str1.Add('AS select `i`.`Ident` AS `Ident`,`i`.`Data` ');
+          str1.Add('AS `Data`,`i`.`SumAVT` AS `Fee`,`i`.`Number` ');
+          str1.Add('AS `Number`,`i`.`Clients_Ident` AS `Clients_Ident`,`c`.`Acronym` ');
+          str1.Add('AS `Acronym`,`c`.`Fullname` AS `FullName`,`c`.`Name` ');
+          str1.Add('AS `Name`,cast(substr(`i`.`Number`,1,(length(`i`.`Number`) - 3)) as unsigned) ');
+          str1.Add('AS `NUM`,`c`.`Inn` AS `INN`,`c`.`KPP` AS `KPP`,`severtrans`.`booksel_NDSFee`(`i`.`Data`,`i`.`SumAVT`) ');
+          str1.Add('AS `NDSFee`,`severtrans`.`booksel_ClearFee`(`i`.`Data`,`i`.`SumAVT`) ');
+          str1.Add('AS `ClearFee` from (`invoice_all` `i` left join `clients` `c` on((`i`.`Clients_Ident` = `c`.`Ident`)))');
+          sql.ExecSQL(str1);
+          str1.free;
+
           ReportMakerWP.AddParam('2=' + 'Книга продаж');
           ReportMakerWP.AddParam('3=' + 'с ' +
             SendStr.DataDMstrY(StrToDate(LabelEditDate1.text)));
@@ -793,6 +808,24 @@ begin
           ReportMakerWP.AddParam('6=' + StrTo00(FloatToStr(F)));
           ReportMakerWP.AddParam('7=' + StrTo00(FloatToStr(Sum)));
           ReportMakerWP.AddParam('8=' + StrTo00(FloatToStr(SNDS)));
+
+          tempStr := sql.SelectString('Boss', 'Name', 'Ident=1');
+          if (tempStr <> '') then
+            ReportMakerWP.AddParam('9=' + tempStr)
+          else
+            ReportMakerWP.AddParam('9=' + 'ООО "СЕВЕРТРАНС"');
+
+          tempStr := sql.SelectString('Boss', 'INN', 'Ident=1');
+          if (tempStr <> '') then
+            ReportMakerWP.AddParam('10=' + tempStr)
+          else
+            ReportMakerWP.AddParam('10=' + '7810819094');
+
+          tempStr := sql.SelectString('Boss', 'KPP', 'Ident=1');
+          if (tempStr <> '') then
+            ReportMakerWP.AddParam('11=' + tempStr)
+          else
+            ReportMakerWP.AddParam('11=' + '781001001');
 
           Fil := 'BookSel';
           FilIni := 'BookSel';
@@ -1776,10 +1809,12 @@ begin
             '.number,'); //+
           str1.Add('' + invoice_table + '.Sum as invoicesum,'); //+
           str1.Add('' + invoice_table + '.Data as data,'); //+
-          str1.Add('Sum(send.sumcount) as sendsum from ' + invoice_table + '');
+          str1.Add('Sum(' + send_table + '.sumcount) as sendsum from ' +
+            invoice_table + '');
           //+
-          str1.Add('left outer join send on '); //+
-          str1.Add('send.invoice_ident=' + invoice_table + '.ident '); //+
+          str1.Add('left outer join ' + send_table + ' on '); //+
+          str1.Add(send_table + '.invoice_ident=' + invoice_table + '.ident ');
+            //+
           str1.Add(cond1); //+
           str1.Add('group by ident '); //+
 
