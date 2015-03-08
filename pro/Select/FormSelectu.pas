@@ -775,7 +775,8 @@ begin
           str1.Add('AS `Name`,cast(substr(`i`.`Number`,1,(length(`i`.`Number`) - 3)) as unsigned) ');
           str1.Add('AS `NUM`,`c`.`Inn` AS `INN`,`c`.`KPP` AS `KPP`,`severtrans`.`booksel_NDSFee`(`i`.`Data`,`i`.`SumAVT`) ');
           str1.Add('AS `NDSFee`,`severtrans`.`booksel_ClearFee`(`i`.`Data`,`i`.`SumAVT`) ');
-          str1.Add('AS `ClearFee` from (`invoice_all` `i` left join `clients` `c` on((`i`.`Clients_Ident` = `c`.`Ident`)))');
+          str1.Add('AS `ClearFee` from (`' + invoice_table +
+            '` `i` left join `clients` `c` on((`i`.`Clients_Ident` = `c`.`Ident`)))');
           sql.ExecSQL(str1);
           str1.free;
 
@@ -1814,7 +1815,7 @@ begin
           //+
           str1.Add('left outer join ' + send_table + ' on '); //+
           str1.Add(send_table + '.invoice_ident=' + invoice_table + '.ident ');
-            //+
+          //+
           str1.Add(cond1); //+
           str1.Add('group by ident '); //+
 
