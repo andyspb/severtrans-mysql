@@ -711,7 +711,7 @@ begin
       s := s + ', SalePersent=0';
 
     // password
-    password := LabelEditPassword.Text;
+    password := trim(LabelEditPassword.Text);
     if (password <> '') then
       s := s + ', password=' + sql.MakeStr(password)
     else
