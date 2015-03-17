@@ -460,8 +460,10 @@ begin
     intToStr(l));
   eSalePersent.Text := sql.SelectString('Clients', 'SalePersent', 'Ident=' +
     intToStr(l));
-  LabelEditPassword.Text := sql.SelectString('Clients', 'password', 'Ident=' +
+
+  password := sql.SelectString('Clients', 'password', 'Ident=' +
     intToStr(l));
+  LabelEditPassword.Text := password;
 
   if IntToStr(ClTypeId) = '' then
   begin
@@ -709,6 +711,7 @@ begin
       s := s + ', SalePersent=0';
 
     // password
+    password := LabelEditPassword.Text;
     if (password <> '') then
       s := s + ', password=' + sql.MakeStr(password)
     else
