@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, toolbtn, StdCtrls, Buttons, BMPBtn, ToolWin, ComCtrls, Sqlctrls,
   LblCombo, Printers, LblEdtDt, ExtCtrls, TSQLCLS, SqlGrid, DB, Math,
-  DBTables, Lbsqlcmb, OleServer, Word2000, XMLDOM, DBClient, MConnect, EntrySec;
+  DBTables, Lbsqlcmb, OleServer, Excel2000, Word2000, XMLDOM, DBClient, MConnect, EntrySec;
 
 type
   TFormSelect = class(TForm)
