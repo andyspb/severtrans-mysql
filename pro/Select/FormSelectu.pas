@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, toolbtn, StdCtrls, Buttons, BMPBtn, ToolWin, ComCtrls, Sqlctrls,
   LblCombo, Printers, LblEdtDt, ExtCtrls, TSQLCLS, SqlGrid, DB, Math,
-  DBTables, Lbsqlcmb, OleServer, Excel2000, Word2000, XMLDOM, DBClient, MConnect, EntrySec;
+  DBTables, Lbsqlcmb, OleServer, Excel2000, Word2000, XMLDOM, DBClient,
+  MConnect, EntrySec;
 
 type
   TFormSelect = class(TForm)
@@ -154,13 +155,14 @@ var
   l, i, sort, Num, CLI: integer;
   ReportMakerWP: TReportMakerWP;
   Fil, FilIni, FilOut, tempStr: string;
-  str1: TStringList;
+  str1, sql_str: TStringList;
   q, qCL: TQuery;
   Sum, WR, WC, F, ASP, Iv, ASPack: real;
   p, w1, w2, w3, w4, w5: OleVariant;
   SG, NG, SAv, NAV, SA, NA, SP, NP, SPA, NPA, SS, NS, SSA, NSA, SNDS: real;
   n, FilOp: integer;
   IdSend: longint;
+  RowIndex: LongInt;
   //label T;
 label
   FO;
@@ -766,6 +768,10 @@ begin
       6: {книга продаж}
         begin
           // alter view booksel
+          sql_str := TStringList.Create;
+          sql_str.Add('call  `BookselSetRowNumber`;');
+          sql.ExecSQL(sql_str);
+          sql_str.free;
           str1 := TStringList.Create;
           str1.Add('alter view booksel '); //+
           str1.Add('AS select `i`.`Ident` AS `Ident`,`i`.`Data` ');
@@ -775,7 +781,9 @@ begin
           str1.Add('AS `Name`,cast(substr(`i`.`Number`,1,(length(`i`.`Number`) - 3)) as unsigned) ');
           str1.Add('AS `NUM`,`c`.`Inn` AS `INN`,`c`.`KPP` AS `KPP`,`severtrans`.`booksel_NDSFee`(`i`.`Data`,`i`.`SumAVT`) ');
           str1.Add('AS `NDSFee`,`severtrans`.`booksel_ClearFee`(`i`.`Data`,`i`.`SumAVT`) ');
-          str1.Add('AS `ClearFee` from (`' + invoice_table +
+          str1.Add('AS `ClearFee`, ');
+          str1.Add('RowNumber() as `row_num`');
+          str1.Add(' from (`' + invoice_table +
             '` `i` left join `clients` `c` on((`i`.`Clients_Ident` = `c`.`Ident`)))');
           sql.ExecSQL(str1);
           str1.free;
