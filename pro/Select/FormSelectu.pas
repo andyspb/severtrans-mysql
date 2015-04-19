@@ -164,6 +164,18 @@ var
   IdSend: longint;
   RowIndex: LongInt;
   //label T;
+  booksel_file: TextFile;
+  curr_date: string;
+  curr_time: string;
+  booksel_csv_path: string;
+  booksel_index: Integer;
+  data_and_number_sf: string;
+  booksel_name: string;
+  booksel_inn_kpp: string;
+  booksel_doc_name: string;
+  booksel_seller_name: string;
+  booksel_seller_inn_kpp: string;
+  booksel_sale_period: string;
 label
   FO;
 begin
@@ -767,6 +779,23 @@ begin
       //--------------------
       6: {книга продаж}
         begin
+          // files
+          curr_date := FormatDateTime('dd_mm_yy', Now);
+          curr_time := FormatDateTime('hh_nn_ss', Now);
+          booksel_csv_path := GetEnvironmentVariable('USERPROFILE');
+          if (booksel_csv_path = '') then
+            booksel_csv_path := 'c:'
+          else
+            booksel_csv_path := booksel_csv_path + '\Desktop\';
+
+          booksel_csv_path := booksel_csv_path + '\Kniga_Prodazh_date_' +
+            curr_date
+            + '_time_' +
+            curr_time +
+            '.csv';
+          AssignFile(booksel_file, booksel_csv_path);
+          Rewrite(booksel_file);
+
           // alter view booksel
           sql_str := TStringList.Create;
           sql_str.Add('call  `BookselSetRowNumber`;');
@@ -788,11 +817,67 @@ begin
           sql.ExecSQL(str1);
           str1.free;
 
-          ReportMakerWP.AddParam('2=' + 'Книга продаж');
+          // write empty line
+          Writeln(booksel_file, '');
+
+          booksel_doc_name := 'Книга продаж';
+          ReportMakerWP.AddParam('2=' + booksel_doc_name);
+          Writeln(booksel_file, booksel_doc_name + ',,,,,,,,,,,,,,,,,,');
+          Writeln(booksel_file, ',,,,,,,,,,,,,,,,,,,');
+          booksel_seller_name := '';
+          tempStr := sql.SelectString('Boss', 'Name', 'Ident=1');
+          if (tempStr <> '') then
+          begin
+            ReportMakerWP.AddParam('9=' + tempStr);
+            booksel_seller_name := 'Продавец ' + tempStr
+          end
+          else
+          begin
+            ReportMakerWP.AddParam('9=' + 'ООО "СЕВЕРТРАНС"');
+            booksel_seller_name := 'Продавец ООО "СЕВЕРТРАНС"';
+          end;
+          Writeln(booksel_file, booksel_seller_name);
+
+          booksel_seller_inn_kpp := '';
+          tempStr := sql.SelectString('Boss', 'INN', 'Ident=1');
+          if (tempStr <> '') then
+          begin
+            ReportMakerWP.AddParam('10=' + tempStr);
+            booksel_seller_inn_kpp := tempStr
+          end
+          else
+          begin
+            ReportMakerWP.AddParam('10=' + '7810819094');
+            booksel_seller_inn_kpp := '7810819094';
+          end;
+
+          tempStr := sql.SelectString('Boss', 'KPP', 'Ident=1');
+          if (tempStr <> '') then
+          begin
+            ReportMakerWP.AddParam('11=' + tempStr);
+            booksel_seller_inn_kpp := booksel_seller_inn_kpp + '/' + tempStr;
+          end
+          else
+          begin
+            ReportMakerWP.AddParam('11=' + '781001001');
+            booksel_seller_inn_kpp := booksel_seller_inn_kpp + '/781001001';
+          end;
+          booksel_seller_inn_kpp :=
+            'Идентификационный номер и код причины постановки на учет налогоплательщика-покупателя: ' +
+            booksel_seller_inn_kpp;
+          Writeln(booksel_file, booksel_seller_inn_kpp);
+
           ReportMakerWP.AddParam('3=' + 'с ' +
             SendStr.DataDMstrY(StrToDate(LabelEditDate1.text)));
           ReportMakerWP.AddParam('4=' + 'по ' +
             SendStr.DataDMstrY(StrToDate(LabelEditDate2.text)));
+          booksel_sale_period := 'Продажа за период с ' +
+            FormatDateTime('dd.mm.yyyy',
+            StrToDate(LabelEditDate1.Text)) + ' по ' +
+            FormatDateTime('dd.mm.yyyy',
+            StrToDate(LabelEditDate2.Text));
+          Writeln(booksel_file, booksel_sale_period);
+          Writeln(booksel_file, ',,,,,,,,,,,,,,,,,,,');
 
           cond := '';
           cond := 'Data>=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
@@ -801,41 +886,97 @@ begin
             StrToDate(LabelEditDate2.Text)));
           ReportMakerWP.AddParam('5=' + cond);
 
-          q := sql.select('BookSel', 'Fee,NDSFee,ClearFee', cond, '');
+          // write table header1
+          Write(booksel_file,
+            '"№п/п",Код вида опера-ции,"Номер и дата счета-фактуры продавца",');
+          Write(booksel_file,
+            '"Номер и дата исправления счета-фактуры продавца",');
+          Write(booksel_file,
+            '"Номер и дата корректиро-вочного счета-фактуры продавца",');
+          Write(booksel_file,
+            '"Номер и дата исправления корректиро-вочного счета-фактуры продавца",');
+          Write(booksel_file,
+            'Наименование покупателя,"ИНН/КПП покупателя","Сведения о посреднике (комиссионере, агенте)",,');
+          Write(booksel_file,
+            '"Номер и дата документа, подтвержда-ющего оплату","Наиме-нование и код валюты",');
+          Write(booksel_file,
+            '"Стоимость продаж по счету- фактуре, разница стоимости по корректировочному счету-фактуре (включая НДС) в валюте счета-фактуры",,');
+          Write(booksel_file,
+            '"Стоимость продаж, облагаемых налогом, по счету-фактуре, разница стоимости по корректи-ровочному счету-фактуре (без НДС) в рублях и копейках по ставке",,,');
+          Write(booksel_file,
+            '"Сумма НДС по счету-фактуре, разница стоимости по корректи-ровочному счету-фактуре в руб-лях и копейках, по ставке",,');
+          Write(booksel_file,
+            '"Стоимость продаж, освобождаемых от налога, по счету-фактуре, разница стоимости  по корректиро-вочному счету-фактуре в рублях и копейках"');
+          Writeln(booksel_file);
+          // write table header2
+          Write(booksel_file,
+            ',,,,,,,,"наименование посредника","ИНН/КПП посредника",,,"в валюте счета-фактуры",');
+          Write(booksel_file,
+            '"в рублях и копейках",18 процентов,10 процентов,0 процентов,18 процентов,10 процентов,');
+          Writeln(booksel_file);
+
+          q := sql.select('BookSel',
+            'Name, Number, INN, KPP, Data, Fee, NDSFee, ClearFee', cond,
+            '');
           Sum := 0;
           F := 0;
           SNDS := 0;
+          booksel_index := 0;
+          data_and_number_sf := '';
+          booksel_name := '';
+          booksel_inn_kpp := '';
+          Writeln(booksel_file,
+            '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20');
           while not q.Eof do
           begin
+            booksel_index := booksel_index + 1;
+            data_and_number_sf := '"' + q.FieldByName('Number').asString + ',' +
+              q.FieldByName('Data').asString + '"';
+            booksel_name := q.FieldByName('Name').asString;
+            booksel_inn_kpp := q.FieldByName('INN').asString + '/ ' +
+              q.FieldByName('KPP').asString;
+            Writeln(booksel_file, IntToStr(booksel_index) + ',="01",' +
+              data_and_number_sf +
+              ',,,,' + booksel_name + ',' + booksel_inn_kpp + ',,,,,,' +
+              '="' + StrTo00(FloatToStr(q.FieldByName('Fee').asFloat)) + '"' +
+              ',' +
+              '="' + StrTo00(FloatToStr(q.FieldByName('ClearFee').asFloat)) + '"'
+              +
+              ',,,' +
+              '="' + StrTo00(FloatToStr(q.FieldByName('NDSFee').asFloat)) + '"'
+              +
+              ',,,');
             Sum := Sum + q.FieldByName('ClearFee').asFloat;
             F := F + q.FieldByName('Fee').asFloat;
             SNDS := SNDS + q.FieldByName('NDSFee').asFloat;
             q.Next;
           end;
           q.Free;
+          Writeln(booksel_file,
+            ',,,,,,,,,,,,' +
+            'Всего,' +
+            '="' + StrTo00(FloatToStr(F)) + '"' + ',' +
+            '="' + StrTo00(FloatToStr(Sum)) + '"' +
+            ',,,' +
+            '="' + StrTo00(FloatToStr(SNDS)) + '"' +
+            ',,,');
+
+          // write 2 empty lines
+          Writeln(booksel_file, '');
+          Writeln(booksel_file, '');
+
+          Writeln(booksel_file,
+            'Руководитель организации или иное уполномоченное лицо,,,,,,____________________________________________');
+          Writeln(booksel_file,
+            'Индивидуальный предприниматель,,,,,,____________________________________________');
+          Writeln(booksel_file,
+            'Реквизиты свидетельства о государственной регистрации индивидуального предпринимателя,,,,,,____________________________________________');
 
           ReportMakerWP.AddParam('6=' + StrTo00(FloatToStr(F)));
           ReportMakerWP.AddParam('7=' + StrTo00(FloatToStr(Sum)));
           ReportMakerWP.AddParam('8=' + StrTo00(FloatToStr(SNDS)));
 
-          tempStr := sql.SelectString('Boss', 'Name', 'Ident=1');
-          if (tempStr <> '') then
-            ReportMakerWP.AddParam('9=' + tempStr)
-          else
-            ReportMakerWP.AddParam('9=' + 'ООО "СЕВЕРТРАНС"');
-
-          tempStr := sql.SelectString('Boss', 'INN', 'Ident=1');
-          if (tempStr <> '') then
-            ReportMakerWP.AddParam('10=' + tempStr)
-          else
-            ReportMakerWP.AddParam('10=' + '7810819094');
-
-          tempStr := sql.SelectString('Boss', 'KPP', 'Ident=1');
-          if (tempStr <> '') then
-            ReportMakerWP.AddParam('11=' + tempStr)
-          else
-            ReportMakerWP.AddParam('11=' + '781001001');
-
+          CloseFile(booksel_file);
           Fil := 'BookSel';
           FilIni := 'BookSel';
         end;
@@ -1438,7 +1579,8 @@ begin
           end
           else
           begin
-            application.MessageBox('На указанный период и город ничего не найденно!', 'Ошибка!', 0);
+            application.MessageBox('На указанный период и город ничего не найденно!',
+              'Ошибка!', 0);
             q.Free;
             exit
           end;
@@ -1954,7 +2096,7 @@ begin
       ReportMakerWP.Free;
       // application.messagebox('Закройте выходной документ в WINWORD!',
       // 'Совет!',0);
-//                          goto T;
+  //                          goto T;
       exit
     end;
 

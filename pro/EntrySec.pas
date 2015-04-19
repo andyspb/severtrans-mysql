@@ -262,7 +262,7 @@ begin
   FMenu.CurrentUserRoles := q.FieldByName('Roles_Ident').AsInteger;
   FMenu.CurrentUserName := eShortName.text;
   bAllData := ChBoxAll.Checked;
-  version := '3.0.13.04.15';
+  version := '3.0.19.04.15';
   period := iff(bAllData, 'ÂÑÅ ÂÐÅÌß', '6 Måñÿöåâ');
   // other tables
   account_table_other := iff(not bAllData, 'account_all', 'account');
@@ -448,5 +448,45 @@ begin
 end;
 {$ENDIF SUPPORTS_INT64}
 
+// Get environment variable
+function GetEnvVarValue(const VarName: string): string;
+var
+  BufSize: Integer;  // buffer size required for value
+begin
+  // Get required buffer size (inc. terminal #0)
+  BufSize := GetEnvironmentVariable(
+    PChar(VarName), nil, 0);
+  if BufSize > 0 then
+  begin
+    // Read env var value into result string
+    SetLength(Result, BufSize - 1);
+    GetEnvironmentVariable(PChar(VarName),
+      PChar(Result), BufSize);
+  end
+  else
+    // No such environment variable
+    Result := '';
+end;
+
+// Get environment variable
+function SetEnvVarValue(const VarName,
+  VarValue: string): Integer;
+begin
+  // Simply call API function
+  if SetEnvironmentVariable(PChar(VarName),
+    PChar(VarValue)) then
+    Result := 0
+  else
+    Result := GetLastError;
+end;
+
+// Delete environment variable
+function DeleteEnvVar(const VarName: string): Integer;
+begin
+  if SetEnvironmentVariable(PChar(VarName), nil) then
+    Result := 0
+  else
+    Result := GetLastError;
+end;
 end.
 
