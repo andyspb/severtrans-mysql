@@ -7,7 +7,7 @@ uses
   Dialogs, toolbtn, StdCtrls, Buttons, BMPBtn, ToolWin, ComCtrls, Sqlctrls,
   LblCombo, Printers, LblEdtDt, ExtCtrls, TSQLCLS, SqlGrid, DB, Math,
   DBTables, Lbsqlcmb, OleServer, Excel2000, Word2000, XMLDOM, DBClient,
-  MConnect, EntrySec;
+  MConnect, EntrySec, Logger;
 
 type
   TFormSelect = class(TForm)
@@ -782,11 +782,22 @@ begin
           // files
           curr_date := FormatDateTime('dd_mm_yy', Now);
           curr_time := FormatDateTime('hh_nn_ss', Now);
-          booksel_csv_path := GetEnvironmentVariable('USERPROFILE');
+          //          booksel_csv_path := GetEnvironmentVariable('USERPROFILE');
+          //          if (booksel_csv_path = '') then
+          //            booksel_csv_path := 'c:'
+          //          else
+          //           booksel_csv_path := booksel_csv_path + '\Desktop\';
+
+          booksel_csv_path := GetDesktopFolder();
+          Logger.LogInfo('Desctop path >>> booksel_csv_path=' +
+            booksel_csv_path);
+          //          application.MessageBox(PChar(booksel_csv_path), 'Warning', 0);
+
           if (booksel_csv_path = '') then
-            booksel_csv_path := 'c:'
-          else
-            booksel_csv_path := booksel_csv_path + '\Desktop\';
+          begin
+            booksel_csv_path := 'c:\';
+            application.MessageBox('Переменная рабочего стола не найдена. Книга продаж будет записаа на диск С:', 'Warning', 0);
+          end;
 
           booksel_csv_path := booksel_csv_path + '\Kniga_Prodazh_date_' +
             curr_date

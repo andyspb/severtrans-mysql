@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Tadjform, StdCtrls, Sqlctrls, Lbledit, ExtCtrls, Buttons, BMPBtn, tsqlcls,
-  DB, DBTables, SEQUENCE;
+  DB, DBTables, SEQUENCE, ShlObj;
 
 function Iff(const Condition: Boolean; const TruePart, FalsePart: Boolean):
   Boolean; overload;
@@ -27,6 +27,8 @@ function Iff(const Condition: Boolean; const TruePart, FalsePart: string):
 function Iff(const Condition: Boolean; const TruePart, FalsePart: Int64): Int64;
   overload;
 {$ENDIF SUPPORTS_INT64}
+function GetDesktopFolder(): string;
+  overload;
 
 type
   TEntrySecurity = class(Tadjustform)
@@ -262,7 +264,7 @@ begin
   FMenu.CurrentUserRoles := q.FieldByName('Roles_Ident').AsInteger;
   FMenu.CurrentUserName := eShortName.text;
   bAllData := ChBoxAll.Checked;
-  version := '3.0.19.04.15';
+  version := '3.0.23.04.15';
   period := iff(bAllData, 'ÂÑÅ ÂÐÅÌß', '6 Måñÿöåâ');
   // other tables
   account_table_other := iff(not bAllData, 'account_all', 'account');
@@ -488,5 +490,20 @@ begin
   else
     Result := GetLastError;
 end;
+
+// Get Desktop path variable
+function GetDesktopFolder(): string;
+var
+  buf: array[0..MAX_PATH] of char;
+  pidList: PItemIDList;
+begin
+  Result := '';
+  SHGetSpecialFolderLocation(Application.Handle, CSIDL_DESKTOP, pidList);
+  if pidList = nil then
+    exit; // no Desktop? Want to see that computer...
+  if SHGetPathFromIDList(pidList, buf) then
+    Result := buf;
+end;
+
 end.
 
