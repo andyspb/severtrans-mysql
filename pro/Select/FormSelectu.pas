@@ -954,7 +954,7 @@ begin
           booksel_name := '';
           booksel_inn_kpp := '';
           Writeln(booksel_file,
-            '="1";="2";="3";="4";="5";="6";="7";="8";="9";="10";="11";="12";="13";="14";="15";="16";="17";="18";="19";="20"');
+            '1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20');
           while not q.Eof do
           begin
             booksel_index := booksel_index + 1;
@@ -963,17 +963,15 @@ begin
             booksel_name := q.FieldByName('Name').asString;
             booksel_inn_kpp := q.FieldByName('INN').asString + '/ ' +
               q.FieldByName('KPP').asString;
-            Writeln(booksel_file, '="' + IntToStr(booksel_index) + '"' +
+            Writeln(booksel_file, IntToStr(booksel_index) +
               ';="01";' +
               data_and_number_sf +
               ';;;;' + booksel_name + ';' + booksel_inn_kpp + ';;;;;;' +
-              '="' + StrTo00(FloatToStr(q.FieldByName('Fee').asFloat)) + '"' +
+              StrTo00(FloatToStr(q.FieldByName('Fee').asFloat)) +
               ';' +
-              '="' + StrTo00(FloatToStr(q.FieldByName('ClearFee').asFloat)) + '"'
-              +
+              StrTo00(FloatToStr(q.FieldByName('ClearFee').asFloat)) +
               ';;;' +
-              '="' + StrTo00(FloatToStr(q.FieldByName('NDSFee').asFloat)) + '"'
-              +
+              StrTo00(FloatToStr(q.FieldByName('NDSFee').asFloat)) +
               ';;;');
             Sum := Sum + q.FieldByName('ClearFee').asFloat;
             F := F + q.FieldByName('Fee').asFloat;
@@ -984,9 +982,9 @@ begin
           Writeln(booksel_file,
             ';;;;;;;;;;;;' +
             'Всего:;' +
-            '="' + StrTo00(FloatToStr(F)) + '"' + ';' +
-            '="' + StrTo00(FloatToStr(Sum)) + '"' + ';;;' +
-            '="' + StrTo00(FloatToStr(SNDS)) + '"' + ';;;');
+            StrTo00(FloatToStr(F)) + ';' +
+            StrTo00(FloatToStr(Sum)) + ';;;' +
+            StrTo00(FloatToStr(SNDS)) + ';;;');
 
           // write 2 empty lines
           Writeln(booksel_file, '');
