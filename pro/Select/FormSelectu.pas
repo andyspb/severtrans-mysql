@@ -963,16 +963,18 @@ begin
             booksel_name := q.FieldByName('Name').asString;
             booksel_inn_kpp := q.FieldByName('INN').asString + '/ ' +
               q.FieldByName('KPP').asString;
+
             Writeln(booksel_file, IntToStr(booksel_index) +
               ';="01";' +
               data_and_number_sf +
               ';;;;' + booksel_name + ';' + booksel_inn_kpp + ';;;;;;' +
-              StrTo00(FloatToStr(q.FieldByName('Fee').asFloat)) +
+              StrTo00WithComma(FloatToStr(q.FieldByName('Fee').asFloat)) +
               ';' +
-              StrTo00(FloatToStr(q.FieldByName('ClearFee').asFloat)) +
+              StrTo00WithComma(FloatToStr(q.FieldByName('ClearFee').asFloat)) +
               ';;;' +
-              StrTo00(FloatToStr(q.FieldByName('NDSFee').asFloat)) +
+              StrTo00WithComma(FloatToStr(q.FieldByName('NDSFee').asFloat)) +
               ';;;');
+
             Sum := Sum + q.FieldByName('ClearFee').asFloat;
             F := F + q.FieldByName('Fee').asFloat;
             SNDS := SNDS + q.FieldByName('NDSFee').asFloat;
@@ -982,9 +984,9 @@ begin
           Writeln(booksel_file,
             ';;;;;;;;;;;;' +
             'Всего:;' +
-            StrTo00(FloatToStr(F)) + ';' +
-            StrTo00(FloatToStr(Sum)) + ';;;' +
-            StrTo00(FloatToStr(SNDS)) + ';;;');
+            StrTo00WithComma(FloatToStr(F)) + ';' +
+            StrTo00WithComma(FloatToStr(Sum)) + ';;;' +
+            StrTo00WithComma(FloatToStr(SNDS)) + ';;;');
 
           // write 2 empty lines
           Writeln(booksel_file, '');

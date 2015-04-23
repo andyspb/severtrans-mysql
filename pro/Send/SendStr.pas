@@ -14,6 +14,7 @@ function String000(Str: string; i: integer): string;
 function String0(t: string; j: integer): string;
 function String00(str: string; k: integer): string;
 function StrTo00(s: string): string;
+function StrTo00WithComma(s: string): string;
 function DayToDate(s: string; D: TDate): TDate;
 function SToDate(str: string; D: TDate): Tdate;
 function Credit(id: longint): string;
@@ -755,6 +756,103 @@ begin
   else if Length(f) = 1 then
     f := f + '0';
   StrTo00 := Neg + f1 + '.' + f;
+end;
+
+
+function StrTo00WithComma(s: string): string;
+var
+  F1, F, Neg: string;
+  i: integer;
+  N1, N2, N3: integer;
+begin
+  {$HINTS OFF}
+  N3 := 0;
+  i := 0;
+  Neg := '';
+  i := pos('-', s);
+  if i <> 0 then
+  begin
+    if i = 1 then
+    begin
+      Neg := '-';
+      delete(s, 1, 1);
+    end
+    else
+    begin
+      ShowMessage('Проверьте правильность всех введенных числовых значений!');
+      exit;
+    end;
+  end;
+
+  if s <> '' then
+  begin
+    i := 0;
+    i := pos('.', s);
+    if i <> 0 then
+    begin
+      f1 := copy(s, 1, i - 1);
+      if Length(f1) = 0 then
+        f1 := '0';
+      f := copy(s, i + 1, Length(s) - i);
+      if Length(f) = 1 then
+        f := f + '0';
+      if Length(f) = 0 then
+        f := '00';
+      if Length(f) > 2 then
+      begin
+        N1 := 0;
+        N2 := 0;
+        N3 := 0;
+        while Length(F) > 2 do
+        begin
+          N1 := StrToInt(copy(f, Length(f), 1));
+          N2 := StrToInt(copy(f, Length(f) - 1, 1)) + N3;
+          if (N1 > 4) then
+            N2 := N2 + 1;
+          if N2 = 10 then
+          begin
+            N3 := 1;
+            N2 := 0;
+          end
+          else
+            N3 := 0;
+          F := copy(f, 1, Length(f) - 2);
+          F := F + IntToStr(N2);
+        end;
+      end;
+      if N3 = 1 then
+      begin
+        if Length(f) = 2 then
+        begin
+          N1 := StrToInt(copy(f, Length(f), 1));
+          N2 := StrToInt(copy(f, Length(f) - 1, 1)) + N3;
+          if (N2 = 10) then
+          begin
+            N2 := 0;
+            f1 := inttostr(StrToInt(F1) + 1);
+          end;
+          f := inttostr(N2) + inttostr(N1);
+        end;
+      end;
+      if Length(f1) = 0 then
+        f1 := '0';
+    end
+    else
+    begin
+      f1 := s;
+      f := '00';
+    end;
+  end
+  else
+  begin
+    F1 := '0';
+    F := '00';
+  end;
+  if Length(f) = 0 then
+    f := '00'
+  else if Length(f) = 1 then
+    f := f + '0';
+  StrTo00WithComma := Neg + f1 + ',' + f;
 end;
 
 function Money00(Money: string): string;
