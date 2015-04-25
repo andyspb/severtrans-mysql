@@ -264,7 +264,7 @@ begin
   FMenu.CurrentUserRoles := q.FieldByName('Roles_Ident').AsInteger;
   FMenu.CurrentUserName := eShortName.text;
   bAllData := ChBoxAll.Checked;
-  version := '3.0.24.04.15';
+  version := '3.0.25.04.15';
   period := iff(bAllData, 'ÂÑÅ ÂÐÅÌß', '6 Måñÿöåâ');
   // other tables
   account_table_other := iff(not bAllData, 'account_all', 'account');
