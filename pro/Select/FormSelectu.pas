@@ -958,8 +958,8 @@ begin
           while not q.Eof do
           begin
             booksel_index := booksel_index + 1;
-            data_and_number_sf := '' + q.FieldByName('Number').asString + ', ' +
-              q.FieldByName('Data').asString + '';
+            data_and_number_sf := '"' + q.FieldByName('Number').asString + '; ' +
+              q.FieldByName('Data').asString + '"';
             booksel_name := q.FieldByName('Name').asString;
             booksel_inn_kpp := q.FieldByName('INN').asString + '/ ' +
               q.FieldByName('KPP').asString;
