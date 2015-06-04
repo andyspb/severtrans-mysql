@@ -234,14 +234,14 @@ uses Menu, FConstant, SendStr, FAddEdit, makerepp,
 
 procedure TFormSend.FormCreate(Sender: TObject);
 var
-  q:TQuery;
+  q: TQuery;
 begin
-  PercentTek :=10;
-  q:=sql.select('Constant','*','','') ;
+  PercentTek := 10;
+  q := sql.select('Constant', '*', '', '');
   if (not q.eof) then
   begin
-      if (q.FieldByName('PercentTek').asString<>'') then
-        PercentTek:=q.FieldByName('PercentTek').asInteger;
+    if (q.FieldByName('PercentTek').asString <> '') then
+      PercentTek := q.FieldByName('PercentTek').asInteger;
   end;
   q.Free;
 
@@ -333,7 +333,7 @@ begin
 
     str := IntToStr(l) + ',' + IntToStr(RadioGroup1.ItemIndex) +
       ',' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
-        StrToDate(LabelEditDate1.text))) +
+      StrToDate(LabelEditDate1.text))) +
       ',' + IntToStr(FMenu.CurrentUser);
 
     //----------
@@ -358,10 +358,10 @@ begin
       str := str + ',' + IntToStr(cbPynkt.SqlComboBox.GetData);
     //----------
     if cbPynktOtpr.SqlComboBox.GetData = 0 then
-      begin
+    begin
       // by default 323 Санкт-Петербург
       str := str + ',' + '323'
-      end
+    end
     else
       str := str + ',' + IntToStr(cbPynktOtpr.SqlComboBox.GetData);
     cbPynktOtpr.NotNull := true;
@@ -667,7 +667,7 @@ begin
       ',NumberServ,PlaceGd,WeightGd,NumberPP,CountInvoice,PlaceC,' +
       'PayTypeServ_Ident,PayTypeWay_Ident,CutTarif,DateDelFirst';
     if (sql.InsertString(send_table, fields, str) <> 0)
-      {and (sql.UpdateString('SendPack','Send_Ident='+IntToStr(l),'Send_Ident is NULL')<>0) } then
+      {and (sql.UpdateString('SendPack','Send_Ident='+IntToStr(l),'Send_Ident is NULL')<>0) }then
     begin
       AddRecord := 0;
       exit;
@@ -1027,7 +1027,7 @@ begin
 
     str := '`Check`=' + IntToStr(RadioGroup1.ItemIndex) +
       ',`Start`=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
-        StrToDate(LabelEditDate1.text)));
+      StrToDate(LabelEditDate1.text)));
     //        ',Inspector_Ident='+IntToStr(FMenu.CurrentUser);
 
     if cbType.SqlComboBox.GetData = 0 then
@@ -1064,7 +1064,8 @@ begin
     if cbPynktOtpr.SqlComboBox.GetData = 0 then
       str := str + ',City_Ident_Sender=' + 'NULL'
     else
-      str := str + ',City_Ident_Sender=' + IntToStr(cbPynktOtpr.SqlComboBox.GetData);
+      str := str + ',City_Ident_Sender=' +
+        IntToStr(cbPynktOtpr.SqlComboBox.GetData);
 
     if LabelEditDate2.text <> '  .  .    ' then
       str := str + ',DateSend=' + sql.MakeStr(FormatDateTime('yyyy-mm-dd',
@@ -1475,7 +1476,7 @@ begin
       'получилась: ' + StrTo00(FloatToStr(s2)));
     case
       application.MessageBox('Исправить введенные суммы за дорогу и услуги?',
-        'Сообщение',
+      'Сообщение',
       MB_YESNO + MB_ICONQUESTION) of
       IDYES:
         begin
@@ -1559,7 +1560,7 @@ begin
         l := sql.FindNextInteger('Ident', 'Forwarder', '', maxlongint);
         if sql.InsertString('Forwarder', 'Ident,Name,Clients_Ident',
           IntToStr(l) + ',' + sql.MakeStr(val) + ',' + IntToStr(cbZak.GetData))
-            <> 0 then
+          <> 0 then
         begin
           exit
         end
@@ -1583,7 +1584,7 @@ begin
       if ((sql.SelectString(send_table, 'NumberCountPattern', 'Ident=' +
         IntToStr(SendIdent)) <> '')
         and (trim(eNumberCountPattern.Text) = '') and (FMenu.CurrentUserRoles <>
-          1)) then
+        1)) then
       begin
         ShowMessage('Произошла попытка удалить номер счетфакутруры у отправки! '
           +
@@ -1763,7 +1764,7 @@ begin
     if (trim(eWieght.text) <> '0') and (trim(eVolume.text) <> '0.00') and
       (trim(eVolume.text) <> '0.0')
       and (trim(eWieght.text) <> '') and (trim(eVolume.text) <> '') and
-        (trim(eVolume.text) <> '0.')
+      (trim(eVolume.text) <> '0.')
       and (trim(eVolume.text) <> '0') then
     begin
       eCountWieght.visible := true;
@@ -1991,13 +1992,13 @@ begin
     if (LabelSQLComboBox1.GetData = 2) and (FWieght <> 0) then
     begin
       Pr := StrToFloat(sql.selectString('Constant', 'UnitPack', ''));
-        {выгрузка силами перевозчика}
+      {выгрузка силами перевозчика}
       fare5 := FCountWieght * Pr;
     end;
     if CheckBox3.Checked then
     begin
       Percent := sql.SelectInteger('Constant', 'PercentOversized', '');
-        {доплата за негаборитный груз}
+      {доплата за негаборитный груз}
       Fare4 := Fare1 * Percent / 100;
     end;
     Fare1 := Fare1 + Fare4 + Fare5;
@@ -2005,15 +2006,15 @@ begin
       and {сумму по доп услуге не суммируем с перевозной платой с 01.06.2012 }
     (StrToDate(LabelEditDate1.text) <= StrToDate('31.05.2012')) then
       fare7 := StrToFloat(trim(LblEditMoney6.Text)); {переносим в доп услуги}
-        {доп. плата за доставку}
-    //----------------------------------------------------------------
-     { if Pos(' склад',cbPynkt.SQLComboBox.Text) <> 0 then
-       Fare2:=StrToFloat(sql.selectstring('Constant','PriceSklad',''))
-      else if Pos('до дверей',cbPynkt.SQLComboBox.Text) <> 0 then
-           Fare2:=StrToFloat(sql.selectstring('Constant','PriceDver',''))
-             else if CheckBox1.Checked then
-           Fare2:=StrToFloat(sql.selectstring('Constant','MinPayWarm',''))
-                  else  Fare2:=StrToFloat(sql.selectstring('Constant','MinPay','')); }
+    {доп. плата за доставку}
+//----------------------------------------------------------------
+ { if Pos(' склад',cbPynkt.SQLComboBox.Text) <> 0 then
+   Fare2:=StrToFloat(sql.selectstring('Constant','PriceSklad',''))
+  else if Pos('до дверей',cbPynkt.SQLComboBox.Text) <> 0 then
+       Fare2:=StrToFloat(sql.selectstring('Constant','PriceDver',''))
+         else if CheckBox1.Checked then
+       Fare2:=StrToFloat(sql.selectstring('Constant','MinPayWarm',''))
+              else  Fare2:=StrToFloat(sql.selectstring('Constant','MinPay','')); }
     Fare := StrTo00(FloatToStr(Fare1 + Fare7));
   end
   else if cbType.getdata = 1 then
@@ -2105,7 +2106,7 @@ begin
     {сумму по доп услуге не суммируем с перевозной платой с 01.06.2012 }
   or ((trim(LabelInteger2.text) <> '') and (trim(LabelInteger2.text) <> '0'))
     or ((trim(LblEditMoney3.text) <> '') and (trim(LblEditMoney3.text) <>
-      '0.00'))
+    '0.00'))
     or ((trim(LblEditMoney6.text) <> '') and (trim(LblEditMoney6.text) <> '0.00')
     and (StrToDate(LabelEditDate1.text) > StrToDate('31.05.2012'))) {доп услуги}
       then
@@ -2123,7 +2124,7 @@ begin
     {сумму по доп услуге не суммируем с перевозной платой с 01.06.2012 }
   or ((trim(LabelInteger2.text) <> '') and (trim(LabelInteger2.text) <> '0'))
     or ((trim(LblEditMoney3.text) <> '') and (trim(LblEditMoney3.text) <>
-      '0.00'))
+    '0.00'))
     or ((trim(LblEditMoney6.text) <> '') and (trim(LblEditMoney6.text) <> '0.00')
     and (StrToDate(LabelEditDate1.text) > StrToDate('31.05.2012'))) {доп услуги}
       then
@@ -2195,7 +2196,7 @@ var
 begin
   q := sql.Select(send_table, 'Namber', '`Start`=' +
     sql.MakeStr(FormatDateTime('yyyy-mm-dd', StrToDate(LabelEditDate1.text))),
-      '');
+    '');
 
   if q.Eof then
     Number := '1/' + FormatDateTime('ddmmyy', StrToDate(LabelEditDate1.text))
@@ -2226,7 +2227,7 @@ begin
   if (trim(eInsuranceSum.text) <> '') and (trim(eInsurancePercent.text) <> '')
     and
     (trim(eInsuranceSum.text) <> '0.00') and (trim(eInsurancePercent.text) <>
-      '0.00') then
+    '0.00') then
   begin
     eInsuranceValue.visible := true;
     if StrToFloat(trim(eInsuranceSum.text))<(StrToFloat(trim(eCountWieght.text))
@@ -2834,7 +2835,7 @@ begin
   if ((trim(eExpCount.text) <> '') and (trim(eExpCount.text) <> '0.00'))
     or ((trim(LabelInteger2.text) <> '') and (trim(LabelInteger2.text) <> '0'))
     or ((trim(LblEditMoney3.text) <> '') and (trim(LblEditMoney3.text) <>
-      '0.00')) then
+    '0.00')) then
   begin
     eAddServicePrace.Visible := true;
     eAddServicePrace.Text := addService;
@@ -3278,9 +3279,9 @@ begin
     if ((trim(eExpCount.text) <> '') and (trim(eExpCount.text) <> '0.00'))
       or ((trim(LabelInteger2.text) <> '') and (trim(LabelInteger2.text) <> '0'))
       or ((trim(LblEditMoney3.text) <> '') and (trim(LblEditMoney3.text) <>
-        '0.00'))
+      '0.00'))
       or ((trim(LblEditMoney6.text) <> '') and (trim(LblEditMoney6.text) <>
-        '0.00')) {доп услуги} then
+      '0.00')) {доп услуги} then
     begin
       eAddServicePrace.Visible := true;
       eAddServicePrace.Text := addService;
@@ -3317,7 +3318,7 @@ end;
 procedure TFormSend.RadioGroup1Exit(Sender: TObject);
 begin
   if (trim(ePercent.text) = '0') and (RadioGroup1.ItemIndex = 1) then
-    ePercent.text := IntToStr(PercentTek) ; //'5';
+    ePercent.text := IntToStr(PercentTek); //'5';
 end;
 
 procedure TFormSend.ePercentExit(Sender: TObject);
