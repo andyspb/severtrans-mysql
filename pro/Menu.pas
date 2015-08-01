@@ -22,7 +22,7 @@ type
     N11: TMenuItem;
     N12: TMenuItem;
     N13: TMenuItem;
-    N14: TMenuItem;
+    N14: TMenuItem; // Картотеки
     N15: TMenuItem;
     N16: TMenuItem;
     N17: TMenuItem;
@@ -58,6 +58,10 @@ type
     N43: TMenuItem;
     N44: TMenuItem;
     ClientsCreditUpdate1: TMenuItem;
+    Export1: TMenuItem;
+    Export_Contragents: TMenuItem;
+    Export_Contact_Info: TMenuItem;
+    Export_Settlements: TMenuItem;
     procedure N7Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
     procedure N5Click(Sender: TObject);
@@ -111,7 +115,10 @@ type
     CurrentUser: Integer;
     CurrentUserName: string;
     CurrentUserRoles: integer;
-    BYH, OPER, BOS: boolean;
+    { visibility }
+    BOS: boolean; // role 1
+    BYH: boolean; // role 2
+    OPER: boolean; // role 3
     { Public declarations }
   end;
 
@@ -165,6 +172,12 @@ begin
   N41.Visible := false;
   N42.Visible := false;
   ClientsCreditUpdate1.Visible := Bos;
+  // Export
+  Export1.Visible := Bos;
+  Export_Contragents.Visible := Bos;
+  Export_Contact_Info.Visible := Bos;
+  Export_Settlements.Visible := Bos;
+
 end;
 
 procedure TFMenu.N7Click(Sender: TObject);

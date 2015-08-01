@@ -5284,5 +5284,17 @@ object FMenu: TFMenu
       Caption = #1042#1067#1061#1054#1044
       OnClick = N7Click
     end
+    object Export1: TMenuItem
+      Caption = 'Export'
+      object Export_Contragents: TMenuItem
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      end
+      object Export_Contact_Info: TMenuItem
+        Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1072#1103' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1103
+      end
+      object Export_Settlements: TMenuItem
+        Caption = #1042#1079#1072#1080#1084#1086#1088#1072#1089#1095#1077#1090#1099
+      end
+    end
   end
 end
