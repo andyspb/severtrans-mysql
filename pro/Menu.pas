@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Tadjform, Menus, DBTables, Sqlctrls, TSQLCLS, ComObj, DB, Logger;
+  Dialogs, Tadjform, Menus, DBTables, Sqlctrls, TSQLCLS, ComObj, DB, Logger,
+  shlobj, StrUtils;
 
 type
   TFMenu = class(tform)
@@ -108,6 +109,9 @@ type
     procedure N44Click(Sender: TObject);
 
     procedure updateClientsKredit1Click(Sender: TObject);
+    procedure OnExportContragents(Sender: TObject);
+    procedure OnExportContactInfo(Sender: TObject);
+    procedure OnExportSettlements(Sender: TObject);
 
   private
     { Private declarations }
@@ -650,6 +654,202 @@ begin
   begin
     Application.MessageBox('Обновление клиентов завершено!', '', 0);
   end;
+end;
+
+procedure TFMenu.OnExportContragents(Sender: TObject);
+var
+  saveDialog: TSaveDialog; // Open dialog variable
+  saveDir: string;
+  select_str: string;
+  export_file: TextFile;
+  query: TQuery;
+  table: string;
+  name: string;
+  acronym: string;
+  type_: string;
+  person_type_ident: string;
+  inn: string;
+  kpp: string;
+  discount: string;
+  nds: string;
+  cond: string;
+begin
+  Logger.LogInfo('Export Contragents');
+  saveDir := GetDesktopFolder();
+  saveDialog := TSaveDialog.Create(self);
+  saveDialog.Title := 'Save your csv file';
+  saveDialog.InitialDir := saveDir;
+  saveDialog.Filter := 'csv|*.csv';
+  saveDialog.DefaultExt := 'csv';
+  saveDialog.FilterIndex := 1;
+  if saveDialog.Execute then
+  begin
+    ShowMessage('File : ' + saveDialog.FileName);
+    Logger.LogInfo('Export Contragents file: ' + saveDialog.FileName);
+
+    table := 'clients';
+
+    AssignFile(export_file, saveDialog.FileName);
+    Rewrite(export_file);
+    Writeln(export_file,
+      'Наименование;Тип(ЮЛ,ФЛ);ИНН для ЮЛ;КПП для ФЛ;скидка;НДС/без НДС;');
+
+    cond := '';
+    select_str := 'Acronym, FullName, INN, PersonType_Ident, SalePersent';
+    query := sql.select(table, '*', cond, '');
+    while not query.eof do
+    begin
+      name := query.FieldByName('FullName').AsString;
+      acronym := query.FieldByName('Acronym').AsString;
+      person_type_ident := query.FieldByName('PersonType_Ident').AsString;
+        type_ := 'Юридическое лицо';
+      if (AnsiCompareStr(person_type_ident,'2') =0 ) then
+        type_ := 'Физическое лицо';
+
+
+      inn := query.FieldByName('INN').AsString;
+      kpp := '0';
+      discount := query.FieldByName('SalePersent').AsString;
+      nds := '0';
+      Writeln(export_file, name + ';' + type_ + ';' + inn + ';' + kpp + ';' +
+        discount + ';' + nds);
+      query.Next;
+    end;
+    query.Free;
+
+    CloseFile(export_file);
+  end
+  else
+    ShowMessage('Export file was cancelled');
+
+  // Free up the dialog
+  saveDialog.Free;
+end;
+
+procedure TFMenu.OnExportContactInfo(Sender: TObject);
+var
+  saveDialog: TSaveDialog; // Open dialog variable
+  saveDir: string;
+  select_str: string;
+  export_file: TextFile;
+  query: TQuery;
+  table: string;
+  name: string;
+  contact: string;
+  phone: string;
+  email: string;
+  cond: string;
+
+begin
+  Logger.LogInfo('Export Contact Info');
+  saveDir := GetDesktopFolder();
+  saveDialog := TSaveDialog.Create(self);
+  saveDialog.Title := 'Save your csv file';
+  saveDialog.InitialDir := saveDir;
+  saveDialog.Filter := 'csv|*.csv';
+  saveDialog.DefaultExt := 'csv';
+  saveDialog.FilterIndex := 1;
+  if saveDialog.Execute then
+  begin
+    ShowMessage('File : ' + saveDialog.FileName);
+    Logger.LogInfo('Export contacts to file: ' + saveDialog.FileName);
+
+    table := 'clientsall';
+
+    AssignFile(export_file, saveDialog.FileName);
+    Rewrite(export_file);
+    Writeln(export_file, 'Наименование;Контактное лицо в виде;телефон;email');
+
+    cond := '';
+    select_str := 'FullName,Inperson,Telephone,Email';
+    query := sql.select(table, '*', cond, '');
+    while not query.eof do
+    begin
+      name := query.FieldByName('FullName').AsString;
+      contact := query.FieldByName('Inperson').AsString;
+      phone := query.FieldByName('Telephone').AsString;
+      email := query.FieldByName('Email').AsString;
+      Writeln(export_file, name + ';' + contact + ';' + phone + ';' + email);
+      query.Next;
+    end;
+    query.Free;
+
+    CloseFile(export_file);
+  end
+  else
+  begin
+    ShowMessage('Export file was cancelled');
+  end;
+  // Free up the dialog
+  saveDialog.Free;
+end;
+
+procedure TFMenu.OnExportSettlements(Sender: TObject);
+var
+  saveDialog: TSaveDialog; // Open dialog variable
+  saveDir: string;
+  select_str: string;
+  export_file: TextFile;
+  query: TQuery;
+  table: string;
+  name: string;
+  saldo: string;
+  cond: string;
+
+begin
+  Logger.LogInfo('Export Settlements');
+  saveDir := GetDesktopFolder();
+  saveDialog := TSaveDialog.Create(self);
+  saveDialog.Title := 'Save your csv file';
+  saveDialog.InitialDir := saveDir;
+  saveDialog.Filter := 'csv|*.csv';
+  saveDialog.DefaultExt := 'csv';
+  saveDialog.FilterIndex := 1;
+  if saveDialog.Execute then
+  begin
+    ShowMessage('File : ' + saveDialog.FileName);
+    Logger.LogInfo('Export settlements to file: ' + saveDialog.FileName);
+
+    table := 'clients';
+
+    AssignFile(export_file, saveDialog.FileName);
+    Rewrite(export_file);
+    Writeln(export_file, 'Наименование;Сальдо');
+
+    cond := '';
+    select_str := 'FullName,Saldo';
+    query := sql.select(table, '*', cond, '');
+    while not query.eof do
+    begin
+      name := query.FieldByName('FullName').AsString;
+      saldo := query.FieldByName('Saldo').AsString;
+      Writeln(export_file, name + ';' + saldo);
+      query.Next;
+    end;
+    query.Free;
+    CloseFile(export_file);
+  end
+  else
+    ShowMessage('Export file was cancelled');
+
+  // Free up the dialog
+  saveDialog.Free;
+
+end;
+
+// Get Desktop path variable
+
+function GetDesktopFolder(): string;
+var
+  buf: array[0..MAX_PATH] of char;
+  pidList: PItemIDList;
+begin
+  Result := '';
+  SHGetSpecialFolderLocation(Application.Handle, CSIDL_DESKTOP, pidList);
+  if pidList = nil then
+    exit; // no Desktop? Want to see that computer...
+  if SHGetPathFromIDList(pidList, buf) then
+    Result := buf;
 end;
 
 end.
