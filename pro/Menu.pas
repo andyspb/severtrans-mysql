@@ -177,10 +177,10 @@ begin
   N42.Visible := false;
   ClientsCreditUpdate1.Visible := Bos;
   // Export
-  Export1.Visible := Bos;
-  Export_Contragents.Visible := Bos;
-  Export_Contact_Info.Visible := Bos;
-  Export_Settlements.Visible := Bos;
+  Export1.Visible := Byh;
+  Export_Contragents.Visible := Byh;
+  Export_Contact_Info.Visible := Byh;
+  Export_Settlements.Visible := Byh;
 
 end;
 
@@ -684,7 +684,6 @@ begin
   saveDialog.FilterIndex := 1;
   if saveDialog.Execute then
   begin
-    ShowMessage('File : ' + saveDialog.FileName);
     Logger.LogInfo('Export Contragents file: ' + saveDialog.FileName);
 
     table := 'clients';
@@ -718,6 +717,7 @@ begin
     query.Free;
 
     CloseFile(export_file);
+    ShowMessage('Export finished to file: ' + saveDialog.FileName);
   end
   else
     ShowMessage('Export file was cancelled');
@@ -751,14 +751,13 @@ begin
   saveDialog.FilterIndex := 1;
   if saveDialog.Execute then
   begin
-    ShowMessage('File : ' + saveDialog.FileName);
     Logger.LogInfo('Export contacts to file: ' + saveDialog.FileName);
 
     table := 'clientsall';
 
     AssignFile(export_file, saveDialog.FileName);
     Rewrite(export_file);
-    Writeln(export_file, 'Наименование;Контактное лицо в виде;телефон;email');
+    Writeln(export_file, 'Наименование;Контактное лицо в лице;телефон;email');
 
     cond := '';
     select_str := 'FullName,Inperson,Telephone,Email';
@@ -775,6 +774,7 @@ begin
     query.Free;
 
     CloseFile(export_file);
+    ShowMessage('Export finished to file: ' + saveDialog.FileName);
   end
   else
   begin
@@ -807,7 +807,6 @@ begin
   saveDialog.FilterIndex := 1;
   if saveDialog.Execute then
   begin
-    ShowMessage('File : ' + saveDialog.FileName);
     Logger.LogInfo('Export settlements to file: ' + saveDialog.FileName);
 
     table := 'clients';
@@ -828,6 +827,7 @@ begin
     end;
     query.Free;
     CloseFile(export_file);
+    ShowMessage('Export finished to file: ' + saveDialog.FileName);
   end
   else
     ShowMessage('Export file was cancelled');
