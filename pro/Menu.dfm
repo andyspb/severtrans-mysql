@@ -5290,6 +5290,10 @@ object FMenu: TFMenu
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         OnClick = OnExportContragents
       end
+      object Export_Contragents_05y: TMenuItem
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' (0.5 '#1075')'
+        OnClick = OnExport_Contragents_05y
+      end
       object Export_Contact_Info: TMenuItem
         Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1072#1103' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1103
         OnClick = OnExportContactInfo

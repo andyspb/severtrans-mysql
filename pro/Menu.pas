@@ -63,6 +63,7 @@ type
     Export_Contragents: TMenuItem;
     Export_Contact_Info: TMenuItem;
     Export_Settlements: TMenuItem;
+    Export_Contragents_05y: TMenuItem;
     procedure N7Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
     procedure N5Click(Sender: TObject);
@@ -112,6 +113,7 @@ type
     procedure OnExportContragents(Sender: TObject);
     procedure OnExportContactInfo(Sender: TObject);
     procedure OnExportSettlements(Sender: TObject);
+    procedure OnExport_Contragents_05y(Sender: TObject);
 
   private
     { Private declarations }
@@ -657,6 +659,80 @@ begin
 end;
 
 procedure TFMenu.OnExportContragents(Sender: TObject);
+var
+  saveDialog: TSaveDialog; // Open dialog variable
+  saveDir: string;
+  select_str: string;
+  export_file: TextFile;
+  query: TQuery;
+  table: string;
+  name: string;
+  acronym: string;
+  type_: string;
+  person_type_ident: string;
+  inn: string;
+  kpp: string;
+  discount: string;
+  nds: string;
+  cond: string;
+begin
+  Logger.LogInfo('Export Contragents');
+  saveDir := GetDesktopFolder();
+  saveDialog := TSaveDialog.Create(self);
+  saveDialog.Title := 'Save your csv file';
+  saveDialog.InitialDir := saveDir;
+  saveDialog.Filter := 'csv|*.csv';
+  saveDialog.DefaultExt := 'csv';
+  saveDialog.FilterIndex := 1;
+  if saveDialog.Execute then
+  begin
+    Logger.LogInfo('Export Contragents file: ' + saveDialog.FileName);
+
+    table := 'clients';
+
+    AssignFile(export_file, saveDialog.FileName);
+    Rewrite(export_file);
+    Writeln(export_file,
+      'Наименование;Тип(ЮЛ,ФЛ);ИНН для ЮЛ;КПП для ФЛ;скидка;НДС/без НДС;');
+
+    cond := '';
+    select_str := 'Acronym, FullName, INN, PersonType_Ident, KPP, SalePersent';
+    query := sql.select(table, '*', cond, '');
+    while not query.eof do
+    begin
+      name := query.FieldByName('FullName').AsString;
+      acronym := query.FieldByName('Acronym').AsString;
+      person_type_ident := query.FieldByName('PersonType_Ident').AsString;
+        type_ := 'Юридическое лицо';
+      if (AnsiCompareStr(person_type_ident,'2') =0 ) then
+        type_ := 'Физическое лицо';
+
+      nds := 'Да';
+      if (Length(acronym)>0) then
+        if (acronym[1] = '"') then
+          nds := 'Нет';
+
+
+      inn := query.FieldByName('INN').AsString;
+      kpp := query.FieldByName('KPP').AsString;
+      discount := query.FieldByName('SalePersent').AsString;
+      Writeln(export_file, name + ';' + type_ + ';' + inn + ';' + kpp + ';' +
+        discount + ';' + nds);
+      query.Next;
+    end;
+    query.Free;
+
+    CloseFile(export_file);
+    ShowMessage('Export finished to file: ' + saveDialog.FileName);
+  end
+  else
+    ShowMessage('Export file was cancelled');
+
+  // Free up the dialog
+  saveDialog.Free;
+end;
+
+procedure TFMenu.OnExport_Contragents_05y(Sender: TObject);
 var
   saveDialog: TSaveDialog; // Open dialog variable
   saveDir: string;
