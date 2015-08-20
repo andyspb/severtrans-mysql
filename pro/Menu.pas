@@ -694,7 +694,7 @@ begin
       'Наименование;Тип(ЮЛ,ФЛ);ИНН для ЮЛ;КПП для ФЛ;скидка;НДС/без НДС;');
 
     cond := '';
-    select_str := 'Acronym, FullName, INN, PersonType_Ident, SalePersent';
+    select_str := 'Acronym, FullName, INN, PersonType_Ident, KPP, SalePersent';
     query := sql.select(table, '*', cond, '');
     while not query.eof do
     begin
@@ -705,11 +705,15 @@ begin
       if (AnsiCompareStr(person_type_ident,'2') =0 ) then
         type_ := 'Физическое лицо';
 
+      nds := 'Да';
+      if (Length(acronym)>0) then
+        if (acronym[1] = '"') then
+          nds := 'Нет';
+
 
       inn := query.FieldByName('INN').AsString;
-      kpp := '0';
+      kpp := query.FieldByName('KPP').AsString;
       discount := query.FieldByName('SalePersent').AsString;
-      nds := '0';
       Writeln(export_file, name + ';' + type_ + ';' + inn + ';' + kpp + ';' +
         discount + ';' + nds);
       query.Next;
@@ -739,6 +743,8 @@ var
   phone: string;
   email: string;
   cond: string;
+  inn: string;
+  kpp: string;
 
 begin
   Logger.LogInfo('Export Contact Info');
@@ -753,14 +759,14 @@ begin
   begin
     Logger.LogInfo('Export contacts to file: ' + saveDialog.FileName);
 
-    table := 'clientsall';
+    table := 'clients';
 
     AssignFile(export_file, saveDialog.FileName);
     Rewrite(export_file);
-    Writeln(export_file, 'Наименование;Контактное лицо в лице;телефон;email');
+    Writeln(export_file, 'Наименование;Контактное лицо в лице;телефон;email;ИНН;KPP');
 
     cond := '';
-    select_str := 'FullName,Inperson,Telephone,Email';
+    select_str := 'FullName,Inperson,Telephone,Email,Inn,KPP';
     query := sql.select(table, '*', cond, '');
     while not query.eof do
     begin
@@ -768,7 +774,10 @@ begin
       contact := query.FieldByName('Inperson').AsString;
       phone := query.FieldByName('Telephone').AsString;
       email := query.FieldByName('Email').AsString;
-      Writeln(export_file, name + ';' + contact + ';' + phone + ';' + email);
+      inn := query.FieldByName('Inn').AsString;
+      kpp := query.FieldByName('KPP').AsString;
+      Writeln(export_file, name + ';' + contact + ';"' + phone + '";"' + email + '";' + inn +
+       ';' + kpp);
       query.Next;
     end;
     query.Free;
