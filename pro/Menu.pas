@@ -889,7 +889,8 @@ var
   name: string;
   saldo: string;
   cond: string;
-
+  inn: string;
+  kpp: string;
 begin
   Logger.LogInfo('Export Settlements');
   saveDir := GetDesktopFolder();
@@ -907,7 +908,7 @@ begin
 
     AssignFile(export_file, saveDialog.FileName);
     Rewrite(export_file);
-    Writeln(export_file, 'Наименование;Сальдо');
+    Writeln(export_file, 'Наименование;ИНН;КПП;Сальдо');
 
     cond := '';
     select_str := 'FullName,Saldo';
@@ -915,8 +916,10 @@ begin
     while not query.eof do
     begin
       name := query.FieldByName('FullName').AsString;
+      inn := query.FieldByName('Inn').AsString;
+      kpp := query.FieldByName('KPP').AsString;
       saldo := query.FieldByName('Saldo').AsString;
-      Writeln(export_file, name + ';' + saldo);
+      Writeln(export_file, name + ';' + inn + ';' + kpp + ';' + saldo);
       query.Next;
     end;
     query.Free;
